@@ -357,7 +357,6 @@ def checkDrugs():
 
 
 def getMain():
-	init(autoreset=True)
 	with open (downloads + 'csvFile.csv', 'r') as inFile2, open(downloads + csvFileModTemp2, 'w') as targetFile:
 		r = csv.reader(inFile2)
 		headers = next(r)
@@ -416,24 +415,28 @@ def getMain():
 						print(cellVal, ': ', colored('I Found a veeva_network_id', 'green'))
 						headers[index] = 'veeva_network_id'
 				elif manu == 'Novartis':
-		            if cellVal == 'mdm_id' or cellVal == 'mdm id' or cellVal == 'mdmid':
-		                print(cellVal, ': ', colored('I Found a MDM_ID', 'green'))
-		                headers[index] = 'mdm_id'
-		            elif cellVal == 'nov_id' or cellVal == 'nov id' or cellVal == 'novid':
-		                print(cellVal, ': ', colored('I Found a NOV_ID', 'green'))
-		                headers[index] = 'nov_id'
-		            elif cellVal == 'vendor_contact_event_id':
-		                print(cellVal, ': ', colored('I Found a vendor_contact_event_id', 'green'))
-		                headers[index] = 'vendor_contact_event_id'
-		            elif cellVal == 'fulfillment_kit_code':
-		                print(cellVal, ': ', colored('I Found a fulfillment_kit_code', 'green'))
-		                headers[index] = 'fulfillment_kit_code'
+					if cellVal == 'mdm_id' or cellVal == 'mdm id' or cellVal == 'mdmid':
+						print(cellVal, ': ', colored('I Found a MDM_ID', 'green'))
+						headers[index] = 'mdm_id'
+					elif cellVal == 'nov_id' or cellVal == 'nov id' or cellVal == 'novid':
+						print(cellVal, ': ', colored('I Found a NOV_ID', 'green'))
+						headers[index] = 'nov_id'
+					elif cellVal == 'vendor_contact_event_id':
+						print(cellVal, ': ', colored('I Found a vendor_contact_event_id', 'green'))
+						headers[index] = 'vendor_contact_event_id'
+					elif cellVal == 'fulfillment_kit_code':
+						print(cellVal, ': ', colored('I Found a fulfillment_kit_code', 'green'))
+						headers[index] = 'fulfillment_kit_code'
 
 
-			w = csv.writer(targetFile, lineterminator='\n')
-			w.writerow(headers)
-			for row in r:
-				w.writerow(row)
+
+
+		w = csv.writer(targetFile, lineterminator='\n')
+		w.writerow(headers)
+		for row in r:
+			w.writerow(row)
+
+		# input('Press Enter to Continue . . . ')
 
 		for col in mainCols:
 			if col not in foundMain:
@@ -495,11 +498,13 @@ def cmiCompasColumns():
 	os.rename(os.path.join(downloads, csvFileModTemp), os.path.join(downloads, csvFileMod))
 
 def postgresConn():
-	df = pandas.read_csv('{downloads}{csvFile}'.format(downloads=downloads, csvFile=csvFileMod), encoding='ISO-8859-1')
+	df = pandas.read_csv('{downloads}{csvFile}'.format(downloads=downloads, csvFile=csvFileMod), encoding='ISO-8859-1', dtype=str)
 	myHeaders = list(df)
 
-	neededColumns = ['me', 'npi', 'fname', 'lname', 'zip'] + utils.prepSasSegments().split(',')
-
+	if caseType == 'Targeting' and manu in ['Merck', 'AstraZeneca', 'Novartis', 'GSK', 'Boehringer', 'Amgen', 'Biogen', 'Sanofi-Aventis']:
+		neededColumns = ['me', 'npi', 'fname', 'lname', 'zip'] + utils.prepSasSegments().split(',')
+	else:
+		neededColumns = ['me', 'npi', 'fname', 'lname', 'zip']
 
 	selectMain5 = "select REPLACE(npi, '.0', '') as npi, REPLACE(me, '.0', '') as me, fname, lname, REPLACE(zip, '.0', '') as zip"
 	selectMain2 = "select REPLACE(npi, '.0', '') as npi, REPLACE(me, '.0', '') as me"
@@ -523,8 +528,10 @@ def postgresConn():
 	cur.execute(dropTable)
 	conn.commit()
 
-
-	df.to_sql('{}'.format(tableName), conn, if_exists='replace', index=False)
+	if manu == 'Biogen':
+		df.to_sql('{}'.format(tableName), conn, if_exists='replace', index=False)
+	else:
+		df.to_sql('{}'.format(tableName), conn, if_exists='replace', index=False)
 
 	for col in neededColumns:
 		if col not in myHeaders:
@@ -540,7 +547,7 @@ def postgresConn():
 		fixBio = """UPDATE {tableName}
 		SET veeva_network_id = '_'||veeva_network_id""".format(tableName=tableName)
 
-		cursor.execute(fixBio)
+		cur.execute(fixBio)
 		conn.commit()
 
 	if caseType == 'listMatch':

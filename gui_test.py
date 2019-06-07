@@ -1981,11 +1981,11 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 #     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\Novartis.py', 'config.json'])
                 if str(self.targetManuName.currentText()) == 'Sanofi-Aventis':
                     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\Sanofi.py', 'config.json'])
-                if str(self.targetManuName.currentText()) == 'Biogen':
-                    subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\Biogen.py', 'config.json'])
+                # if str(self.targetManuName.currentText()) == 'Biogen':
+                #     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\Biogen.py', 'config.json'])
                 # if str(self.targetManuName.currentText()) == 'Merck':
                 #     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\Merck.py', 'config.json'])
-                if self.config['caseType'] == 'Targeting' and str(self.targetManuName.currentText()) not in ['Sanofi-Aventis', 'Biogen']:
+                if self.config['caseType'] == 'Targeting' and str(self.targetManuName.currentText()) not in ['Sanofi-Aventis']:
                     subprocess.call(['python3.exe', os.path.join(desktop, 'Ewok','theOne_GUI.py'), 'config.json'])
                 if self.config['caseType'] == 'listMatch':
                     if not isSdaChecked and not isBdaChecked:
@@ -2040,11 +2040,11 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 #     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\Novartis.py', 'config.json'])
                 if str(self.targetManuName.currentText()) == 'Sanofi-Aventis':
                     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\Sanofi.py', 'config.json'])
-                if str(self.targetManuName.currentText()) == 'Biogen':
-                    subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\Biogen.py', 'config.json'])
+                # if str(self.targetManuName.currentText()) == 'Biogen':
+                #     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\Biogen.py', 'config.json'])
                 # if str(self.targetManuName.currentText()) == 'Merck':
                 #     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\Merck.py', 'config.json'])
-                if self.config['caseType'] == 'Targeting' and str(self.targetManuName.currentText()) not in ['Sanofi-Aventis', 'Biogen']:
+                if self.config['caseType'] == 'Targeting' and str(self.targetManuName.currentText()) not in ['Sanofi-Aventis']:
                     subprocess.call(['python3.exe', os.path.join(desktop, 'Ewok','theOne_GUI.py'), 'config.json'])
                 if self.config['caseType'] == 'listMatch':
                     if not isSdaChecked and not isBdaChecked:
