@@ -411,13 +411,29 @@ def getMain():
 					elif cellVal == 'dimcidvalue' or cellVal == 'cid' or cellVal == 'clientid' or cellVal == 'client_id':
 						print(cellVal, ': ', colored('I Found a ClientID', 'green'))
 						headers[index] = 'clientid'
+				elif manu == 'Biogen':
+					if cellVal == 'vnid' or cellVal == 'veeva_network_id':
+						print(cellVal, ': ', colored('I Found a veeva_network_id', 'green'))
+						headers[index] = 'veeva_network_id'
+				elif manu == 'Novartis':
+		            if cellVal == 'mdm_id' or cellVal == 'mdm id' or cellVal == 'mdmid':
+		                print(cellVal, ': ', colored('I Found a MDM_ID', 'green'))
+		                headers[index] = 'mdm_id'
+		            elif cellVal == 'nov_id' or cellVal == 'nov id' or cellVal == 'novid':
+		                print(cellVal, ': ', colored('I Found a NOV_ID', 'green'))
+		                headers[index] = 'nov_id'
+		            elif cellVal == 'vendor_contact_event_id':
+		                print(cellVal, ': ', colored('I Found a vendor_contact_event_id', 'green'))
+		                headers[index] = 'vendor_contact_event_id'
+		            elif cellVal == 'fulfillment_kit_code':
+		                print(cellVal, ': ', colored('I Found a fulfillment_kit_code', 'green'))
+		                headers[index] = 'fulfillment_kit_code'
 
 
-
-		w = csv.writer(targetFile, lineterminator='\n')
-		w.writerow(headers)
-		for row in r:
-			w.writerow(row)
+			w = csv.writer(targetFile, lineterminator='\n')
+			w.writerow(headers)
+			for row in r:
+				w.writerow(row)
 
 		for col in mainCols:
 			if col not in foundMain:
@@ -519,6 +535,13 @@ def postgresConn():
 				continue 
 
 	conn.commit()
+
+	if manu == 'Biogen':
+		fixBio = """UPDATE {tableName}
+		SET veeva_network_id = '_'||veeva_network_id""".format(tableName=tableName)
+
+		cursor.execute(fixBio)
+		conn.commit()
 
 	if caseType == 'listMatch':
 		if listMatchType == 'Standard_Seg':
@@ -624,15 +647,6 @@ def postgresConn():
 				pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
 
 		if config['cmi_compass_client'] == 'Y':
-			# for col in cmiList:
-			# 	if col not in myHeaders:
-			# 		try:
-			# 			cur.executescript('ALTER TABLE {} ADD COLUMN {} text;'.format(tableName, col))
-			# 		except:
-			# 			print(col, 'Already Exists . . . Skipping')
-			# 			continue
-
-		# conn.commit()
 
 			if listMatchType =='Standard' and config['cmi_compass_client'] == 'Y':
 				export = """{select}, {seg} from {tableName};""".format(select=selectMain5, seg=splitList, tableName=tableName)
