@@ -225,7 +225,7 @@ def importDrugs():
 def prepSasSegments():
 	cmiCompasSegmentation = "npi, address1, campaign_type, city, cl_fname, cl_lname, cl_me, cl_zip, clientid, compasid, middle_name, segment1, specialty, state_code, tier, segment2, segment3"
 
-	with open(os.path.join('C:\\Users\\asinger\\Desktop\\Ewok\\Datasharing', 'dataSharing.json'), 'r') as infile:
+	with open(os.path.join(desktop,'Ewok\\Datasharing', 'dataSharing.json'), 'r') as infile:
 		config = json.loads(infile.read(), encoding='utf8')
 
 	specialDataSharingDict = config
@@ -312,7 +312,7 @@ def prepSasSegments():
 	return sasSegments
 
 def prepSqlSegments():
-	with open(os.path.join('C:\\Users\\asinger\\Desktop\\Ewok\\Datasharing', 'dataSharing.json'), 'r') as infile:
+	with open(os.path.join(desktop,'Ewok\\Datasharing', 'dataSharing.json'), 'r') as infile:
 		config = json.loads(infile.read(), encoding='utf8')
 
 	specialDataSharingDict = config
