@@ -804,15 +804,6 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                     # toolTipString += newLine
                 self.bdaLabel.setToolTip(toolTipString)
 
-
-
-        # self.sdaOcc.show()
-        # self.sdaSpec.show()
-        # self.bdaOcc.show()
-        # self.bdaSpec.show()
-        # self.drugList.show()
-        # self.playHello() 
-
     def bajabThread(self):
         thread1 = Thread(target = self.playBajab)
         thread1.start()
@@ -1759,6 +1750,10 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                     self.tableNameWarning.setText('Table Name Acceptable')
                     self.tableNameWarning.setStyleSheet('color: green')
                     self.runProgramButton.setEnabled(True)
+
+            else:
+                self.tableNameWarning.setText('')
+                self.runProgramButton.setEnabled(True)                
         else:
             if self.formatTableNameTarget():
                 if self.formatTableNameTarget() in self.getPostgresTables():
@@ -1774,6 +1769,9 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                     self.tableNameWarningTargeting.setText('Table Name Acceptable')
                     self.tableNameWarningTargeting.setStyleSheet('color: green')
                     self.runProgramButton.setEnabled(True)
+            else:
+                self.tableNameWarning.setText('')
+                self.runProgramButton.setEnabled(True)
 
 
     def getPostgresTables2(self):
@@ -1968,23 +1966,9 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 showError = True
                 break
         if showError == False:   
-            if self.config['suppressionApplied'] == 'N':
-                # if str(self.targetManuName.currentText()) == 'Amgen':
-                #     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\Amgen.py', 'config.json'])
-                # if str(self.targetManuName.currentText()) == 'AstraZeneca':
-                #     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\AZ.py', 'config.json'])
-                # if str(self.targetManuName.currentText()) == 'Boehringer':
-                #     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\Boehringer.py', 'config.json'])
-                # if str(self.targetManuName.currentText()) == 'GSK':
-                #     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\GSK.py', 'config.json'])
-                # if str(self.targetManuName.currentText()) == 'Novartis':
-                #     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\Novartis.py', 'config.json'])
+            if self.config['suppressionApplied'] == 'No':
                 if str(self.targetManuName.currentText()) == 'Sanofi-Aventis':
                     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\Sanofi.py', 'config.json'])
-                # if str(self.targetManuName.currentText()) == 'Biogen':
-                #     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\Biogen.py', 'config.json'])
-                # if str(self.targetManuName.currentText()) == 'Merck':
-                #     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\Merck.py', 'config.json'])
                 if self.config['caseType'] == 'Targeting' and str(self.targetManuName.currentText()) not in ['Sanofi-Aventis']:
                     subprocess.call(['python3.exe', os.path.join(desktop, 'Ewok','theOne_GUI.py'), 'config.json'])
                 if self.config['caseType'] == 'listMatch':
@@ -2027,23 +2011,10 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                                     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\BDA_Multi_Occ_Only.py.py', 'config.json'])
                         else:
                             subprocess.call(['python3.exe', os.path.join(desktop, 'Ewok','theOne_GUI.py'), 'config.json'])
-            if self.config['suppressionApplied'] == 'Y':
-                # if str(self.targetManuName.currentText()) == 'Amgen':
-                #     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\Amgen.py', 'config.json'])
-                # if str(self.targetManuName.currentText()) == 'AstraZeneca':
-                #     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\AZ.py', 'config.json'])
-                # if str(self.targetManuName.currentText()) == 'Boehringer':
-                #     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\Boehringer.py', 'config.json'])
-                # if str(self.targetManuName.currentText()) == 'GSK':
-                #     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\GSK.py', 'config.json'])
-                # if str(self.targetManuName.currentText()) == 'Novartis':
-                #     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\Novartis.py', 'config.json'])
+
+            if self.config['suppressionApplied'] == 'Yes':
                 if str(self.targetManuName.currentText()) == 'Sanofi-Aventis':
                     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\Sanofi.py', 'config.json'])
-                # if str(self.targetManuName.currentText()) == 'Biogen':
-                #     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\Biogen.py', 'config.json'])
-                # if str(self.targetManuName.currentText()) == 'Merck':
-                #     subprocess.call(['python3.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\DataSharing\\Merck.py', 'config.json'])
                 if self.config['caseType'] == 'Targeting' and str(self.targetManuName.currentText()) not in ['Sanofi-Aventis']:
                     subprocess.call(['python3.exe', os.path.join(desktop, 'Ewok','theOne_GUI.py'), 'config.json'])
                 if self.config['caseType'] == 'listMatch':
@@ -2205,10 +2176,6 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 self.config['dataCap'] = '""'
             if str(self.dataCap.text()) != '':
                 self.config['dataCap'] = str(self.dataCap.text())
-            # if self.suppCheck.isChecked():
-            #     self.config['matchFileName'] = self.fileWindow.selectMatchFile
-            #     self.config['suppFileName'] = self.fileWindow.selectSuppFile
-            #     self.config['suppMatchType'] = self.fileWindow.suppMatchType
             if self.keepSeg.isChecked():
                 self.config['keep_seg'] = 'Yes'
             if not isKeepSegChecked:
@@ -2223,6 +2190,11 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.config['suppFileName'] = self.fileWindow.selectSuppFile
             self.config['suppMatchType'] = self.fileWindow.suppMatchType
             self.config['suppSASFile'] = self.fileWindow.suppSasFileInput
+
+        if not self.suppCheck.isChecked():
+            self.config['suppMatchType'] = '""'
+            self.config['suppSASFile'] = ''
+
         if self.pivotTableCheck.isChecked():
             self.config['createPivotTable'] = 'Y'
             self.config['pivotSeg1'] = self.pivotWindow.selectSeg1
@@ -2291,10 +2263,10 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             # else: 
             #     self.config['foundFullName'] = 'n'
         if self.suppCheck.isChecked():
-            self.config['suppressionApplied'] = 'Y'
+            self.config['suppressionApplied'] = 'Yes'
             self.config['suppMatchFile'] = str(self.suppMatchPath.text())
         if not self.suppCheck.isChecked():
-            self.config['suppressionApplied'] = 'N'
+            self.config['suppressionApplied'] = 'No'
         if self.sdaOnly.isChecked():
             self.config['sdaOnly'] = 'Y'
             if self.tabWidget.currentIndex() == 0:
