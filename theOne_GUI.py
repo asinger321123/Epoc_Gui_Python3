@@ -180,7 +180,12 @@ if len(args) > 0:
 					# 	finalSpecDataSharing = specialDataSharingDict[manu]+', '+ segVariable
 
 			if bDa_only  == 'Y' or sDa_only == 'Y':
-				listMatchType == 'None'
+				segVariable = str(config['segVariable']).lower()
+				varValues = ''
+				neededValues = ''
+				backFillValue = ''
+				targetNum = ''
+				listMatchType = 'None'
 				neededValues = ''
 				backFillValue = ''
 			dSharing = str(config['dSharing'])
@@ -191,15 +196,20 @@ if len(args) > 0:
 					if config['segVariable'] != "":
 						finalSeg = addSeg.split(', ')
 						finalSeg.append(segVariable)
+						print(finalSeg)
 						for seg in finalSeg:    
 							segmentList.append(str(seg).replace(' ', '_'))
 							splitList = ", ".join(segmentList)
+						print(segmentList)
+						print(splitList)
 					
 					if segVariable == '':
 						finalSeg = addSeg.split(', ')
 						for seg in finalSeg:    
 							segmentList.append(str(seg).replace(' ', '_'))
 							splitList = ", ".join(segmentList)
+						print(segmentList)
+						print(splitList)
 				else:
 					print('IM USING THE NEW FUNCTION TO MAKE DA SQL AND SEGMETNS')
 					splitList = utils.prepSqlSegments()
@@ -229,12 +239,14 @@ if len(args) > 0:
 			if dSharing == 'N' and bDa_only  == 'N' and sDa_only == 'N':
 				segmentList = str(config['segVariable']).lower().replace(' ', '_')
 				keep_seg = str(config['keep_seg'])
+				splitList = segmentList
+				segmentList = segmentList.split()
 				# if config['segVariable'] != "":
 				# 	segmentList = segmentList
 
 			if dSharing == 'N' and (bDa_only  == 'Y' or sDa_only == 'Y'):
 				dSharing = 'N'
-				segmentList = ''
+				segmentList = []
 				keep_seg = str(config['keep_seg'])
 			keep_seg = str(config['keep_seg'])
 			brand = str(config['Brand'])
@@ -617,6 +629,7 @@ def postgresConn():
 				export = """{select}, {seg} from {tableName};""".format(select=selectMain2, tableName=tableName, seg=splitList)
 				pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
 
+
 		elif dSharing == 'N':
 			if listMatchType =='Standard':
 				if foundFullName == 'n':
@@ -802,7 +815,10 @@ def fixSas():
 		targetOut = """P:\\Epocrates Analytics\\TARGETS\\{date}\\{manu} {brand}""".format(date = date, manu = manu, brand = brand)
 		outCode2 = """P:\\Epocrates Analytics\\TARGETS\\{date}\\{manu} {brand}{slashes}""".format(date = date, slashes = "\\", manu = manu, brand = brand)
 		# if dSharing == 'Y' and (listMatchType == 'Standard' or listMatchType == 'Standard_Seg' or listMatchType == 'Exact' or listMatchType == 'Exact_Seg'):
-		segList = segmentList
+		if manu not in ['Merck', 'AstraZeneca', 'Novartis', 'GSK', 'Boehringer', 'Amgen', 'Biogen', 'Sanofi-Aventis']:
+			segList = ', '.join(segmentList)
+		else:
+			segList = segmentList
 		copyfile(targetAuto, os.path.join(outCode2, 'Targeting Automation Code_OFFICIAL.sas'))
 		newInput = os.path.join(outCode2, 'Targeting Automation Code_OFFICIAL.sas')
 
