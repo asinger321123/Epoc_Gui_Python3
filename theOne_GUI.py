@@ -49,14 +49,15 @@ dt = str(datetime.datetime.now().strftime("%Y%m%d"))
 cmiCompasSegmentation = "npi, address1, campaign_type, city, cl_fname, cl_lname, cl_me, cl_zip, clientid, compasid, middle_name, segment1, specialty, state_code, tier, segment2, segment3"
 cmiCompasSQL = "address1, campaign_type, city, fname as cl_fname, lname as cl_lname, me as cl_me, zip as cl_zip, clientid, compasid, middle_name, segment1, specialty, state_code, tier, segment2, segment3"
 cmiList = ['npi', 'address1', 'campaign_type', 'city', 'cl_fname', 'cl_lname', 'cl_me', 'cl_zip', 'clientid', 'compasid', 'middle_name', 'segment1', 'specialty', 'state_code', 'tier', 'segment2', 'segment3']
+userhome = os.path.expanduser('~')
+desktop = userhome + '\\Desktop\\'
 
 #Custom DataSHaring Client
 with open(os.path.join(desktop, 'Ewok\\Datasharing', 'dataSharing.json'), 'r') as infile:
 	config2 = json.loads(infile.read(), encoding='utf8')
 
 specialDataSharingDict = config2
-userhome = os.path.expanduser('~')
-desktop = userhome + '\\Desktop\\'
+
 # configFile = os.path.join(desktop, 'config.json')
 
 randomList = []
@@ -74,7 +75,7 @@ with open(os.path.join(desktop, 'TheEagleHasLanded.csv'), 'r') as passFile:
 		password = item['password']
 
 if len(args) > 0:
-	with open(os.path.join(desktop, args[0]), 'r') as infile:
+	with open(os.path.join(desktop, 'Ewok\\Configs', args[0]), 'r') as infile:
 		config = json.loads(infile.read(), encoding='utf8')
 		foundFullName = 'n'
 		if 'foundFullName' in config:

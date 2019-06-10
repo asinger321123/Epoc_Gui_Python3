@@ -141,16 +141,16 @@ class SDA_Widget(base_4, form_4):
         # with open(desktop+'\\'+'sdaConfig.json', 'w') as outfile:
         #     json.dump(self.sdaConfig, outfile, indent=2, sort_keys=True)
 
-        with open(desktop+'\\'+'sdaConfig.json', 'r') as infile:
+        with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json', 'r') as infile:
             data = json.loads(infile.read())
 
             data.update(self.sdaConfig)
 
-        with open(desktop+'\\'+'sdaConfig.json', 'w') as outfile:
+        with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json', 'w') as outfile:
             json.dump(data, outfile, indent=2, sort_keys=True)
 
     def checkTotalSdas(self):
-        with open(desktop+'\\'+'sdaConfig.json', 'r') as infile:
+        with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json', 'r') as infile:
             config = json.loads(infile.read())
             # if config['additonalSdaOcc'+'_'+str(window.sdainc)]:
             if 'additonalSdaOcc'+'_'+str(window.sdainc) in config:
@@ -232,11 +232,11 @@ class BDA_Widget(base_5, form_5):
 
 
         #Load BDA Configs and append them to the master config
-        with open(desktop+'\\'+'bdaConfig.json', 'r') as infile:
+        with open(desktop+'\\Ewok\\Configs\\'+'bdaConfig.json', 'r') as infile:
             data = json.loads(infile.read())
             data.update(self.bdaConfig)
 
-        with open(desktop+'\\'+'bdaConfig.json', 'w') as outfile:
+        with open(desktop+'\\Ewok\\Configs\\'+'bdaConfig.json', 'w') as outfile:
             json.dump(data, outfile, indent=2, sort_keys=True)
 
     def createDrugListBDA(self):
@@ -253,7 +253,7 @@ class BDA_Widget(base_5, form_5):
             return self.drugContents
 
     def checkTotalBdas(self):
-        with open(desktop+'\\'+'bdaConfig.json', 'r') as infile:
+        with open(desktop+'\\Ewok\\Configs\\'+'bdaConfig.json', 'r') as infile:
             config = json.loads(infile.read())
             # if config['additonalSdaOcc'+'_'+str(window.bdainc)]:
             if 'additonalBdaOcc'+'_'+str(window.bdainc) in config:
@@ -436,27 +436,27 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.bdainc = 1
 
         #clean masterConfig File
-        with open(desktop+'\\'+'config.json', 'r') as infile:
+        with open(desktop+'\\Ewok\\Configs\\'+'config.json', 'r') as infile:
             configCheck = json.loads(infile.read())
             for element in list(configCheck.keys()):
                 # print element
                 if element.startswith('additonal'):
                     configCheck.pop(element, None)
 
-        with open(desktop+'\\'+'config2.json', 'w') as outfile:
+        with open(desktop+'\\Ewok\\Configs\\'+'config2.json', 'w') as outfile:
             json.dump(configCheck, outfile, indent=2, sort_keys=True)
 
-        os.remove(desktop+'\\'+'config.json')
-        os.rename(desktop+'\\'+'config2.json', desktop+'\\'+'config.json')
+        os.remove(desktop+'\\Ewok\\Configs\\'+'config.json')
+        os.rename(desktop+'\\Ewok\\Configs\\'+'config2.json', desktop+'\\Ewok\\Configs\\'+'config.json')
 
 
         #clean sdaConfig File
-        with open(desktop+'\\'+'sdaConfig.json', 'w') as firstFile:
+        with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json', 'w') as firstFile:
             data = {'totalAdditionalSDAs': 0}
             # data['totalAdditionalSDAs'] = 0
             json.dump(data, firstFile, indent=2, sort_keys=True)
 
-        with open(desktop+'\\'+'sdaConfig.json', 'r') as infile:
+        with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json', 'r') as infile:
             configCheck = json.loads(infile.read())
             for element in list(configCheck.keys()):
                 # print element
@@ -465,19 +465,19 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 if element.startswith('totalAdditional'):
                     configCheck[element] = 0
 
-        with open(desktop+'\\'+'sdaConfig2.json', 'w') as outfile:
+        with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig2.json', 'w') as outfile:
             json.dump(configCheck, outfile, indent=2, sort_keys=True)
 
-        os.remove(desktop+'\\'+'sdaConfig.json')
-        os.rename(desktop+'\\'+'sdaConfig2.json', desktop+'\\'+'sdaConfig.json')
+        os.remove(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json')
+        os.rename(desktop+'\\Ewok\\Configs\\'+'sdaConfig2.json', desktop+'\\Ewok\\Configs\\'+'sdaConfig.json')
 
         #clean bdaConfig File
-        with open(desktop+'\\'+'bdaConfig.json', 'w') as firstFile:
+        with open(desktop+'\\Ewok\\Configs\\'+'bdaConfig.json', 'w') as firstFile:
             data = {'totalAdditionalBDAs': 0}
             # data['totalAdditionalSDAs'] = 0
             json.dump(data, firstFile, indent=2, sort_keys=True)
 
-        with open(desktop+'\\'+'bdaConfig.json', 'r') as infile:
+        with open(desktop+'\\Ewok\\Configs\\'+'bdaConfig.json', 'r') as infile:
             configCheck = json.loads(infile.read())
             for element in list(configCheck.keys()):
                 # print element
@@ -486,11 +486,11 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 if element.startswith('totalAdditional'):
                     configCheck[element] = 0
 
-        with open(desktop+'\\'+'bdaConfig2.json', 'w') as outfile:
+        with open(desktop+'\\Ewok\\Configs\\'+'bdaConfig2.json', 'w') as outfile:
             json.dump(configCheck, outfile, indent=2, sort_keys=True)
 
-        os.remove(desktop+'\\'+'bdaConfig.json')
-        os.rename(desktop+'\\'+'bdaConfig2.json', desktop+'\\'+'bdaConfig.json')
+        os.remove(desktop+'\\Ewok\\Configs\\'+'bdaConfig.json')
+        os.rename(desktop+'\\Ewok\\Configs\\'+'bdaConfig2.json', desktop+'\\Ewok\\Configs\\'+'bdaConfig.json')
 
 
         self.dateButton = self.findChild(QToolButton, 'dateButton')
@@ -718,7 +718,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         print('Gui Started')
 
     def showSDAToolTip(self):
-        with open(desktop+'\\'+'sdaConfig.json', 'r') as infile:
+        with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json', 'r') as infile:
             configCheck = json.loads(infile.read())
             totalCodesBuilt = 1
             toolTipString = ""
@@ -744,7 +744,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 self.sdaLabel.setToolTip(toolTipString)
 
     def showDAToolTip(self):
-        with open(desktop+'\\'+'bdaConfig.json', 'r') as infile:
+        with open(desktop+'\\Ewok\\Configs\\'+'bdaConfig.json', 'r') as infile:
             configCheck = json.loads(infile.read())
             totalCodesBuilt = 1
             toolTipString = ""
@@ -1810,7 +1810,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         isPreviousChecked = self.previousSettings.isChecked()
         if isPreviousChecked:
             self.previousSettings.setStyleSheet("color: green; font-weight: bold")
-            with open(os.path.join(desktop, 'config.json'), 'r') as infile:
+            with open(os.path.join(desktop, 'Ewok\\Configs\\config.json'), 'r') as infile:
                 config = json.loads(infile.read())
                 if config['caseType'] == 'listMatch':
                     self.tabWidget.setCurrentIndex(0)
@@ -2283,26 +2283,26 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.config['loadedFile'] = str(self.loadedFile)
 
         #write all the new setting first when the RUN BUTTON is clicked
-        with open(desktop+'\\'+'config.json', 'w') as outfile1:
+        with open(desktop+'\\Ewok\\Configs\\'+'config.json', 'w') as outfile1:
             json.dump(self.config, outfile1, indent=2, sort_keys=True)
 
         #This config is built dynamically in the gui and then read to be added to the main config.json file
-        with open(desktop+'\\'+'sdaConfig.json', 'r') as infileSDA:
+        with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json', 'r') as infileSDA:
             sdaData = json.loads(infileSDA.read())
 
         #This config is built dynamically in the gui and then read to be added to the main config.json file    
-        with open(os.path.join(desktop, 'bdaConfig.json'), 'r') as infileBDA:
+        with open(os.path.join(desktop, 'Ewok\\Configs\\bdaConfig.json'), 'r') as infileBDA:
             bdaData = json.loads(infileBDA.read())
 
         #Read the Newly written config file from above and load its data as masterFile and then update it with the other 2 config files
-        with open(desktop+'\\'+'config.json', 'r') as infile:
+        with open(desktop+'\\Ewok\\Configs\\'+'config.json', 'r') as infile:
             masterData = json.loads(infile.read())
 
             masterData.update(sdaData)
             masterData.update(bdaData)
 
         #re write the final file one last time with all the new data
-        with open(desktop+'\\'+'config.json', 'w') as outfile2:
+        with open(desktop+'\\Ewok\\Configs\\'+'config.json', 'w') as outfile2:
             json.dump(masterData, outfile2, indent=2, sort_keys=True)
 
     def createDrugList(self):

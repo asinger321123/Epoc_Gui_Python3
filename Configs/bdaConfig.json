@@ -1,3 +1,10 @@
 {
-  "totalAdditionalBDAs": 0
+  "additonalBdaDedup_1": "No",
+  "additonalBdaDrugList_1": "aspirin",
+  "additonalBdaLookUpPeriod_1": "31",
+  "additonalBdaLookUps_1": "1",
+  "additonalBdaOcc_1": "\"MD\", \"DO\", \"NP\", \"PA\"",
+  "additonalBdaSpec_1": "\"Family Practice\"",
+  "additonalBdatherapyChecked_1": "No",
+  "totalAdditionalBDAs": 1
 }
