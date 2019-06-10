@@ -51,7 +51,7 @@ cmiCompasSQL = "address1, campaign_type, city, fname as cl_fname, lname as cl_ln
 cmiList = ['npi', 'address1', 'campaign_type', 'city', 'cl_fname', 'cl_lname', 'cl_me', 'cl_zip', 'clientid', 'compasid', 'middle_name', 'segment1', 'specialty', 'state_code', 'tier', 'segment2', 'segment3']
 
 #Custom DataSHaring Client
-with open(os.path.join('C:\\Users\\asinger\\Desktop\\Ewok\\Datasharing', 'dataSharing.json'), 'r') as infile:
+with open(os.path.join(desktop, 'Ewok\\Datasharing', 'dataSharing.json'), 'r') as infile:
 	config2 = json.loads(infile.read(), encoding='utf8')
 
 specialDataSharingDict = config2
