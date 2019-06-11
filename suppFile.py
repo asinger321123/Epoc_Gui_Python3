@@ -35,6 +35,7 @@ userhome = os.path.expanduser('~')
 downloads = userhome + '\\Downloads\\'
 desktop = userhome + '\\Desktop\\'
 newest = max(os.listdir(downloads), key=lambda f: os.path.getctime("{}/{}".format(downloads, f)))
+stupid = ''
 
 with open(os.path.join(desktop, 'TheEagleHasLanded.csv'), 'r') as passFile:
 	reader = csv.DictReader(passFile)
