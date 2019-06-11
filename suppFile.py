@@ -42,7 +42,7 @@ with open(os.path.join(desktop, 'TheEagleHasLanded.csv'), 'r') as passFile:
 		password = item['password']
 
 if len(args) > 0:
-	with open(os.path.join(desktop, args[0]), 'r') as infile:
+	with open(os.path.join(desktop, 'Ewok\\Configs', args[0]), 'r') as infile:
 		config = json.loads(infile.read(), encoding='utf8')
 
 		listMatchType = str(config['suppMatchType'])
