@@ -25,7 +25,6 @@ import sqlite3
 import random
 import utils as utils
 from threading import Thread
-import progressbar
 
 init(autoreset=True)
 
