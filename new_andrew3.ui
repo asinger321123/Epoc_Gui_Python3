@@ -28,9 +28,9 @@
 	
 	
 	
-	
 
-}</string>
+}
+</string>
   </property>
   <property name="tabShape">
    <enum>QTabWidget::Rounded</enum>
@@ -2209,7 +2209,15 @@ border-right: 2px solid black;
     </property>
     <addaction name="actionLoad_List"/>
    </widget>
+   <widget class="QMenu" name="menuEditor">
+    <property name="title">
+     <string>Editor</string>
+    </property>
+    <addaction name="actionState_Zip_Editor"/>
+    <addaction name="actionClear_State_Zip_Settings"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuEditor"/>
   </widget>
   <action name="actionChange_Log">
    <property name="text">
@@ -2227,6 +2235,19 @@ border-right: 2px solid black;
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionState_Zip_Editor">
+   <property name="text">
+    <string>State/Zip Editor</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionClear_State_Zip_Settings">
+   <property name="text">
+    <string>Clear State/Zip Settings </string>
    </property>
   </action>
  </widget>

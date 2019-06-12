@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>378</width>
+    <height>722</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>State / Zip Editor</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="6" column="2">
+    <widget class="QListWidget" name="final_state_zip_listWidget">
+     <property name="dragDropMode">
+      <enum>QAbstractItemView::DragDrop</enum>
+     </property>
+     <property name="defaultDropAction">
+      <enum>Qt::MoveAction</enum>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::ExtendedSelection</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <widget class="QListWidget" name="state_zip_listWidget">
+     <property name="dragDropMode">
+      <enum>QAbstractItemView::DragDrop</enum>
+     </property>
+     <property name="defaultDropAction">
+      <enum>Qt::MoveAction</enum>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::ExtendedSelection</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="sourceStateZip_label">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>List Data: </string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="2">
+    <widget class="QPushButton" name="ok_pushButton">
+     <property name="text">
+      <string>OK</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>150</height>
+      </size>
+     </property>
+     <property name="title">
+      <string>Data Type</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="stateMatch_checkBox">
+        <property name="text">
+         <string>State Match</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QCheckBox" name="zipMatch_checkBox">
+        <property name="text">
+         <string>Zip Match</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Apply To . . .</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="clientList_checkBox">
+        <property name="text">
+         <string>Client List</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="sda_checkBox">
+        <property name="text">
+         <string>SDA</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QCheckBox" name="bda_checkBox">
+        <property name="text">
+         <string>BDA</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QPushButton" name="import_pushButton">
+     <property name="text">
+      <string>Import Zip File</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="QPushButton" name="fetchZips_pushButton">
+     <property name="text">
+      <string>Fetch Selected Zips</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

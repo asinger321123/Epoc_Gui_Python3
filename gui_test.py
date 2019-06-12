@@ -45,11 +45,13 @@ uifile_2 = os.path.join(desktop, 'Ewok','fileWidget.ui')
 uifile_3 = os.path.join(desktop, 'Ewok','pivotTabe_ui.ui')
 uifile_4 = os.path.join(desktop, 'Ewok','AdditionalSDA.ui')
 uifile_5 = os.path.join(desktop, 'Ewok','AdditionalBDA.ui')
+uifile_6 = os.path.join(desktop, 'Ewok','state_zip_editor.ui')
 
 form_2, base_2 = uic.loadUiType(uifile_2)
 form_3, base_3 = uic.loadUiType(uifile_3)
 form_4, base_4 = uic.loadUiType(uifile_4)
 form_5, base_5 = uic.loadUiType(uifile_5)
+form_6, base_6 = uic.loadUiType(uifile_6)
 
 class Completer(QtGui.QCompleter):
     def __init__(self, *args, **kwargs):
@@ -264,6 +266,205 @@ class BDA_Widget(base_5, form_5):
     def setBDACountLabel(self):
         window.bdaLabel.setText('Additional BDAs: '+ str(window.bdainc))
 
+class State_Zip(base_6, form_6):
+    def __init__(self):
+        super(base_6, self).__init__()
+        self.setupUi(self)
+
+        self.statesList = ["Alabama","Alaska","Arizona","Arkansas","California","Colorado", "Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois", "Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland", "Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana", "Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York", "North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania", "Puerto Rico", "Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah", "Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"]
+        
+        #config Variables
+        self.statesString = ""
+        self.sqlStates = ""
+        self.applyToClientList = ''
+        self.applyToSda = ''
+        self.applyToCBda = ''
+
+        #CheckBoxes
+        self.stateCheckBox = self.findChild(QCheckBox, 'stateMatch_checkBox')
+        self.zipCheckBox = self.findChild(QCheckBox, 'zipMatch_checkBox')
+        self.clientListBox = self.findChild(QCheckBox, 'clientList_checkBox')
+        self.sdaBox = self.findChild(QCheckBox, 'sda_checkBox')
+        self.bdaBox = self.findChild(QCheckBox, 'bda_checkBox')
+
+        #Labels
+        self.sourceListLabel = self.findChild(QLabel, 'sourceStateZip_label')
+
+        #ListWidgest
+        self.stateZipListSource = self.findChild(QListWidget, 'state_zip_listWidget')
+        self.stateZipListFinal = self.findChild(QListWidget, 'final_state_zip_listWidget')
+
+        #QPushButtons
+        self.importZip = self.findChild(QPushButton, 'import_pushButton')
+        self.stateZipOkButton = self.findChild(QPushButton, 'ok_pushButton')
+        self.fetchZipCode = self.findChild(QPushButton, 'fetchZips_pushButton')
+
+        #CallBacks
+        self.stateCheckBox.toggled.connect(self.populateSourceStates)
+        self.zipCheckBox.toggled.connect(self.populateSourceZips)
+        self.objectsList = [self.stateCheckBox, self.zipCheckBox]
+        for obj in self.objectsList:
+            obj.toggled.connect(self.inputWarning)
+
+        self.applyToList = [self.clientListBox, self.sdaBox, self.bdaBox]
+        for obj in self.applyToList:
+            obj.toggled.connect(self.applyTo)
+
+        self.stateZipOkButton.pressed.connect(self.setStates)
+        self.importZip.pressed.connect(self.importZipFile)
+        self.stateZipOkButton.released.connect(self.close)
+        self.fetchZipCode.pressed.connect(self.sqlFetchZips)
+
+        #default settings
+        self.importZip.setEnabled(False)
+
+    def sqlFetchZips(self):
+        self.stateZipListFinal.clear()
+        conn = sqlite3.connect(os.path.join(desktop,'Ewok', 'epocrates_tables.db'))
+        conn.text_factory = str
+        cur = conn.cursor()
+
+
+        selectedStates = sorted([index.row() for index in self.stateZipListSource.selectedIndexes()], reverse=True)
+        for state in selectedStates:
+            self.stateObject = '{}{}{}{}{}'.format('"', str(self.stateZipListSource.item(state).text()), '"', ', ', '\n')
+            self.sqlStates += self.stateObject
+
+            self.sqlStatesFinal = self.sqlStates[:-3]
+
+        # print(self.sqlStatesFinal)
+
+        queryStateZips = """Select zip from us_zip_data where state_name in ({})""".format(self.sqlStatesFinal)
+
+        # print(queryStateZips)
+
+        results = cur.execute(queryStateZips)
+        conn.commit()
+
+        for row in results:
+            # print(row[0])
+            self.stateZipListFinal.addItem(row[0])
+
+        self.sqlStates = ""
+        selectedStates = []
+
+        # cur.execute(queryStateZips)
+        # conn.commit()
+
+
+
+    def loadZips(self, file):
+        with open(file, 'r') as inFile:
+            reader = csv.reader(inFile)
+            headers = next(reader)
+
+            for row in reader:
+                for item in row:
+                    if len(item) == 4:
+                        item = '0'+item
+                    self.stateZipListFinal.addItem(item)
+
+
+    def importZipFile(self):
+        dlg = QFileDialog()
+        dlg.setDirectory(downloads)
+        dlg.setFileMode(QFileDialog.AnyFile)
+        dlg.setFilter("List Match File (*.csv)")
+        filenames = list()
+        
+        if dlg.exec_():
+            filename = dlg.selectedFiles()[0]
+            self.loadZips(filename)
+            # filenames = str(filenames[0]).rsplit('/', 1)[-1]
+            # self.setWindowTitle("File Loaded: "+filenames)
+            # self.loadedFile = filenames     
+
+    def applyTo(self):
+        if self.clientListBox.isChecked():
+            self.applyToClientList = 'Yes'
+        else:
+            self.applyToClientList = 'No'
+
+        if self.sdaBox.isChecked():
+            self.applyToSda = 'Yes'
+        else:
+            self.applyToSda = 'No'
+
+        if self.bdaBox.isChecked():
+            self.applyToBda = 'Yes'
+        else:
+            self.applyToBda = 'No'
+
+    def setStates(self):
+        if self.stateCheckBox.isChecked():
+            for state in range(self.stateZipListFinal.count()):
+                # self.stateObject = '"'+str(self.stateZipListFinal.item(state).text())+'"'+', '+'\n'
+                self.stateObject = '{}{}{}{}{}'.format('"', str(self.stateZipListFinal.item(state).text()), '"', ', ', '\n')
+                self.statesString += self.stateObject
+
+            self.statesStringFinal = self.statesString[:-3]
+        
+            # print(self.statesStringFinal)
+
+        if self.zipCheckBox.isChecked():
+            with open(os.path.join(downloads, 'zipsImport.csv'), 'w') as outFile:
+                writer = csv.writer(outFile, lineterminator='\n')
+                writer.writerow(['zipcode'])
+                for item in range(self.stateZipListFinal.count()):
+                    finalZip = str(self.stateZipListFinal.item(item).text())
+                    # print(finalZip)
+
+                    writer.writerow([finalZip])
+
+        window.setStyleSheet("""QMenuBar::item {background-color: blue; color: white;}""")
+
+
+    def populateSourceStates(self):
+        isStateChecked = self.stateCheckBox.isChecked()
+        isZipChecked = self.zipCheckBox.isChecked()
+
+        if isStateChecked:
+            self.stateZipListSource.clear()
+            for state in self.statesList:
+                self.stateZipListSource.addItem(state)
+        if not isStateChecked and isZipChecked:
+            self.populateSourceZips()
+
+        if not isStateChecked and not isZipChecked:
+            self.stateZipListSource.clear()
+            self.stateZipListFinal.clear()
+            self.statesString = ""
+
+    def populateSourceZips(self):
+        isStateChecked = self.stateCheckBox.isChecked()
+        isZipChecked = self.zipCheckBox.isChecked()
+        if isZipChecked:
+            # self.stateCheckBox.setChecked(False)
+            self.stateZipListSource.clear()
+            self.stateZipListFinal.clear()
+            self.statesString = ""
+            self.importZip.setEnabled(True)
+
+        if not isZipChecked and isStateChecked:
+            self.importZip.setEnabled(False)
+            self.populateSourceStates()
+
+        if not isStateChecked and not isZipChecked:
+            self.stateZipListSource.clear()
+            self.stateZipListFinal.clear()
+            self.importZip.setEnabled(False)
+            self.statesString = ""
+
+    def inputWarning(self):
+        isStateChecked = self.stateCheckBox.isChecked()
+        isZipChecked = self.zipCheckBox.isChecked()
+
+        if isStateChecked and isZipChecked:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Warning)
+            msg.setText("Only State or Only Zip Can Be Checked. Please Deselect One")
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec_() 
 
 
 class PivotPage(base_3, form_3):
@@ -553,6 +754,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.fuzzyBox = self.findChild(QCheckBox, 'fuzzy_checkBox')
         # self.testTextEdit = MyHighlighter(self.findChild(QTextEdit, 'Test_textEdit'), "classic")
         self.loadAction = self.findChild(QAction, 'actionLoad_List')
+        self.stateZipEditor = self.findChild(QAction, 'actionState_Zip_Editor')
+        self.clearStateZipEditor = self.findChild(QAction, 'actionClear_State_Zip_Settings')
         self.therapyClassBox = self.findChild(QCheckBox, 'therapyClass_checkBox')
         self.sheetCount = self.findChild(QLabel, 'sheetCount_Label')
         self.dataCap = self.findChild(QLineEdit, 'dataCap_lineEdit')
@@ -712,6 +915,11 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.therapyClassBox.toggled.connect(self.sda_bda_options)
         self.suppSDAOnly.toggled.connect(self.sda_bda_options)
         self.suppBDAOnly.toggled.connect(self.sda_bda_options)
+        self.stateZipEditor.triggered.connect(self.loadStateZipEditor)
+        self.clearStateZipEditor.triggered.connect(self.clearStateZipSettings)
+
+        # self.stateZip = State_Zip()
+        # if stateZip.statesString == ""
 
         self.loadedFile = newest
         self.countSheets()
@@ -922,6 +1130,19 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         else:
             self.sheetCount.setText('Sheet Count: N/A')
             self.sheetCount.setStyleSheet('color: black')
+
+
+    def loadStateZipEditor(self):
+        self.stateZip = State_Zip()
+        self.stateZip.show()
+
+    def clearStateZipSettings(self):
+        self.stateZip.statesString = ""
+        self.stateZip.applyToClientList = ''
+        self.stateZip.applyToSda = ''
+        self.stateZip.applyToCBda = ''
+
+        window.setStyleSheet("""QMenuBar::item {;}""")
 
 
     def getfiles(self):
