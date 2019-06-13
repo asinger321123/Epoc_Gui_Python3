@@ -275,14 +275,16 @@ class State_Zip(base_6, form_6):
         
         #config Variables
         self.statesString = ""
+        self.statesStringFinal = ""
         self.sqlStates = ""
         self.applyToClientList = ''
         self.applyToSda = ''
-        self.applyToCBda = ''
+        self.applyToBda = ''
 
         #CheckBoxes
         self.stateCheckBox = self.findChild(QCheckBox, 'stateMatch_checkBox')
         self.zipCheckBox = self.findChild(QCheckBox, 'zipMatch_checkBox')
+        self.zipsByState = self.findChild(QCheckBox, 'zipsByState_checkBox')
         self.clientListBox = self.findChild(QCheckBox, 'clientList_checkBox')
         self.sdaBox = self.findChild(QCheckBox, 'sda_checkBox')
         self.bdaBox = self.findChild(QCheckBox, 'bda_checkBox')
@@ -298,10 +300,12 @@ class State_Zip(base_6, form_6):
         self.importZip = self.findChild(QPushButton, 'import_pushButton')
         self.stateZipOkButton = self.findChild(QPushButton, 'ok_pushButton')
         self.fetchZipCode = self.findChild(QPushButton, 'fetchZips_pushButton')
+        self.resetAllButton = self.findChild(QPushButton, 'resetAll_pushButton')
 
         #CallBacks
         self.stateCheckBox.toggled.connect(self.populateSourceStates)
         self.zipCheckBox.toggled.connect(self.populateSourceZips)
+        self.zipsByState.toggled.connect(self.populateSourceStates)
         self.objectsList = [self.stateCheckBox, self.zipCheckBox]
         for obj in self.objectsList:
             obj.toggled.connect(self.inputWarning)
@@ -314,16 +318,32 @@ class State_Zip(base_6, form_6):
         self.importZip.pressed.connect(self.importZipFile)
         self.stateZipOkButton.released.connect(self.close)
         self.fetchZipCode.pressed.connect(self.sqlFetchZips)
+        self.resetAllButton.pressed.connect(self.resetAll)
 
         #default settings
         self.importZip.setEnabled(False)
+
+    def resetAll(self):
+        self.stateCheckBox.setChecked(False)
+        self.zipCheckBox.setChecked(False)
+        self.zipsByState.setChecked(False)
+
+        self.clientListBox.setChecked(False)
+        self.sdaBox.setChecked(False)
+        self.bdaBox.setChecked(False)
+
+        self.statesString = ""
+        self.statesStringFinal = ""
+        self.sqlStates = ""
+        self.applyToClientList = ''
+        self.applyToSda = ''
+        self.applyToBda = ''
 
     def sqlFetchZips(self):
         self.stateZipListFinal.clear()
         conn = sqlite3.connect(os.path.join(desktop,'Ewok', 'epocrates_tables.db'))
         conn.text_factory = str
         cur = conn.cursor()
-
 
         selectedStates = sorted([index.row() for index in self.stateZipListSource.selectedIndexes()], reverse=True)
         for state in selectedStates:
@@ -335,9 +355,6 @@ class State_Zip(base_6, form_6):
         # print(self.sqlStatesFinal)
 
         queryStateZips = """Select zip from us_zip_data where state_name in ({})""".format(self.sqlStatesFinal)
-
-        # print(queryStateZips)
-
         results = cur.execute(queryStateZips)
         conn.commit()
 
@@ -347,11 +364,6 @@ class State_Zip(base_6, form_6):
 
         self.sqlStates = ""
         selectedStates = []
-
-        # cur.execute(queryStateZips)
-        # conn.commit()
-
-
 
     def loadZips(self, file):
         with open(file, 'r') as inFile:
@@ -404,9 +416,9 @@ class State_Zip(base_6, form_6):
 
             self.statesStringFinal = self.statesString[:-3]
         
-            # print(self.statesStringFinal)
+            print('You have Selected the Following States: \n', self.statesStringFinal)
 
-        if self.zipCheckBox.isChecked():
+        if self.zipCheckBox.isChecked() or self.zipsByState.isChecked():
             with open(os.path.join(downloads, 'zipsImport.csv'), 'w') as outFile:
                 writer = csv.writer(outFile, lineterminator='\n')
                 writer.writerow(['zipcode'])
@@ -422,18 +434,20 @@ class State_Zip(base_6, form_6):
     def populateSourceStates(self):
         isStateChecked = self.stateCheckBox.isChecked()
         isZipChecked = self.zipCheckBox.isChecked()
+        isZipsByStateChecked = self.zipsByState.isChecked()
 
-        if isStateChecked:
+        if isStateChecked or isZipsByStateChecked:
             self.stateZipListSource.clear()
             for state in self.statesList:
                 self.stateZipListSource.addItem(state)
-        if not isStateChecked and isZipChecked:
+        if (not isStateChecked or not isZipsByStateChecked) and isZipChecked:
             self.populateSourceZips()
 
-        if not isStateChecked and not isZipChecked:
+        if not isStateChecked and not isZipChecked and not isZipsByStateChecked:
             self.stateZipListSource.clear()
             self.stateZipListFinal.clear()
             self.statesString = ""
+            self.statesStringFinal = ""
 
     def populateSourceZips(self):
         isStateChecked = self.stateCheckBox.isChecked()
@@ -443,6 +457,7 @@ class State_Zip(base_6, form_6):
             self.stateZipListSource.clear()
             self.stateZipListFinal.clear()
             self.statesString = ""
+            self.statesStringFinal = ""
             self.importZip.setEnabled(True)
 
         if not isZipChecked and isStateChecked:
@@ -454,6 +469,7 @@ class State_Zip(base_6, form_6):
             self.stateZipListFinal.clear()
             self.importZip.setEnabled(False)
             self.statesString = ""
+            self.statesStringFinal = ""
 
     def inputWarning(self):
         isStateChecked = self.stateCheckBox.isChecked()
@@ -635,6 +651,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         # self.config = dict()
         self.sdainc = 1
         self.bdainc = 1
+        self.stateZip = State_Zip()
 
         #clean masterConfig File
         with open(desktop+'\\Ewok\\Configs\\'+'config.json', 'r') as infile:
@@ -1133,7 +1150,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
 
     def loadStateZipEditor(self):
-        self.stateZip = State_Zip()
+        # self.stateZip = State_Zip()
         self.stateZip.show()
 
     def clearStateZipSettings(self):
@@ -2502,6 +2519,19 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.config['bdaOnly'] = 'N'
         # print self.filePage.fileDict
         self.config['loadedFile'] = str(self.loadedFile)
+
+
+        if self.stateZip.applyToClientList != '' or self.stateZip.applyToSda != '' or self.stateZip.applyToBda != '':
+            self.config['applyToClientList'] = self.stateZip.applyToClientList
+            self.config['applyToSda'] = self.stateZip.applyToSda
+            self.config['applyToBda'] = self.stateZip.applyToBda
+            if self.stateZip.statesStringFinal != "":
+                self.config['queryStates'] = 'Yes'
+                self.config['queryZips'] = 'No'
+                self.config['statesToQuery'] = self.stateZip.statesStringFinal
+            else:
+                self.config['queryStates'] = 'No'
+                self.config['queryZips'] = 'Yes'
 
         #write all the new setting first when the RUN BUTTON is clicked
         with open(desktop+'\\Ewok\\Configs\\'+'config.json', 'w') as outfile1:

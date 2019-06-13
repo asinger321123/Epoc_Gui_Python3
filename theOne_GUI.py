@@ -50,8 +50,13 @@ dt = str(datetime.datetime.now().strftime("%Y%m%d"))
 cmiCompasSegmentation = "npi, address1, campaign_type, city, cl_fname, cl_lname, cl_me, cl_zip, clientid, compasid, middle_name, segment1, specialty, state_code, tier, segment2, segment3"
 cmiCompasSQL = "address1, campaign_type, city, fname as cl_fname, lname as cl_lname, me as cl_me, zip as cl_zip, clientid, compasid, middle_name, segment1, specialty, state_code, tier, segment2, segment3"
 cmiList = ['npi', 'address1', 'campaign_type', 'city', 'cl_fname', 'cl_lname', 'cl_me', 'cl_zip', 'clientid', 'compasid', 'middle_name', 'segment1', 'specialty', 'state_code', 'tier', 'segment2', 'segment3']
+
+
 userhome = os.path.expanduser('~')
 desktop = userhome + '\\Desktop\\'
+downloads = userhome + '\\Downloads\\'
+
+zipsFile = os.path.join(downloads, 'zipsImport.csv')
 
 #Custom DataSHaring Client
 with open(os.path.join(desktop, 'Ewok\\Datasharing', 'dataSharing.json'), 'r') as infile:
@@ -81,6 +86,21 @@ if len(args) > 0:
 		foundFullName = 'n'
 		if 'foundFullName' in config:
 			foundFullName = config['foundFullName']
+		if 'queryStates' in config:
+			queryStates = str(config['queryStates'])
+			queryZips = str(config['queryZips'])
+			applyToClientList = str(config['applyToClientList'])
+			applyToSda = str(config['applyToSda'])
+			applyToBda = str(config['applyToBda'])
+			if queryStates == 'Yes':
+				statesToQuery = str(config['statesToQuery'])
+		if 'queryStates' not in config:
+			queryStates = ''
+			queryZips = ''
+			applyToClientList = ''
+			applyToSda = ''
+			applyToBda = ''
+			statesToQuery = ''
 		caseType = str(config['caseType'])
 		therapyClass = str(config['therapyChecked'])
 		sDa_only = str(config['sdaOnly'])
@@ -297,7 +317,7 @@ if len(args) > 0:
 
 
 userhome = os.path.expanduser('~')
-downloads = userhome + '\\Downloads\\'
+# downloads = userhome + '\\Downloads\\'
 newest = max(os.listdir(downloads), key=lambda f: os.path.getmtime("{}/{}".format(downloads, f)))
 extension = os.path.splitext(os.path.join(downloads, newest))
 justwork = downloads + listText
@@ -812,6 +832,12 @@ def fixSas():
 			target_out = target_out.replace('/*pivYes2*/', pivSeg2)
 			target_out = target_out.replace('/*totalSDAS*/', finalSDATotal)
 			target_out = target_out.replace('/*totalBDAS*/', finalBDATotal)
+			target_out = target_out.replace('/*queryStates*/', queryStates)
+			target_out = target_out.replace('/*statesToQuery*/', statesToQuery)
+			target_out = target_out.replace('/*queryZips*/', queryZips)
+			target_out = target_out.replace('/*applyToClientList*/', applyToClientList)
+			target_out = target_out.replace('/*applyToSda*/', applyToSda)
+			target_out = target_out.replace('/*applytoBda*/', applyToBda)
 			new_file.write(target_out)
 			line_file = new_file
 
@@ -866,6 +892,12 @@ def fixSas():
 			target_out = target_out.replace('/*backFillVals*/', backFillValue)
 			target_out = target_out.replace('/*suppSDAOnly*/', suppSDAOnly)
 			target_out = target_out.replace('/*suppBDAOnly*/', suppBDAOnly)
+			target_out = target_out.replace('/*queryStates*/', queryStates)
+			target_out = target_out.replace('/*statesToQuery*/', statesToQuery)
+			target_out = target_out.replace('/*queryZips*/', queryZips)
+			target_out = target_out.replace('/*applyToClientList*/', applyToClientList)
+			target_out = target_out.replace('/*applyToSda*/', applyToSda)
+			target_out = target_out.replace('/*applytoBda*/', applyToBda)
 			new_file.write(target_out)
 			line_file = new_file
 

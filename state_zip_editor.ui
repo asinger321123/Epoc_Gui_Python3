@@ -9,14 +9,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>378</width>
-    <height>722</height>
+    <width>385</width>
+    <height>688</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>State / Zip Editor</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="8" column="2">
+    <widget class="QPushButton" name="resetAll_pushButton">
+     <property name="text">
+      <string>Reset All</string>
+     </property>
+    </widget>
+   </item>
    <item row="6" column="2">
     <widget class="QListWidget" name="final_state_zip_listWidget">
      <property name="dragDropMode">
@@ -56,6 +63,26 @@
      </property>
     </widget>
    </item>
+   <item row="8" column="0">
+    <widget class="QPushButton" name="fetchZips_pushButton">
+     <property name="text">
+      <string>Fetch Selected Zips</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2">
+    <widget class="QLabel" name="label_2">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>State/Zips To Use:</string>
+     </property>
+    </widget>
+   </item>
    <item row="7" column="2">
     <widget class="QPushButton" name="ok_pushButton">
      <property name="text">
@@ -63,7 +90,14 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
+   <item row="7" column="0">
+    <widget class="QPushButton" name="import_pushButton">
+     <property name="text">
+      <string>Import Zip File</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="3">
     <widget class="QGroupBox" name="groupBox">
      <property name="minimumSize">
       <size>
@@ -74,13 +108,13 @@
      <property name="maximumSize">
       <size>
        <width>16777215</width>
-       <height>150</height>
+       <height>175</height>
       </size>
      </property>
      <property name="title">
       <string>Data Type</string>
      </property>
-     <layout class="QFormLayout" name="formLayout">
+     <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0">
        <widget class="QCheckBox" name="stateMatch_checkBox">
         <property name="text">
@@ -88,14 +122,28 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QCheckBox" name="zipMatch_checkBox">
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="zipsByState_checkBox">
         <property name="text">
-         <string>Zip Match</string>
+         <string>Zips By State</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="5" column="1">
+       <widget class="QCheckBox" name="sda_checkBox">
+        <property name="text">
+         <string>SDA</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2">
+       <widget class="QCheckBox" name="bda_checkBox">
+        <property name="text">
+         <string>BDA</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
        <widget class="QLabel" name="label">
         <property name="font">
          <font>
@@ -108,42 +156,21 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="0" column="1">
+       <widget class="QCheckBox" name="zipMatch_checkBox">
+        <property name="text">
+         <string>Zip Match</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
        <widget class="QCheckBox" name="clientList_checkBox">
         <property name="text">
          <string>Client List</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QCheckBox" name="sda_checkBox">
-        <property name="text">
-         <string>SDA</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QCheckBox" name="bda_checkBox">
-        <property name="text">
-         <string>BDA</string>
-        </property>
-       </widget>
-      </item>
      </layout>
-    </widget>
-   </item>
-   <item row="7" column="0">
-    <widget class="QPushButton" name="import_pushButton">
-     <property name="text">
-      <string>Import Zip File</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="0">
-    <widget class="QPushButton" name="fetchZips_pushButton">
-     <property name="text">
-      <string>Fetch Selected Zips</string>
-     </property>
     </widget>
    </item>
   </layout>
