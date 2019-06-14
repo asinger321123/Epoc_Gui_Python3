@@ -94,6 +94,8 @@ if len(args) > 0:
 			applyToBda = str(config['applyToBda'])
 			if queryStates == 'Yes':
 				statesToQuery = str(config['statesToQuery'])
+			else:
+				statesToQuery = ''
 		if 'queryStates' not in config:
 			queryStates = ''
 			queryZips = ''
@@ -760,10 +762,14 @@ def copyTarget():
 	if caseType == 'listMatch':
 		# copy(downloads + listText, outFileFinal, progress)
 		copyfile(downloads + listText, outFileFinal)
+		if queryZips == 'Yes':
+			copyfile(zipsFile, os.path.join(outCode, 'zipsImport.csv'))
 
 	elif caseType == 'Targeting':
 		# copy(downloads + listText, outFileFinal2, progress)
 		copyfile(downloads + listText, outFileFinal2)
+		if queryZips == 'Yes':
+			copyfile(zipsFile, os.path.join(outCode3, 'zipsImport.csv'))
 
 def removeFiles():
 	os.remove(os.path.join(downloads, 'target.txt'))
@@ -778,6 +784,8 @@ def removeFiles():
 	else:
 		newest = str(config['loadedFile'])
 		copyfile(os.path.join(downloads, newest), os.path.join(outCode, newest))
+	if queryZips == 'Yes':
+		os.remove(zipsFile)
 
 def fixSas():
 	#fixes the listMatch Code
