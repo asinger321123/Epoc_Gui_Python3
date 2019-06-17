@@ -849,6 +849,10 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.getPostgresTables()
         #On start up build csv files needed to populate the Segmentation column names
         # utils.csv_from_excel()
+        if self.sourceSegs:
+            self.sourceSegs.clear()
+            self.finalSegs.clear()
+        utils.checkExtension()
         utils.removeChar()
         utils.incDupColumns()
 
@@ -2936,7 +2940,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.addBDAButton.setEnabled(False)
 
     def attachCallbacks(self):
-        self.refreshFile()
+        # self.refreshFile()
         self.docalertCallback()
         self.epocquizCallback()
         self.segmentCallBack()
@@ -2948,11 +2952,12 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.bdaCallback()
         self.addSeg()
         self.removeSeg()
-        self.dataSharingClients()
-        self.getUniqueSegmentValues()
-        self.renameValue()
-        self.renameColumn()
+        # self.dataSharingClients()
+        # self.getUniqueSegmentValues()
+        # self.renameValue()
+        # self.renameColumn()
         self.detectMatchType()
+        self.highlightCMI()
 
 
 if __name__ == "__main__":

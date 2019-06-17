@@ -980,7 +980,7 @@ border-radius: 6px;
 </string>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="listMatchTab">
        <attribute name="title">
@@ -1033,7 +1033,7 @@ background: rgb(248, 248, 255, 0);
               </font>
              </property>
              <property name="text">
-              <string>Postgres Table Name</string>
+              <string>SQL Table Name</string>
              </property>
             </widget>
            </item>
@@ -1733,7 +1733,7 @@ background: rgb(248, 248, 255, 0);
               </font>
              </property>
              <property name="text">
-              <string>Postgres Table Name</string>
+              <string>SQL Table Name</string>
              </property>
             </widget>
            </item>
@@ -2211,7 +2211,7 @@ border-right: 2px solid black;
    </widget>
    <widget class="QMenu" name="menuEditor">
     <property name="title">
-     <string>Editor</string>
+     <string>Editors</string>
     </property>
     <addaction name="actionState_Zip_Editor"/>
     <addaction name="actionClear_State_Zip_Settings"/>

@@ -249,12 +249,14 @@ if len(args) > 0:
 						for seg in finalSeg:    
 							segmentList.append(str(seg).replace(' ', '_'))
 							splitList = ", ".join(segmentList)
+							splitList = splitList.replace('npi, ', '')
 					
 					if segVariable == '':
 						finalSeg = addSeg.split(', ')
 						for seg in finalSeg:    
 							segmentList.append(str(seg).replace(' ', '_'))
 							splitList = ", ".join(segmentList)
+							splitList = splitList.replace('npi, ', '')
 				else:
 					print('IM USING THE NEW FUNCTION TO MAKE DA SQL AND SEGMETNS')
 					splitList = utils.prepSqlSegments()
@@ -698,6 +700,14 @@ def postgresConn():
 
 		if config['cmi_compass_client'] == 'Y':
 
+			for col in cmiList:
+				if col not in myHeaders:
+					try:
+						cur.executescript('ALTER TABLE {} ADD COLUMN {} text;'.format(tableName, col))
+					except:
+						print(col, 'Already Exists . . .', colored('Skipping', 'red'))
+						continue
+
 			if listMatchType =='Standard' and config['cmi_compass_client'] == 'Y':
 				export = """{select}, {seg} from {tableName};""".format(select=selectMain5, seg=splitList, tableName=tableName)
 				pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
@@ -727,7 +737,7 @@ def csv_from_excel():
 def removeChar():
 	inputFile = open(downloads + csvFile, 'r')
 	outputFile = open(downloads + 'csvFile.csv', 'w')
-	conversion = '-/%$# @<>+*?&)('
+	conversion = '-/%$# @<>+*?&)(®'
 	numbers = '0123456789'
 	newtext = '_'
 
@@ -944,6 +954,7 @@ def buildSDACodes():
 	sdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\CUSTOM\\Email Codes\\additionalSDA'
 	sdaCode = 'PS_SDA_plus_CL_Email'
 	suppApplied = str(config['suppressionApplied'])
+	sDa_only = str(config['sdaOnly'])
 	
 	# if suppApplied == 'Y':
 	# 	suppFolder = config['suppSASFile']
