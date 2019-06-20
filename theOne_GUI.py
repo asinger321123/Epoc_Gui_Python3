@@ -522,7 +522,7 @@ def cmiCompasColumns():
 			if cellVal == 'state':
 				print(cellVal, colored('I Found a State_Code', 'green'))
 				headers[index] = 'state_code'
-			elif cellVal == 'address_1' or cellVal == 'addr1':
+			elif cellVal == 'address_1' or cellVal == 'addr1' or cellVal == 'addressline1':
 				print(cellVal, colored('I Found a Address_1', 'green'))
 				headers[index] = 'address1'
 			elif cellVal == 'client_id' or cellVal == 'client_id_1':

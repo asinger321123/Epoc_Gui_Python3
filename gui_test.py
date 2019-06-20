@@ -46,12 +46,14 @@ uifile_3 = os.path.join(desktop, 'Ewok','pivotTabe_ui.ui')
 uifile_4 = os.path.join(desktop, 'Ewok','AdditionalSDA.ui')
 uifile_5 = os.path.join(desktop, 'Ewok','AdditionalBDA.ui')
 uifile_6 = os.path.join(desktop, 'Ewok','state_zip_editor.ui')
+uifile_7 = os.path.join(desktop, 'Ewok','NBE.ui')
 
 form_2, base_2 = uic.loadUiType(uifile_2)
 form_3, base_3 = uic.loadUiType(uifile_3)
 form_4, base_4 = uic.loadUiType(uifile_4)
 form_5, base_5 = uic.loadUiType(uifile_5)
 form_6, base_6 = uic.loadUiType(uifile_6)
+form_7, base_7 = uic.loadUiType(uifile_7)
 
 class Completer(QtGui.QCompleter):
     def __init__(self, *args, **kwargs):
@@ -482,6 +484,151 @@ class State_Zip(base_6, form_6):
             msg.setStandardButtons(QMessageBox.Ok)
             msg.exec_() 
 
+class NBE_Editor(base_7, form_7):
+    def __init__(self):
+        super(base_7, self).__init__()
+        self.setupUi(self)
+        downloadFilesDirectory = [f for f in listdir(downloads) if isfile(join(downloads, f))]
+        downloadFilesDirectory.sort(key=lambda x: os.stat(os.path.join(downloads, x)).st_mtime, reverse=True)
+
+        self.selectNBEFile = ""
+        self.selectOrganicFile = ""
+        self.organicMatchType = ""
+        self.organicSasFileInput = ""
+        self.openerScheduleIDS = ""
+        # self.fileDict = defaultdict(list)
+
+        self.downloadFiles = self.findChild(QListWidget, 'files_listWidget')
+        self.listMatchFile = self.findChild(QListWidget, 'listMatchFile_listWidget')
+        self.organicMatchFile = self.findChild(QListWidget, 'organicFile_listWidget')
+        self.setFilesButton = self.findChild(QPushButton, 'setFIles_pushButton')
+        self.standardOrganicCheck = self.findChild(QCheckBox, 'organicStandardCheck_checkBox')
+        self.exactOrganicCheck = self.findChild(QCheckBox, 'organicExactCheck_checkBox')
+        self.organicModel = self.downloadFiles.model()
+        self.organicSheetCountLabel = self.findChild(QLabel, 'organicSheetCount_Label')
+        self.refreshDownloads = self.findChild(QPushButton, 'refreshFiles_pushButton')
+        self.openerScheduleIDLine = self.findChild(QLineEdit, 'openerScheduleID_lineEdit')
+
+        for i in downloadFilesDirectory:
+            self.downloadFiles.addItem(i)
+
+
+        self.setFilesButton.pressed.connect(self.setNBEFile)
+        self.setFilesButton.pressed.connect(self.setOrganicFile)
+        self.setFilesButton.released.connect(self.refreshFrom2Files)
+        self.setFilesButton.released.connect(self.setScheduleIDS)
+        self.setFilesButton.released.connect(self.close)
+        self.standardOrganicCheck.toggled.connect(self.organicFileCheckboxesStandard)
+        self.exactOrganicCheck.toggled.connect(self.organicFileCheckboxesExact)
+        self.organicModel.rowsRemoved.connect(self.organicSheetCount)
+        self.refreshDownloads.pressed.connect(self.refreshDownloadFiles)
+
+    def setScheduleIDS(self):
+        if str(self.openerScheduleIDLine.text()) != "":
+            self.openerScheduleIDS = str(self.openerScheduleIDLine.text())
+            print('Code will Dedupe Openers from Schedules: ', self.openerScheduleIDS)
+        else:
+            self.openerScheduleIDS = ""
+            print('No Openers Will Be Deduped')
+
+    def refreshDownloadFiles(self):
+        downloadFilesDirectory = [f for f in listdir(downloads) if isfile(join(downloads, f))]
+        downloadFilesDirectory.sort(key=lambda x: os.stat(os.path.join(downloads, x)).st_mtime, reverse=True)
+
+        self.downloadFiles.clear()
+        for i in downloadFilesDirectory:
+            self.downloadFiles.addItem(i)
+
+
+    def organicSheetCount(self):
+        for i in range(self.organicMatchFile.count()):
+            self.selectOrganicFile = str(self.organicMatchFile.item(i).text())
+        sheetFile = self.selectOrganicFile
+        filename, extension = os.path.splitext(os.path.join(downloads, sheetFile))
+        if extension == '.xlsx':
+            w = xlrd.open_workbook(downloads + sheetFile, on_demand=True)
+            totalSheets = len(w.sheet_names())
+            self.organicSheetCountLabel.setText('Sheet Count: '+str(totalSheets))
+            if totalSheets == 1:
+                self.organicSheetCountLabel.setStyleSheet('color: green')
+            else:
+                self.organicSheetCountLabel.setStyleSheet('color: red')
+        else:
+            self.organicSheetCountLabel.setText('Sheet Count: N/A')
+            self.organicSheetCountLabel.setStyleSheet('color: black') 
+
+
+
+    def setNBEFile(self):
+        self.selectNBEFile = ""
+        for i in range(self.listMatchFile.count()):
+            self.selectNBEFile = str(self.listMatchFile.item(i).text())
+            print('Your Match File is', self.selectNBEFile)
+            window.setWindowTitle("File Loaded: "+self.selectNBEFile)
+            window.loadedFile = self.selectNBEFile
+            window.countSheets()
+            # return self.selectMatchFile
+            # self.fileDict['matchFile'].append(self.selectMatchFile)
+
+    def setOrganicFile(self):
+        for i in range(self.organicMatchFile.count()):
+            self.selectSuppFile = str(self.organicMatchFile.item(i).text())
+            print('Your Organic File is', self.selectOrganicFile)
+        if not self.selectOrganicFile:
+            self.organicSasFileInput = str(self.organicSasFile.text())
+            print('Your using a _supp_####: ', self.organicSasFileInput)
+        if self.standardOrganicCheck.isChecked():
+            self.organicMatchType = "Standard"
+        else:
+            self.organicMatchType = "Exact"
+        # return self.selectSuppFile
+            # self.fileDict['suppFile'].append(self.selectSuppFile)
+
+    def refreshFrom2Files(self):
+        #remove files and clear current column names
+        if os.path.exists(os.path.join(downloads, 'csvFile.csv')):
+            os.remove(os.path.join(downloads, 'csvFile.csv'))
+        if os.path.exists(os.path.join(downloads, 'target.csv')):
+            os.remove(os.path.join(downloads, 'target.csv'))
+        if os.path.exists(os.path.join(downloads, 'target_mod.csv')):
+            os.remove(os.path.join(downloads, 'target_mod.csv'))
+        if window.sourceSegs:
+            window.sourceSegs.clear()
+            window.finalSegs.clear()
+        utils.checkExtension2(self.selectNBEFile)
+        utils.removeChar()
+        utils.incDupColumns()
+
+        #populates the listWidget
+        colList = utils.fetchColumns()
+        for i in colList:
+            window.sourceSegs.addItem(i)
+        window.returnUserTable() 
+        window.countFullFile()
+        window.resetEditTab()
+        window.highlightSourceSegs()
+        window.detectMatchType()
+
+    def organicFileCheckboxesStandard(self):
+        isStandardOrganicChecked = self.standardOrganicCheck.isChecked()
+
+        if isStandardOrganicChecked:
+            self.standardOrganicCheck.setStyleSheet("color: green; font-weight: bold")
+            self.exactOrganicCheck.setChecked(False)
+        elif not isStandardOrganicChecked:
+            self.exactOrganicCheck.setChecked(True)
+            self.standardOrganicCheck.setStyleSheet("color: black")
+
+    def organicFileCheckboxesExact(self):
+        isExactOrganicChecked = self.exactOrganicCheck.isChecked()
+
+        if isExactOrganicChecked:
+            self.exactOrganicCheck.setStyleSheet("color: green; font-weight: bold")
+            self.standardOrganicCheck.setChecked(False)
+        elif not isExactOrganicChecked:
+            self.standardOrganicCheck.setChecked(True)
+            self.exactOrganicCheck.setStyleSheet("color: black")
+
 
 class PivotPage(base_3, form_3):
     def __init__(self):
@@ -799,6 +946,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.cmiCompass = self.findChild(QCheckBox, 'cmi_compass_checkBox')
         self.tableNameWarningTargeting = self.findChild(QLabel, 'targetTableName')
         self.backFillBox = self.findChild(QCheckBox, 'backFill_checkBox')
+        self.nbeCheckBox = self.findChild(QCheckBox, 'nbe_checkBox')
 
         #Edit List Objects
         self.uniqueValuesList = self.findChild(QListWidget, 'uniqueValues_listWidget')
@@ -845,7 +993,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
         #On startup attach call backs and set default toggle options for enabled widgets
         self.setDefaults()
-        self.attachCallbacks()
+        # self.attachCallbacks()
         self.getPostgresTables()
         #On start up build csv files needed to populate the Segmentation column names
         # utils.csv_from_excel()
@@ -864,6 +1012,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.sourceSegs.addItem(i)
 
         self.highlightSourceSegs()
+        self.attachCallbacks()
 
         self.refreshButton.pressed.connect(self.refreshFile)
         self.refreshButton.released.connect(self.refreshSuccessful)
@@ -938,6 +1087,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.suppBDAOnly.toggled.connect(self.sda_bda_options)
         self.stateZipEditor.triggered.connect(self.loadStateZipEditor)
         self.clearStateZipEditor.triggered.connect(self.clearStateZipSettings)
+        self.nbeCheckBox.toggled.connect(self.nbeEditor)
 
         # self.stateZip = State_Zip()
         # if stateZip.statesString == ""
@@ -1128,6 +1278,13 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.pivotTableCheck.setStyleSheet("color: green; font-weight: bold")
             self.pivotWindow = PivotPage()
             self.pivotWindow.show()
+
+    def nbeEditor(self):
+        isnbeChecked = self.nbeCheckBox.isChecked()
+        if isnbeChecked:
+            self.nbeCheckBox.setStyleSheet("color: green; font-weight: bold")
+            self.nbeEditWindow = NBE_Editor()
+            self.nbeEditWindow.show()
 
     def additionalSDA(self):
         self.addSDA = SDA_Widget()
