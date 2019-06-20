@@ -920,6 +920,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.loadAction = self.findChild(QAction, 'actionLoad_List')
         self.stateZipEditor = self.findChild(QAction, 'actionState_Zip_Editor')
         self.clearStateZipEditor = self.findChild(QAction, 'actionClear_State_Zip_Settings')
+        self.nbeEditorTab = self.findChild(QAction, 'actionNBE_Editor')
         self.therapyClassBox = self.findChild(QCheckBox, 'therapyClass_checkBox')
         self.sheetCount = self.findChild(QLabel, 'sheetCount_Label')
         self.dataCap = self.findChild(QLineEdit, 'dataCap_lineEdit')
@@ -1088,6 +1089,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.stateZipEditor.triggered.connect(self.loadStateZipEditor)
         self.clearStateZipEditor.triggered.connect(self.clearStateZipSettings)
         self.nbeCheckBox.toggled.connect(self.nbeEditor)
+        self.nbeEditorTab.triggered.connect(self.nbeEditorMenu)
 
         # self.stateZip = State_Zip()
         # if stateZip.statesString == ""
@@ -1280,11 +1282,23 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.pivotWindow.show()
 
     def nbeEditor(self):
+        # self.nbeCheckBox.setChecked(True)
         isnbeChecked = self.nbeCheckBox.isChecked()
         if isnbeChecked:
             self.nbeCheckBox.setStyleSheet("color: green; font-weight: bold")
             self.nbeEditWindow = NBE_Editor()
             self.nbeEditWindow.show()
+        if not isnbeChecked:
+            self.nbeCheckBox.setStyleSheet("")
+
+    def nbeEditorMenu(self):
+        self.nbeCheckBox.setChecked(False)
+        self.nbeCheckBox.setChecked(True)
+        isnbeChecked = self.nbeCheckBox.isChecked()
+        if isnbeChecked:
+            self.nbeCheckBox.setStyleSheet("color: green; font-weight: bold")
+            # self.nbeEditWindow = NBE_Editor()
+            # self.nbeEditWindow.show()
 
     def additionalSDA(self):
         self.addSDA = SDA_Widget()
@@ -2589,6 +2603,16 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.config['suppFileName'] = self.fileWindow.selectSuppFile
             self.config['suppMatchType'] = self.fileWindow.suppMatchType
             self.config['suppSASFile'] = self.fileWindow.suppSasFileInput
+
+        if self.nbeCheckBox.isChecked():
+            self.config['nbeTarget'] = 'Yes'
+            self.config['nbeFileName'] = self.nbeEditWindow.selectNBEFile
+            self.config['organicFileName'] = self.nbeEditWindow.selectOrganicFile
+            self.config['organicMatchType'] = self.nbeEditWindow.organicMatchType
+            self.config['openerScheduleIDS'] = self.nbeEditWindow.openerScheduleIDS
+
+        if not self.nbeCheckBox.isChecked():
+            self.config['nbeTarget'] = 'No'
 
         if not self.suppCheck.isChecked():
             self.config['suppMatchType'] = '""'

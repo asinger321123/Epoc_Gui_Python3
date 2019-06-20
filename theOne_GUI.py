@@ -13,8 +13,7 @@ import unicodecsv
 from collections import Counter
 import datetime
 import json
-from subprocess import *
-# import subprocess
+import subprocess
 from os import listdir
 from os.path import isfile, join
 from termcolor import *
@@ -173,6 +172,7 @@ if len(args) > 0:
 			email = str(config['email'])
 			tableName = str(config['tableName'])
 		elif caseType == 'Targeting':
+			nbeTarget = str(config['nbeTarget'])
 			suppSDAOnly = str(config['suppSDAOnly'])
 			suppBDAOnly = str(config['suppBDAOnly'])
 			backFill = str(config['backFill'])
@@ -182,8 +182,20 @@ if len(args) > 0:
 			listMatchType = str(config['listMatchType'])
 			manu = str(config['Manu'])
 			date = str(config['date'])
+			brand = str(config['Brand'])
 			sDa_only = str(config['sdaOnly'])
 			bDa_only = str(config['bdaOnly'])
+
+			outFileFinal2 = """P:\\Epocrates Analytics\\TARGETS\\{date}\\{manu} {brand}\\target.txt""".format(date = date, manu = manu, brand = brand)
+			outCode3 = """P:\\Epocrates Analytics\\TARGETS\\{date}\\{manu} {brand}""".format(date = date, slashes = "\\", manu = manu, brand = brand)
+			rawOutfile = outCode3
+			sdaBDAOnly = ""
+			targetFolder = manu+" "+brand
+			if suppApplied == 'Yes':
+				suppFileLocation = "P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\Supp".format(date = date, slashes = "\\", targetFolder=targetFolder)
+			else:
+				suppFileLocation = ''
+
 			if bDa_only  == 'N' and sDa_only == 'N':
 				if listMatchType == 'Standard' or listMatchType == 'Exact':
 					targetNum = str(config['targetNum'])
@@ -275,7 +287,6 @@ if len(args) > 0:
 				segmentList = []
 				keep_seg = str(config['keep_seg'])
 			keep_seg = str(config['keep_seg'])
-			brand = str(config['Brand'])
 			yourIn = str(config['yourIn'])
 			sDa = str(config['sDa'])
 			name = "T_{manu}_{brand}_{dt}_{initials}".format(manu=manu, brand=brand, dt=dt, initials=yourIn)
@@ -317,6 +328,12 @@ if len(args) > 0:
 				drugList = ""
 				occupation2 = ''
 				drugsnocomma = ''
+			if nbeTarget == 'Yes':
+				manu = str(config['Manu'])
+				date = str(config['date'])
+				brand = str(config['Brand'])
+				if os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
+					print('Im on the second File and going to do black magic here :')
 			tableName = str(config['tableName'])
 
 
@@ -333,17 +350,17 @@ masterDrugs = 'P:\Epocrates Analytics\Drug Compare\Master Drug List\\drugs.csv'
 outFile = """P:\\Epocrates Analytics\\List Match\\List Match Folder\\{folderName}{slashes}""".format(folderName = name, slashes = "\\")
 outFileFinal = """P:\\Epocrates Analytics\\List Match\\List Match Folder\\{folderName}\\target.txt""".format(folderName = name)
 outCode = """P:\\Epocrates Analytics\\List Match\\List Match Folder\\{folderName}""".format(folderName = name)
-if caseType == 'Targeting':
-	outFileFinal2 = """P:\\Epocrates Analytics\\TARGETS\\{date}\\{manu} {brand}\\target.txt""".format(date = date, manu = manu, brand = brand)
-	outCode3 = """P:\\Epocrates Analytics\\TARGETS\\{date}\\{manu} {brand}""".format(date = date, slashes = "\\", manu = manu, brand = brand)
-	rawOutfile = outCode3
-	sdaBDAOnly = ""
-	targetFolder = manu+" "+brand
-	if suppApplied == 'Yes':
-		suppFileLocation = "P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\Supp".format(date = date, slashes = "\\", targetFolder=targetFolder)
-	else:
-		suppFileLocation = ''
-else:
+# if caseType == 'Targeting':
+# 	outFileFinal2 = """P:\\Epocrates Analytics\\TARGETS\\{date}\\{manu} {brand}\\target.txt""".format(date = date, manu = manu, brand = brand)
+# 	outCode3 = """P:\\Epocrates Analytics\\TARGETS\\{date}\\{manu} {brand}""".format(date = date, slashes = "\\", manu = manu, brand = brand)
+# 	rawOutfile = outCode3
+# 	sdaBDAOnly = ""
+# 	targetFolder = manu+" "+brand
+# 	if suppApplied == 'Yes':
+# 		suppFileLocation = "P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\Supp".format(date = date, slashes = "\\", targetFolder=targetFolder)
+# 	else:
+# 		suppFileLocation = ''
+if caseType == 'listMatch':
 	if suppApplied == 'Yes':
 		suppFileLocation = "P:\\Epocrates Analytics\\List Match\\List Match Folder\\{folderName}\\Supp".format(folderName = name)
 	else:
@@ -375,6 +392,14 @@ def createFolders():
 		if not os.path.exists("P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}".format(date = date, slashes = "\\", targetFolder=targetFolder)):
 			os.chdir("""P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}""".format(date = date, slashes = "\\"))
 			os.mkdir(targetFolder)
+
+		if nbeTarget == 'Yes':
+			if os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
+				if os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\Organic'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
+					print(colored('TARGETS Folder '+ manu + ' ' + brand + ' ORGANIC Already Exists . . . Skipping Creation', 'yellow'))
+				if not os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\Organic'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
+					os.chdir("""P:\\Epocrates Analytics\\TARGETS\\{date}\\{targetFolder}\\""".format(date = date, slashes = "\\", targetFolder=targetFolder))
+					os.mkdir('Organic')
 
 def checkDrugs():
 	#read master drug file, strip white space and load into a list for comparison
@@ -626,97 +651,105 @@ def postgresConn():
 			pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
 
 	elif caseType == 'Targeting':
-		if dSharing == 'Y':
-			if listMatchType =='Standard':
-				if config['cmi_compass_client'] == 'N':
-					if foundFullName == 'n':
-						export = """{select}, {seg} from {tableName};""".format(select=selectMain5, tableName=tableName, seg=splitList)
-						pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
+		if not os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
+			if dSharing == 'Y':
+				if listMatchType =='Standard':
+					if config['cmi_compass_client'] == 'N':
+						if foundFullName == 'n':
+							export = """{select}, {seg} from {tableName};""".format(select=selectMain5, tableName=tableName, seg=splitList)
+							pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
 
-					if foundFullName == 'y':
-						export = """{select}, {seg} from {tableName};""".format(select=selectFullName, tableName=tableName, seg=splitList)
-						pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t') 
+						if foundFullName == 'y':
+							export = """{select}, {seg} from {tableName};""".format(select=selectFullName, tableName=tableName, seg=splitList)
+							pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t') 
 
-			elif listMatchType =='Exact':
-				export = """{select}, {seg} from {tableName};""".format(select=selectMain2, tableName=tableName, seg=splitList)
-				pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
-
-			elif listMatchType =='Standard_Seg':
-				if config['cmi_compass_client'] == 'N':
-					if foundFullName == 'n':
-						export = """{select}, {seg} from {tableName};""".format(select=selectMain5, tableName=tableName, seg=splitList)
-						pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
-
-					if foundFullName == 'y':
-						export = """{select}, {seg} from {tableName};""".format(select=selectFullName, tableName=tableName, seg=splitList)
-						pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
-
-			elif listMatchType =='Exact_Seg':
-				export = """{select}, {seg} from {tableName};""".format(select=selectMain2, tableName=tableName, seg=splitList)
-				pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
-
-
-		elif dSharing == 'N':
-			if listMatchType =='Standard':
-				if foundFullName == 'n':
-					if config['segmentListChecked'] == 'n':
-						export = """{} from {};""".format(selectMain5, tableName)
-						pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
-
-					if config['segmentListChecked'] == 'y':
-						export = """{}, {} from {};""".format(selectMain5, splitList, tableName)
-						pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
-
-				if foundFullName == 'y':
-					if config['segmentListChecked'] == 'n':
-						export = """{select} from {tableName};""".format(select=selectFullName, tableName=tableName)
-						pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
-
-					if config['segmentListChecked'] == 'y':
-						export = """{select}, {seg} from {tableName};""".format(select=selectFullName, tableName=tableName, seg=splitList)
-						pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
-
-			elif listMatchType =='Exact':
-				if config['segmentListChecked'] == 'n':
-					export = """{select} from {tableName};""".format(select=selectMain2, tableName=tableName)
-					pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
-
-				if config['segmentListChecked'] == 'y':
+				elif listMatchType =='Exact':
 					export = """{select}, {seg} from {tableName};""".format(select=selectMain2, tableName=tableName, seg=splitList)
 					pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
 
-			elif listMatchType =='Standard_Seg':
-				if foundFullName == 'n':
-					export = """{select}, {seg} from {tableName};""".format(select=selectMain5, tableName=tableName, seg=splitList)
+				elif listMatchType =='Standard_Seg':
+					if config['cmi_compass_client'] == 'N':
+						if foundFullName == 'n':
+							export = """{select}, {seg} from {tableName};""".format(select=selectMain5, tableName=tableName, seg=splitList)
+							pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
+
+						if foundFullName == 'y':
+							export = """{select}, {seg} from {tableName};""".format(select=selectFullName, tableName=tableName, seg=splitList)
+							pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
+
+				elif listMatchType =='Exact_Seg':
+					export = """{select}, {seg} from {tableName};""".format(select=selectMain2, tableName=tableName, seg=splitList)
 					pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
 
-				if foundFullName == 'y':
-					export = """{select}, {seg} from {tableName};""".format(select=selectFullName, tableName=tableName, seg=splitList)
+
+			elif dSharing == 'N':
+				if listMatchType =='Standard':
+					if foundFullName == 'n':
+						if config['segmentListChecked'] == 'n':
+							export = """{} from {};""".format(selectMain5, tableName)
+							pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
+
+						if config['segmentListChecked'] == 'y':
+							export = """{}, {} from {};""".format(selectMain5, splitList, tableName)
+							pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
+
+					if foundFullName == 'y':
+						if config['segmentListChecked'] == 'n':
+							export = """{select} from {tableName};""".format(select=selectFullName, tableName=tableName)
+							pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
+
+						if config['segmentListChecked'] == 'y':
+							export = """{select}, {seg} from {tableName};""".format(select=selectFullName, tableName=tableName, seg=splitList)
+							pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
+
+				elif listMatchType =='Exact':
+					if config['segmentListChecked'] == 'n':
+						export = """{select} from {tableName};""".format(select=selectMain2, tableName=tableName)
+						pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
+
+					if config['segmentListChecked'] == 'y':
+						export = """{select}, {seg} from {tableName};""".format(select=selectMain2, tableName=tableName, seg=splitList)
+						pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
+
+				elif listMatchType =='Standard_Seg':
+					if foundFullName == 'n':
+						export = """{select}, {seg} from {tableName};""".format(select=selectMain5, tableName=tableName, seg=splitList)
+						pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
+
+					if foundFullName == 'y':
+						export = """{select}, {seg} from {tableName};""".format(select=selectFullName, tableName=tableName, seg=splitList)
+						pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
+
+				elif listMatchType =='Exact_Seg':
+					export = """{select}, {seg} from {tableName};""".format(select=selectMain2, tableName=tableName, seg=splitList)
 					pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
 
-			elif listMatchType =='Exact_Seg':
-				export = """{select}, {seg} from {tableName};""".format(select=selectMain2, tableName=tableName, seg=splitList)
+			if config['cmi_compass_client'] == 'Y':
+
+				for col in cmiList:
+					if col not in myHeaders:
+						try:
+							cur.executescript('ALTER TABLE {} ADD COLUMN {} text;'.format(tableName, col))
+						except:
+							print(col, 'Already Exists . . .', colored('Skipping', 'red'))
+							continue
+
+				if listMatchType =='Standard' and config['cmi_compass_client'] == 'Y':
+					export = """{select}, {seg} from {tableName};""".format(select=selectMain5, seg=splitList, tableName=tableName)
+					pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
+
+
+				elif listMatchType =='Standard_Seg' and config['cmi_compass_client'] == 'Y':
+
+					export = """{select}, {seg} from {tableName};""".format(select=selectMain5, seg=splitList, tableName=tableName)
+					pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
+
+		else:
+			if str(config['organicMatchType']) == 'Standard':
+				export = """{}, {} from {};""".format(selectMain5, splitList, tableName)
 				pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
 
-		if config['cmi_compass_client'] == 'Y':
 
-			for col in cmiList:
-				if col not in myHeaders:
-					try:
-						cur.executescript('ALTER TABLE {} ADD COLUMN {} text;'.format(tableName, col))
-					except:
-						print(col, 'Already Exists . . .', colored('Skipping', 'red'))
-						continue
-
-			if listMatchType =='Standard' and config['cmi_compass_client'] == 'Y':
-				export = """{select}, {seg} from {tableName};""".format(select=selectMain5, seg=splitList, tableName=tableName)
-				pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
-
-
-			elif listMatchType =='Standard_Seg' and config['cmi_compass_client'] == 'Y':
-
-				export = """{select}, {seg} from {tableName};""".format(select=selectMain5, seg=splitList, tableName=tableName)
-				pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
 
 	print('')
 	print('SQL Export Complete\n')
@@ -776,8 +809,10 @@ def copyTarget():
 			copyfile(zipsFile, os.path.join(outCode, 'zipsImport.csv'))
 
 	elif caseType == 'Targeting':
-		# copy(downloads + listText, outFileFinal2, progress)
-		copyfile(downloads + listText, outFileFinal2)
+		if not os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
+			copyfile(downloads + listText, outFileFinal2)
+		else:
+			copyfile(downloads + listText, 'P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\Organic\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder))
 		if queryZips == 'Yes':
 			copyfile(zipsFile, os.path.join(outCode3, 'zipsImport.csv'))
 
@@ -785,7 +820,7 @@ def removeFiles():
 	os.remove(os.path.join(downloads, 'target.txt'))
 	os.remove(os.path.join(downloads, 'target_mod.csv'))
 	os.remove(os.path.join(downloads, 'target.csv'))
-	# os.remove(os.path.join(downloads, 'csvFile.csv'))
+	os.remove(os.path.join(downloads, 'csvFile.csv'))
 	os.remove(os.path.join(downloads, 'csvFile1.csv'))
 	os.remove(os.path.join(downloads, csvFileModTemp2))
 	if caseType == 'Targeting' and sDa_only == 'N' and bDa_only == 'N':
@@ -1159,6 +1194,12 @@ if (caseType == 'listMatch' or caseType == 'Targeting') and listMatchType == 'No
 	if bDa_only == 'Y':
 		checkDrugs()
 	fixSas()
+
+if nbeTarget == 'Yes' and not os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\Organic'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
+	utils.checkExtension2(str(config['organicFileName']))
+	utils.removeChar()
+	utils.incDupColumns()
+	subprocess.call(['python.exe', os.path.join(desktop, 'Ewok','theOne_GUI.py'), 'config.json'])
 
 print('')
 print(colored('P', 'cyan')+colored('R', 'red')+colored('O', 'green')+colored('G', 'yellow')+colored('R', 'blue')+colored('A', 'magenta')+colored('M', 'cyan')+' '+colored('C', 'magenta')+colored('O', 'red')+colored('M', 'green')+colored('P', 'blue')+colored('L', 'red')+colored('E', 'cyan')+colored('T', 'yellow')+colored('E', 'white'))
