@@ -1358,10 +1358,11 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.stateZip.show()
 
     def clearStateZipSettings(self):
-        self.stateZip.statesString = ""
-        self.stateZip.applyToClientList = ''
-        self.stateZip.applyToSda = ''
-        self.stateZip.applyToCBda = ''
+        self.stateZip.resetAll()
+        # self.stateZip.statesString = ""
+        # self.stateZip.applyToClientList = ''
+        # self.stateZip.applyToSda = ''
+        # self.stateZip.applyToCBda = ''
 
         window.setStyleSheet("""QMenuBar::item {;}""")
 
