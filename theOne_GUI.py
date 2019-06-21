@@ -1214,6 +1214,13 @@ if nbeTarget == 'Yes' and not os.path.exists('P:\\Epocrates Analytics\\TARGETS\\
 	utils.incDupColumns()
 	subprocess.call(['python.exe', os.path.join(desktop, 'Ewok','theOne_GUI.py'), 'config.json'])
 
-print('')
-print(colored('P', 'cyan')+colored('R', 'red')+colored('O', 'green')+colored('G', 'yellow')+colored('R', 'blue')+colored('A', 'magenta')+colored('M', 'cyan')+' '+colored('C', 'magenta')+colored('O', 'red')+colored('M', 'green')+colored('P', 'blue')+colored('L', 'red')+colored('E', 'cyan')+colored('T', 'yellow')+colored('E', 'white'))
-# print 'PROGRAM COMPLETE!'
+	nbeFile = str(config['organicFileName'])
+	copyfile(os.path.join(downloads, nbeFile), os.path.join(outCode3, 'Organic', nbeFile))
+
+	print('')
+	print(colored('P', 'cyan')+colored('R', 'red')+colored('O', 'green')+colored('G', 'yellow')+colored('R', 'blue')+colored('A', 'magenta')+colored('M', 'cyan')+' '+colored('C', 'magenta')+colored('O', 'red')+colored('M', 'green')+colored('P', 'blue')+colored('L', 'red')+colored('E', 'cyan')+colored('T', 'yellow')+colored('E', 'white'))
+
+if caseType == 'Presales' or nbeTarget == 'No':
+	print('')
+	print(colored('P', 'cyan')+colored('R', 'red')+colored('O', 'green')+colored('G', 'yellow')+colored('R', 'blue')+colored('A', 'magenta')+colored('M', 'cyan')+' '+colored('C', 'magenta')+colored('O', 'red')+colored('M', 'green')+colored('P', 'blue')+colored('L', 'red')+colored('E', 'cyan')+colored('T', 'yellow')+colored('E', 'white'))
+	# print 'PROGRAM COMPLETE!'
