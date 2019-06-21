@@ -20,13 +20,15 @@ import subprocess
 import psycopg2
 import itertools
 import resource_rc
-# C:\Users\asinger\AppData\Local\Programs\Python\python7\Lib\site-packages\PyQt4\pyrcc4.exe -py3 resource.qrc > resource_rc.py
 import glob
 from collections import defaultdict
 import winsound
 from threading import Thread
 import sqlite3
-# from colorama import init, Fore, Back, Style
+from termcolor import *
+from colorama import init, Fore, Back, Style
+
+init(autoreset=True)
 
 userhome = os.path.expanduser('~')
 desktop = userhome + '\\Desktop\\'
@@ -494,7 +496,7 @@ class NBE_Editor(base_7, form_7):
         self.selectNBEFile = ""
         self.selectOrganicFile = ""
         self.organicMatchType = ""
-        self.organicSasFileInput = ""
+        # self.organicSasFileInput = ""
         self.openerScheduleIDS = ""
         self.organicTargetNumber = ""
         # self.fileDict = defaultdict(list)
@@ -529,10 +531,10 @@ class NBE_Editor(base_7, form_7):
     def setScheduleIDS(self):
         if str(self.openerScheduleIDLine.text()) != "":
             self.openerScheduleIDS = str(self.openerScheduleIDLine.text())
-            print('Code will Dedupe Openers from Schedules: ', self.openerScheduleIDS)
+            print(colored('Code will Dedupe Openers from Schedules: ', 'yellow'), colored(self.openerScheduleIDS, 'green'))
         else:
             self.openerScheduleIDS = ""
-            print('No Openers Will Be Deduped')
+            print(colored('No Openers Will Be Deduped', 'yellow'))
 
     def refreshDownloadFiles(self):
         downloadFilesDirectory = [f for f in listdir(downloads) if isfile(join(downloads, f))]
@@ -569,7 +571,7 @@ class NBE_Editor(base_7, form_7):
         self.selectNBEFile = ""
         for i in range(self.listMatchFile.count()):
             self.selectNBEFile = str(self.listMatchFile.item(i).text())
-            print('Your Match File is', self.selectNBEFile)
+            print(colored('Your Match File is: ', 'yellow'), self.selectNBEFile)
             window.setWindowTitle("File Loaded: "+self.selectNBEFile)
             window.loadedFile = self.selectNBEFile
             window.countSheets()
@@ -579,10 +581,10 @@ class NBE_Editor(base_7, form_7):
     def setOrganicFile(self):
         for i in range(self.organicMatchFile.count()):
             self.selectSuppFile = str(self.organicMatchFile.item(i).text())
-            print('Your Organic File is', self.selectOrganicFile)
-        if not self.selectOrganicFile:
-            self.organicSasFileInput = str(self.organicSasFile.text())
-            print('Your using a _supp_####: ', self.organicSasFileInput)
+            print(colored('Your Organic File is: ', 'yellow'), self.selectOrganicFile)
+        # if not self.selectOrganicFile:
+        #     self.organicSasFileInput = str(self.organicSasFile.text())
+        #     print(colored('Your using a _supp_####: ', 'yellow'), self.organicSasFileInput)
         if self.standardOrganicCheck.isChecked():
             self.organicMatchType = "Standard"
         else:
@@ -679,6 +681,7 @@ class FilePage(base_2, form_2):
         self.selectSuppFile = ""
         self.suppMatchType = ""
         self.suppSasFileInput = ""
+        self.suppOpenerIds = ""
         # self.fileDict = defaultdict(list)
 
         self.downloadFiles = self.findChild(QListWidget, 'files_listWidget')
@@ -691,11 +694,12 @@ class FilePage(base_2, form_2):
         self.suppSheetCountLabel = self.findChild(QLabel, 'suppSheetCount_Label')
         self.suppSasFile = self.findChild(QLineEdit, 'suppSAS_lineEdit')
         self.refreshDownloads = self.findChild(QPushButton, 'refreshFiles_pushButton')
-        self.suppOpenerIDS = self.findChild(QLineEdit, 'openerScheduleID_lineEdit')
+        self.suppOpenerIdsLine = self.findChild(QLineEdit, 'openerScheduleID_lineEdit')
 
 
         self.setFilesButton.pressed.connect(self.setMatchFile)
         self.setFilesButton.pressed.connect(self.setSuppFile)
+        self.setFilesButton.pressed.connect(self.setScheduleIDS)
         self.setFilesButton.released.connect(self.refreshFrom2Files)
         self.setFilesButton.released.connect(self.close)
         self.standardSuppCheck.toggled.connect(self.suppFileCheckboxesStandard)
@@ -707,6 +711,14 @@ class FilePage(base_2, form_2):
 
         for i in downloadFilesDirectory:
             self.downloadFiles.addItem(i)
+
+    def setScheduleIDS(self):
+        if str(self.suppOpenerIdsLine.text()) != "":
+            self.suppOpenerIds = str(self.suppOpenerIdsLine.text())
+            print(colored('Code will Dedupe Openers from Schedules: ', 'yellow'), colored(self.suppOpenerIds, 'green'))
+        else:
+            self.suppOpenerIds = ""
+            print(colored('No Openers Will Be Deduped', 'green'))
 
     def refreshDownloadFiles(self):
         downloadFilesDirectory = [f for f in listdir(downloads) if isfile(join(downloads, f))]
@@ -737,7 +749,7 @@ class FilePage(base_2, form_2):
         self.selectMatchFile = ""
         for i in range(self.listMatchFile.count()):
             self.selectMatchFile = str(self.listMatchFile.item(i).text())
-            print('Your Match File is', self.selectMatchFile)
+            print(colored('Your Match File is', 'yellow'), self.selectMatchFile)
             window.setWindowTitle("File Loaded: "+self.selectMatchFile)
             window.loadedFile = self.selectMatchFile
             window.countSheets()
@@ -747,10 +759,10 @@ class FilePage(base_2, form_2):
     def setSuppFile(self):
         for i in range(self.suppMatchFile.count()):
             self.selectSuppFile = str(self.suppMatchFile.item(i).text())
-            print('Your Suppression File is', self.selectSuppFile)
+            print(colored('Your Suppression File is', 'yellow'), self.selectSuppFile)
         if not self.selectSuppFile:
             self.suppSasFileInput = str(self.suppSasFile.text())
-            print('Your using a _supp_####: ', self.suppSasFileInput)
+            print(colored('Your using a _supp_####: ', 'yellow'), self.suppSasFileInput)
         if self.standardSuppCheck.isChecked():
             self.suppMatchType = "Standard"
         else:
