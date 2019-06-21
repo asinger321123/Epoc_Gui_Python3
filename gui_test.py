@@ -488,14 +488,15 @@ class NBE_Editor(base_7, form_7):
     def __init__(self):
         super(base_7, self).__init__()
         self.setupUi(self)
-        downloadFilesDirectory = [f for f in listdir(downloads) if isfile(join(downloads, f))]
-        downloadFilesDirectory.sort(key=lambda x: os.stat(os.path.join(downloads, x)).st_mtime, reverse=True)
+        # downloadFilesDirectory = [f for f in listdir(downloads) if isfile(join(downloads, f))]
+        # downloadFilesDirectory.sort(key=lambda x: os.stat(os.path.join(downloads, x)).st_mtime, reverse=True)
 
         self.selectNBEFile = ""
         self.selectOrganicFile = ""
         self.organicMatchType = ""
         self.organicSasFileInput = ""
         self.openerScheduleIDS = ""
+        self.organicTargetNumber = ""
         # self.fileDict = defaultdict(list)
 
         self.downloadFiles = self.findChild(QListWidget, 'files_listWidget')
@@ -508,6 +509,7 @@ class NBE_Editor(base_7, form_7):
         self.organicSheetCountLabel = self.findChild(QLabel, 'organicSheetCount_Label')
         self.refreshDownloads = self.findChild(QPushButton, 'refreshFiles_pushButton')
         self.openerScheduleIDLine = self.findChild(QLineEdit, 'openerScheduleID_lineEdit')
+        self.organicTarget = self.findChild(QLineEdit, 'organicTargetNumber_lineEdit')
 
         for i in downloadFilesDirectory:
             self.downloadFiles.addItem(i)
@@ -515,8 +517,9 @@ class NBE_Editor(base_7, form_7):
 
         self.setFilesButton.pressed.connect(self.setNBEFile)
         self.setFilesButton.pressed.connect(self.setOrganicFile)
-        self.setFilesButton.released.connect(self.refreshFrom2Files)
-        self.setFilesButton.released.connect(self.setScheduleIDS)
+        self.setFilesButton.pressed.connect(self.refreshFrom2Files)
+        self.setFilesButton.pressed.connect(self.setScheduleIDS)
+        self.setFilesButton.pressed.connect(self.setOrganicTargetNumber)
         self.setFilesButton.released.connect(self.close)
         self.standardOrganicCheck.toggled.connect(self.organicFileCheckboxesStandard)
         self.exactOrganicCheck.toggled.connect(self.organicFileCheckboxesExact)
@@ -556,6 +559,9 @@ class NBE_Editor(base_7, form_7):
         else:
             self.organicSheetCountLabel.setText('Sheet Count: N/A')
             self.organicSheetCountLabel.setStyleSheet('color: black') 
+
+    def setOrganicTargetNumber(self):
+        self.organicTargetNumber = str(self.organicTarget.text())
 
 
 
@@ -684,6 +690,8 @@ class FilePage(base_2, form_2):
         self.suppModel = self.downloadFiles.model()
         self.suppSheetCountLabel = self.findChild(QLabel, 'suppSheetCount_Label')
         self.suppSasFile = self.findChild(QLineEdit, 'suppSAS_lineEdit')
+        self.refreshDownloads = self.findChild(QPushButton, 'refreshFiles_pushButton')
+        self.suppOpenerIDS = self.findChild(QLineEdit, 'openerScheduleID_lineEdit')
 
 
         self.setFilesButton.pressed.connect(self.setMatchFile)
@@ -693,9 +701,18 @@ class FilePage(base_2, form_2):
         self.standardSuppCheck.toggled.connect(self.suppFileCheckboxesStandard)
         self.exactSuppCheck.toggled.connect(self.suppFileCheckboxesExact)
         self.suppModel.rowsRemoved.connect(self.suppSheetCount)
+        self.refreshDownloads.pressed.connect(self.refreshDownloadFiles)
 
 
 
+        for i in downloadFilesDirectory:
+            self.downloadFiles.addItem(i)
+
+    def refreshDownloadFiles(self):
+        downloadFilesDirectory = [f for f in listdir(downloads) if isfile(join(downloads, f))]
+        downloadFilesDirectory.sort(key=lambda x: os.stat(os.path.join(downloads, x)).st_mtime, reverse=True)
+
+        self.downloadFiles.clear()
         for i in downloadFilesDirectory:
             self.downloadFiles.addItem(i)
 
@@ -2606,6 +2623,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
         if self.nbeCheckBox.isChecked():
             self.config['nbeTarget'] = 'Yes'
+            self.config['organicTargetNumber'] =  self.nbeEditWindow.organicTargetNumber
             self.config['nbeFileName'] = self.nbeEditWindow.selectNBEFile
             self.config['organicFileName'] = self.nbeEditWindow.selectOrganicFile
             self.config['organicMatchType'] = self.nbeEditWindow.organicMatchType

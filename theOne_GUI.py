@@ -248,8 +248,8 @@ if len(args) > 0:
 						print(splitList)
 				else:
 					print('IM USING THE NEW FUNCTION TO MAKE DA SQL AND SEGMETNS')
-					splitList = utils.prepSqlSegments()
-					segmentList = utils.prepSasSegments()
+					splitList = utils.prepSqlSegments(listMatchType)
+					segmentList = utils.prepSasSegments(listMatchType)
 					
 			if dSharing == 'Y' and config['cmi_compass_client'] == 'Y':
 				if manu not in ['Merck', 'AstraZeneca', 'Novartis', 'GSK', 'Boehringer', 'Amgen', 'Biogen', 'Sanofi-Aventis']:
@@ -271,8 +271,8 @@ if len(args) > 0:
 							splitList = splitList.replace('npi, ', '')
 				else:
 					print('IM USING THE NEW FUNCTION TO MAKE DA SQL AND SEGMETNS')
-					splitList = utils.prepSqlSegments()
-					segmentList = utils.prepSasSegments()
+					splitList = utils.prepSqlSegments(listMatchType)
+					segmentList = utils.prepSasSegments(listMatchType)
 
 			if dSharing == 'N' and bDa_only  == 'N' and sDa_only == 'N':
 				segmentList = str(config['segVariable']).lower().replace(' ', '_')
@@ -334,6 +334,11 @@ if len(args) > 0:
 				brand = str(config['Brand'])
 				if os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
 					print('Im on the second File and going to do black magic here :')
+					listMatchType = str(config['organicMatchType'])
+					targetNum = str(config['organicTargetNumber'])
+					splitList = utils.prepSqlSegments(str(config['organicMatchType']))
+					segmentList = utils.prepSasSegments(str(config['organicMatchType']))
+
 			tableName = str(config['tableName'])
 
 
@@ -369,6 +374,7 @@ segmentListSingle = []
 
 #Set Sas Code Variables
 targetAuto = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Targeting Automation Code_OFFICIAL.sas'
+targetAutoOrganic = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Targeting Automation Code_ORGANIC.sas'
 basicMatch = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\TGT_NPI_ME_3PT_20170515.sas'
 dataSharing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\TGT_NPI_ME_3PT_DataSharing_20170515.sas'
 autoCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Presales Automation.sas'
@@ -571,7 +577,7 @@ def postgresConn():
 	myHeaders = list(df)
 
 	if caseType == 'Targeting' and manu in ['Merck', 'AstraZeneca', 'Novartis', 'GSK', 'Boehringer', 'Amgen', 'Biogen', 'Sanofi-Aventis']:
-		neededColumns = ['me', 'npi', 'fname', 'lname', 'zip'] + utils.prepSasSegments().split(',')
+		neededColumns = ['me', 'npi', 'fname', 'lname', 'zip'] + utils.prepSasSegments(listMatchType).split(',')
 	else:
 		neededColumns = ['me', 'npi', 'fname', 'lname', 'zip']
 
@@ -902,8 +908,13 @@ def fixSas():
 			segList = ', '.join(segmentList)
 		else:
 			segList = segmentList
-		copyfile(targetAuto, os.path.join(outCode2, 'Targeting Automation Code_OFFICIAL.sas'))
-		newInput = os.path.join(outCode2, 'Targeting Automation Code_OFFICIAL.sas')
+
+		if not os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
+			copyfile(targetAuto, os.path.join(outCode2, 'Targeting Automation Code_OFFICIAL.sas'))
+			newInput = os.path.join(outCode2, 'Targeting Automation Code_OFFICIAL.sas')
+		else:
+			copyfile(targetAutoOrganic, os.path.join(outCode2, 'Organic', 'Targeting Automation Code_ORGANIC.sas'))
+			newInput = os.path.join(outCode2, 'Organic', 'Targeting Automation Code_ORGANIC.sas')
 
 		line_file = open(os.path.join(newInput),'r').readlines()
 		new_file = open(os.path.join(newInput),'w')
@@ -951,6 +962,7 @@ def fixSas():
 			target_out = target_out.replace('/*applyToClientList*/', applyToClientList)
 			target_out = target_out.replace('/*applyToSda*/', applyToSda)
 			target_out = target_out.replace('/*applytoBda*/', applyToBda)
+			target_out = target_out.replace('/*nbeTarget*/', nbeTarget)
 			new_file.write(target_out)
 			line_file = new_file
 
@@ -1194,6 +1206,7 @@ if (caseType == 'listMatch' or caseType == 'Targeting') and listMatchType == 'No
 	if bDa_only == 'Y':
 		checkDrugs()
 	fixSas()
+
 
 if nbeTarget == 'Yes' and not os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\Organic'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
 	utils.checkExtension2(str(config['organicFileName']))

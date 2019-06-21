@@ -139,6 +139,32 @@ def checkExtension2(test=None):
 			writer = csv.writer(out, lineterminator='\n')
 			writer.writerows([['No File Found']])
 
+# def incDupColumns2(test=None):
+# 	matched = test
+# 	with open(downloads + 'csvFile1.csv', 'r') as myFile, open(downloads + 'csvFile.csv', 'w') as myOut:
+# 		reader = csv.reader(myFile)
+# 		headers = next(reader)
+# 		headersList = []
+# 		visited = []
+# 		inc = 1
+# 		for header in headers:
+# 			headersList.append(header)
+# 		for i, x in enumerate(headersList):
+# 			if x not in visited:
+# 				visited.append(headersList[i])
+# 			else:
+# 				dup = x +'_'+str(inc)
+# 				if dup not in visited:
+# 					visited.append(x+'_'+str(inc))
+# 				else:
+# 					inc += 1
+# 					visited.append(x+'_'+str(inc))
+
+# 		w = csv.writer(myOut, lineterminator='\n')
+# 		w.writerow(visited)
+# 		for row in reader:
+# 			w.writerow(row)
+
 def tab_to_csv2(test=None):
 	matched = test
 	with open(os.path.join(downloads, matched), 'r') as f, open(os.path.join(downloads, 'target.csv'), 'w') as out:
@@ -195,6 +221,8 @@ def incDupColumns():
 		for row in reader:
 			w.writerow(row)
 
+
+
 def cmiCompasCheck():
 	cmiColumns = []
 	with open(downloads + 'csvFile.csv', 'r') as f:
@@ -224,7 +252,7 @@ def importDrugs():
 			drugComplete.append(drugs)
 	return drugComplete
 
-def prepSasSegments():
+def prepSasSegments(lmType):
 	cmiCompasSegmentation = "npi, address1, campaign_type, city, cl_fname, cl_lname, cl_me, cl_zip, clientid, compasid, middle_name, segment1, specialty, state_code, tier, segment2, segment3"
 
 	with open(os.path.join(desktop,'Ewok\\Datasharing', 'dataSharing.json'), 'r') as infile:
@@ -235,7 +263,7 @@ def prepSasSegments():
 		config3 = json.loads(infile.read(), encoding='utf8')
 		manu = str(config3['Manu'])
 		segVariable = str(config3['segVariable']).lower()
-		if config3['listMatchType'] == 'Standard' or config3['listMatchType'] == 'Exact':
+		if lmType == 'Standard' or lmType == 'Exact':
 			if config3['cmi_compass_client'] == 'N':
 				if manu == 'Merck':
 					sasSegments = specialDataSharingDict[manu]
@@ -268,7 +296,7 @@ def prepSasSegments():
 					breakUP.remove('clientid')
 					sasSegments = cmiCompasSegmentation + ', ' + ''.join(breakUP)
 
-		elif config3['listMatchType'] == 'Standard_Seg' or config3['listMatchType'] == 'Exact_Seg':
+		elif lmType == 'Standard_Seg' or lmType == 'Exact_Seg':
 			if config3['cmi_compass_client'] == 'N':
 				if manu == 'Merck':
 					sasSegments = specialDataSharingDict[manu] + ', ' + segVariable
@@ -313,7 +341,7 @@ def prepSasSegments():
 
 	return sasSegments
 
-def prepSqlSegments():
+def prepSqlSegments(lmType):
 	with open(os.path.join(desktop,'Ewok\\Datasharing', 'dataSharing.json'), 'r') as infile:
 		config = json.loads(infile.read(), encoding='utf8')
 
@@ -322,7 +350,7 @@ def prepSqlSegments():
 		config3 = json.loads(infile.read(), encoding='utf8')
 		manu = str(config3['Manu'])
 		segVariable = str(config3['segVariable']).lower()
-		if config3['listMatchType'] == 'Standard' or config3['listMatchType'] == 'Exact':
+		if lmType == 'Standard' or lmType == 'Exact':
 			if config3['cmi_compass_client'] == 'N':
 				if manu == 'Merck':
 					sqlSegments = specialDataSharingDict[manu]
@@ -359,7 +387,7 @@ def prepSqlSegments():
 				if manu == 'Biogen':
 					sqlSegments = specialDataSharingDict[manu]
 
-		elif config3['listMatchType'] == 'Standard_Seg' or config3['listMatchType'] == 'Exact_Seg':
+		elif lmType == 'Standard_Seg' or lmType == 'Exact_Seg':
 			if config3['cmi_compass_client'] == 'N':
 				if manu == 'Merck':
 					sqlSegments = specialDataSharingDict[manu] + ', ' + segVariable
