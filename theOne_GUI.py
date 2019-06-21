@@ -115,6 +115,7 @@ if len(args) > 0:
 			pivSeg1 = ""
 			pivSeg2 = ""
 		if caseType == 'listMatch':
+			nbeTarget = 'No'
 			suppApplied = str(config['suppressionApplied'])
 			listProduct = str(config['listProduct'])
 			listMatchType = str(config['listMatchType'])
