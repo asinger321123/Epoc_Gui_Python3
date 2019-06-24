@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>681</width>
-    <height>755</height>
+    <height>756</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1567,6 +1567,11 @@ background: rgb(248, 248, 255, 0);
              <item>
               <property name="text">
                <string>Janssen</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>L-Nutra</string>
               </property>
              </item>
              <item>
