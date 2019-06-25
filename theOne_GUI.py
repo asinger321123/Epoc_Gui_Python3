@@ -255,21 +255,32 @@ if len(args) > 0:
 			if dSharing == 'Y' and config['cmi_compass_client'] == 'Y':
 				if manu not in ['Merck', 'AstraZeneca', 'Novartis', 'GSK', 'Boehringer', 'Amgen', 'Biogen', 'Sanofi-Aventis']:
 					addSeg = cmiCompasSegmentation
-					segVariable = str(config['segVariable'])
+					segVariable = str(config['segVariable']).lower()
 					if config['segVariable'] != "":
-						finalSeg = addSeg.split(', ')
-						finalSeg.append(segVariable)
-						for seg in finalSeg:    
-							segmentList.append(str(seg).replace(' ', '_'))
-							splitList = ", ".join(segmentList)
-							splitList = splitList.replace('npi, ', '')
+						# finalSeg = addSeg.split(', ')
+						# finalSeg.append(segVariable)
+						# for seg in finalSeg:
+						# 	if seg != segVariable:
+						# 		segmentList.append(str(seg).replace(' ', '_'))
+						cmiSegCheck = addSeg.split(', ')
+						if segVariable.lower() in cmiSegCheck:
+							segmentList = addSeg.split(', ')
+						if segVariable.lower() not in cmiSegCheck:
+							segmentList = str(addSeg + ', ' + segVariable).split(', ')
+
+						cmiSqlCheck = cmiCompasSQL.split(', ')
+						if segVariable.lower() in cmiSqlCheck:
+							splitList = cmiCompasSQL
+						if segVariable.lower() not in cmiSqlCheck:
+							splitList = cmiCompasSQL + ', ' + segVariable
+
 					
 					if segVariable == '':
 						finalSeg = addSeg.split(', ')
-						for seg in finalSeg:    
+						for seg in finalSeg:
 							segmentList.append(str(seg).replace(' ', '_'))
-							splitList = ", ".join(segmentList)
-							splitList = splitList.replace('npi, ', '')
+							splitList = cmiCompasSQL
+							# splitList = splitList.replace('npi, ', '')
 				else:
 					print('IM USING THE NEW FUNCTION TO MAKE DA SQL AND SEGMETNS')
 					splitList = utils.prepSqlSegments(listMatchType)
