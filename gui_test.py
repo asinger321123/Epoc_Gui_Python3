@@ -1587,6 +1587,32 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         for i in uniqueList:
             self.uniqueValuesList.addItem(i)
 
+    # def renameValue(self):
+    #     with open(downloads + 'csvFileTemp.csv', 'w') as outFile:
+    #         row_writer = csv.writer(outFile, lineterminator='\n')
+    #         # selectedValue = sorted([index.row() for index in self.uniqueValuesList.selectedIndexes()], reverse=True)
+    #         # for selectedItem in selectedValue:
+    #         #     selectedItem = str(self.uniqueValuesList.currentItem().text())
+    #         selectedItem = sorted([index.row() for index in self.uniqueValuesList.selectedIndexes()], reverse=True)
+    #         selectedItems = []
+    #         for i in selectedItem:
+    #             selectedItems.append(self.uniqueValuesList.item(i).text())
+
+    #         with open(downloads + 'csvFile.csv', 'r') as f:
+    #             reader = csv.reader(f)
+    #             first_row = next(reader)
+    #             row_writer.writerow(first_row)
+    #             for row in reader:
+    #                 for n, segVal in enumerate(row):
+    #                     if segVal in selectedItems:
+    #                         row[n] = str(self.renameValueEdit.text())
+    #                 row_writer.writerow(row)
+    #     os.chdir(downloads)
+    #     os.remove(os.path.join(downloads, 'csvFile.csv'))
+    #     os.rename(os.path.join(downloads, 'csvFileTemp.csv'), os.path.join(downloads, 'csvFile.csv'))
+    #     self.getUniqueSegmentValues()
+
+
     def renameValue(self):
         with open(downloads + 'csvFileTemp.csv', 'w') as outFile:
             row_writer = csv.writer(outFile, lineterminator='\n')
@@ -1603,9 +1629,9 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 first_row = next(reader)
                 row_writer.writerow(first_row)
                 for row in reader:
-                    for n, segVal in enumerate(row):
-                        if segVal in selectedItems:
-                            row[n] = str(self.renameValueEdit.text())
+                    if row[self.returnSourceIndexes()[0]] in selectedItems:
+                        # print(row[self.returnSourceIndexes()[0]], selectedItems)
+                        row[self.returnSourceIndexes()[0]] = str(self.renameValueEdit.text())
                     row_writer.writerow(row)
         os.chdir(downloads)
         os.remove(os.path.join(downloads, 'csvFile.csv'))
