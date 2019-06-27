@@ -1066,6 +1066,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.tabWidget.currentChanged.connect(self.returnUserTable)
         self.targetManuName.currentIndexChanged.connect(self.dataSharingClients)
         self.targetManuName.currentIndexChanged.connect(self.highlightCMI)
+        self.targetManuName.currentIndexChanged.connect(self.dataIntegratyCheck)
         self.getUniqueValuesButton.clicked.connect(self.getUniqueSegmentValues)
         self.renameButton.clicked.connect(self.renameValue)
         self.renameButton.clicked.connect(self.bajabThread)
@@ -1637,6 +1638,37 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         os.remove(os.path.join(downloads, 'csvFile.csv'))
         os.rename(os.path.join(downloads, 'csvFileTemp.csv'), os.path.join(downloads, 'csvFile.csv'))
         self.getUniqueSegmentValues()
+
+    def returnIndex(self, sourceSeg):
+        itemsTextList =  [str(self.sourceSegs.item(i).text()).lower() for i in range(self.sourceSegs.count())]
+        itemIndex = itemsTextList.index(sourceSeg)
+        return itemIndex
+
+
+
+    def dataIntegratyCheck(self):
+        if str(self.targetManuName.currentText()) == 'Boehringer':
+            with open(downloads + 'csvFile.csv', 'r') as f:
+                reader = csv.reader(f)
+                first_row = next(reader)
+                itemsTextList =  [str(self.sourceSegs.item(i).text()).lower() for i in range(self.sourceSegs.count())]
+                if 'client_id' in itemsTextList:
+                    for row in reader:
+                        if not str(row[self.returnIndex('client_id')]).startswith('001'):
+                            msg = QMessageBox()
+                            msg.setIcon(QMessageBox.Warning)
+                            msg.setText("There are bad Client_IDs (Veeva_IDs) in the source data. Please reach out to Account Manager to Resolve Bad Data")
+                            msg.setStandardButtons(QMessageBox.Ok)
+                            msg.exec_()
+                            break
+                            # print(row[self.returnIndex('client_id')])
+
+                else:
+                    continue
+
+                # soureColumns = sorted([index.row() for index in self.sourceSegs.selectedIndexes()], reverse=True)
+                # for row in reader:
+
 
     def returnSelectedValues(self):
         selectedList = []
