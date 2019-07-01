@@ -1664,7 +1664,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                             # print(row[self.returnIndex('client_id')])
 
                 else:
-                    continue
+                    pass
 
                 # soureColumns = sorted([index.row() for index in self.sourceSegs.selectedIndexes()], reverse=True)
                 # for row in reader:
@@ -2698,10 +2698,14 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.config['nbeFileName'] = self.nbeEditWindow.selectNBEFile
             self.config['organicFileName'] = self.nbeEditWindow.selectOrganicFile
             self.config['organicMatchType'] = self.nbeEditWindow.organicMatchType
-            self.config['openerScheduleIDS'] = self.nbeEditWindow.openerScheduleIDS
+            if self.nbeEditWindow.openerScheduleIDS != '':
+                self.config['openerScheduleIDS'] = self.nbeEditWindow.openerScheduleIDS
+            else:
+                self.config['openerScheduleIDS'] = '""'
 
         if not self.nbeCheckBox.isChecked():
             self.config['nbeTarget'] = 'No'
+            self.config['openerScheduleIDS'] = '""'
 
         if not self.suppCheck.isChecked():
             self.config['suppMatchType'] = '""'

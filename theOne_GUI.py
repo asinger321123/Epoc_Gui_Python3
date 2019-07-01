@@ -173,6 +173,7 @@ if len(args) > 0:
 			email = str(config['email'])
 			tableName = str(config['tableName'])
 		elif caseType == 'Targeting':
+			openerIDs = str(config['openerScheduleIDS'])
 			nbeTarget = str(config['nbeTarget'])
 			suppSDAOnly = str(config['suppSDAOnly'])
 			suppBDAOnly = str(config['suppBDAOnly'])
@@ -932,6 +933,7 @@ def fixSas():
 			copyfile(targetAutoOrganic, os.path.join(outCode2, 'Organic', 'Targeting Automation Code_ORGANIC.sas'))
 			newInput = os.path.join(outCode2, 'Organic', 'Targeting Automation Code_ORGANIC.sas')
 
+
 		line_file = open(os.path.join(newInput),'r').readlines()
 		new_file = open(os.path.join(newInput),'w')
 		for line_in in line_file:
@@ -979,6 +981,8 @@ def fixSas():
 			target_out = target_out.replace('/*applyToSda*/', applyToSda)
 			target_out = target_out.replace('/*applytoBda*/', applyToBda)
 			target_out = target_out.replace('/*nbeTarget*/', nbeTarget)
+			target_out = target_out.replace('/*openerScheduleIDs*/', openerIDs)
+
 			new_file.write(target_out)
 			line_file = new_file
 
