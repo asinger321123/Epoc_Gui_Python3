@@ -635,12 +635,13 @@ def postgresConn():
 
 	conn.commit()
 
-	if manu == 'Biogen':
-		fixBio = """UPDATE {tableName}
-		SET veeva_network_id = '_'||veeva_network_id""".format(tableName=tableName)
+	if caseType == 'Targeting':
+		if manu == 'Biogen':
+			fixBio = """UPDATE {tableName}
+			SET veeva_network_id = '_'||veeva_network_id""".format(tableName=tableName)
 
-		cur.execute(fixBio)
-		conn.commit()
+			cur.execute(fixBio)
+			conn.commit()
 
 	if caseType == 'listMatch':
 		if listMatchType == 'Standard_Seg':
