@@ -1541,7 +1541,17 @@ background: rgb(248, 248, 255, 0);
              </item>
              <item>
               <property name="text">
+               <string>Cutis</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
                <string>Daiichi</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Eisai</string>
               </property>
              </item>
              <item>
