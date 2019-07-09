@@ -233,6 +233,7 @@ if len(args) > 0:
 				neededValues = ''
 				backFillValue = ''
 				targetNum = ''
+				targetNum2 = ''
 				listMatchType = 'None'
 				neededValues = ''
 				backFillValue = ''
