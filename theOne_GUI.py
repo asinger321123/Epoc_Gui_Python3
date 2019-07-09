@@ -220,6 +220,7 @@ if len(args) > 0:
 
 				if listMatchType == 'Standard_Seg' or listMatchType == 'Exact_Seg':
 					targetNum = str(config['targetNum'])
+					targetNum2 = ''
 					segVariable = str(config['segVariable']).lower()
 					varValues = str(config['varValues'])
 					neededValues = str(config['neededSegs'])
