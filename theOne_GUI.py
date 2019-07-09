@@ -205,6 +205,7 @@ if len(args) > 0:
 				if listMatchType == 'Standard' or listMatchType == 'Exact':
 					if randomSplit == 'No':
 						targetNum = str(config['targetNum'])
+						targetNum2 = ''
 					else:
 						targetNum = str(config['targetNum'])
 						targetNums = targetNum.split(' ')
