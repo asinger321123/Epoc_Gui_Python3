@@ -44,6 +44,8 @@ csvFileModTemp2 = 'target_mod_temp2.csv'
 csvFileFinal = 'target_final.csv'
 dt = str(datetime.datetime.now().strftime("%Y%m%d"))
 
+inc = 0
+
 
 #Excludes SPecial Datasharing clients
 cmiCompasSegmentation = "npi, address1, campaign_type, city, cl_fname, cl_lname, cl_me, cl_zip, clientid, compasid, middle_name, segment1, specialty, state_code, tier, segment2, segment3"
@@ -173,6 +175,7 @@ if len(args) > 0:
 			email = str(config['email'])
 			tableName = str(config['tableName'])
 		elif caseType == 'Targeting':
+			randomSplit = str(config['randomSplit'])
 			openerIDs = str(config['openerScheduleIDS'])
 			nbeTarget = str(config['nbeTarget'])
 			suppSDAOnly = str(config['suppSDAOnly'])
@@ -200,7 +203,13 @@ if len(args) > 0:
 
 			if bDa_only  == 'N' and sDa_only == 'N':
 				if listMatchType == 'Standard' or listMatchType == 'Exact':
-					targetNum = str(config['targetNum'])
+					if randomSplit == 'No':
+						targetNum = str(config['targetNum'])
+					else:
+						targetNum = str(config['targetNum'])
+						targetNums = targetNum.split(' ')
+						targetNum = targetNums[0]
+						targetNum2 = targetNums[1]
 					segVariable = str(config['segVariable']).lower()
 					varValues = ''
 					neededValues = ''
@@ -946,6 +955,8 @@ def fixSas():
 			target_out = target_out.replace('/*Brand*/', brand)
 			target_out = target_out.replace('?MY_INIT?', yourIn)
 			target_out = target_out.replace('/*TargetNum*/', targetNum)
+			target_out = target_out.replace('/*TargetNum2*/', targetNum2)
+			target_out = target_out.replace('/*randomSplit*/', randomSplit)
 			target_out = target_out.replace('/*segVar*/', segVariable)
 			target_out = target_out.replace('/*segValues*/', varValues)
 			target_out = target_out.replace('/*dataShareYorN*/', dSharing)

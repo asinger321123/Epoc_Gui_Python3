@@ -977,6 +977,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.tableNameWarningTargeting = self.findChild(QLabel, 'targetTableName')
         self.backFillBox = self.findChild(QCheckBox, 'backFill_checkBox')
         self.nbeCheckBox = self.findChild(QCheckBox, 'nbe_checkBox')
+        self.splitBox = self.findChild(QCheckBox, 'randomSplit_checkBox')
 
         #Edit List Objects
         self.uniqueValuesList = self.findChild(QListWidget, 'uniqueValues_listWidget')
@@ -2608,6 +2609,10 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             if not isDedupChecked:
                 self.config['deDup'] = str('No')
         if self.tabWidget.currentIndex() == 1:
+            if self.splitBox.isChecked():
+                self.config['randomSplit'] = 'Yes'
+            if not self.splitBox.isChecked():
+                self.config['randomSplit'] = 'No'
             if isSuppSdaChecked:
                 self.config['suppSDAOnly'] = 'Y'
             if not isSuppSdaChecked:
