@@ -374,7 +374,7 @@ extension = os.path.splitext(os.path.join(downloads, newest))
 justwork = downloads + listText
 
 #MastDrug File
-masterDrugs = 'P:\Epocrates Analytics\Drug Compare\Master Drug List\\drugs.csv'
+masterDrugs = 'P:\\Epocrates Analytics\\Drug Compare\\Master Drug List\\drugs.csv'
 
 #Set input File and Output File as well as establish default list of source attributes
 outFile = """P:\\Epocrates Analytics\\List Match\\List Match Folder\\{folderName}{slashes}""".format(folderName = name, slashes = "\\")

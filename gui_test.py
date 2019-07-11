@@ -1108,6 +1108,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.segBox.toggled.connect(self.threadSong)
         self.sdaAddOn.toggled.connect(self.exitsThread)
         self.runProgramButton.released.connect(self.trashThread)
+        self.bdaAddOn.toggled.connect(self.getThereThread)
 
         self.addSDAButton.pressed.connect(self.additionalSDA)
         self.addBDAButton.pressed.connect(self.additionalBDA)
@@ -1257,6 +1258,14 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
     def playTrash(self):
         winsound.PlaySound(os.path.join(desktop, 'Ewok\\Sounds\\Trash.wav'), winsound.SND_FILENAME)
+
+    def getThereThread(self):
+        if self.bdaAddOn.isChecked():
+            thread1 = Thread(target = self.playGetThere)
+            thread1.start()
+
+    def playGetThere(self):
+        winsound.PlaySound(os.path.join(desktop, 'Ewok\\Sounds\\get_there.wav'), winsound.SND_FILENAME)
 
     def highlightPivotSegs(self):
         self.seg1 = self.pivotWindow.selectSeg1
