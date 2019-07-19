@@ -323,6 +323,7 @@ class State_Zip(base_6, form_6):
         self.stateZipOkButton.released.connect(self.close)
         self.fetchZipCode.pressed.connect(self.sqlFetchZips)
         self.resetAllButton.pressed.connect(self.resetAll)
+        self.stateZipListFinal.itemClicked.connect(self.zipCityTip)
 
         #default settings
         self.importZip.setEnabled(False)
@@ -342,6 +343,29 @@ class State_Zip(base_6, form_6):
         self.applyToClientList = ''
         self.applyToSda = ''
         self.applyToBda = ''
+
+    def zipCityTip(self):
+        selectedZipCodes = sorted([index.row() for index in self.stateZipListFinal.selectedIndexes()], reverse=True)
+        conn = sqlite3.connect(os.path.join(desktop,'Ewok', 'epocrates_tables.db'))
+        conn.text_factory = str
+        cur = conn.cursor()
+
+        zipCityList = []
+        for zipcode in selectedZipCodes:
+            zipCityList.append("'"+str(self.stateZipListFinal.item(zipcode).text())+"'")
+
+        queryStateZips = """Select city from us_zip_data where zip in ({})""".format(", ".join(zipCityList))
+        results = cur.execute(queryStateZips)
+        conn.commit()
+
+
+        displayCity = ""
+        for row in results:
+            # print(row[0])
+            displayCity += '{}{}'.format(row[0], '\n')
+            self.stateZipListFinal.setToolTip(displayCity)
+
+        selectedZipCodes = []
 
     def sqlFetchZips(self):
         self.stateZipListFinal.clear()
@@ -918,7 +942,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.removeSegButton = self.findChild(QPushButton, 'removeSegButton_push_btn')
         self.drugList = self.findChild(QPlainTextEdit, 'drugList_text_edit')
         self.segBox = self.findChild(QCheckBox, 'segBox_check_box')
-        self.runProgramButton = self.findChild(QPushButton, 'runProgramButton')
+        self.runProgramButton = self.findChild(QPushButton, 'runProgramButton') 
         self.brandName = self.findChild(QLineEdit, 'brandName_line_edit')
         self.caseOptions = self.findChild(QGroupBox, 'caseOptionsGroupBox')
         self.addOns = self.findChild(QGroupBox, 'addOnGroupBox')
