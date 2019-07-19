@@ -81,6 +81,8 @@ with open(os.path.join(desktop, 'TheEagleHasLanded.csv'), 'r') as passFile:
 	for item in reader:
 		password = item['password']
 
+utils.codeCounter()
+
 if len(args) > 0:
 	with open(os.path.join(desktop, 'Ewok\\Configs', args[0]), 'r') as infile:
 		config = json.loads(infile.read(), encoding='utf8')
@@ -357,7 +359,8 @@ if len(args) > 0:
 				manu = str(config['Manu'])
 				date = str(config['date'])
 				brand = str(config['Brand'])
-				if os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
+				# if os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
+				if utils.codeCountReader() > 1:
 					print('Im on the second File and going to do black magic here :')
 					listMatchType = str(config['organicMatchType'])
 					targetNum = str(config['organicTargetNumber'])
@@ -687,7 +690,8 @@ def postgresConn():
 			pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
 
 	elif caseType == 'Targeting':
-		if not os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
+		# if not os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
+		if utils.codeCountReader() <= 1:
 			if dSharing == 'Y':
 				if listMatchType =='Standard':
 					if config['cmi_compass_client'] == 'N':
@@ -845,7 +849,8 @@ def copyTarget():
 			copyfile(zipsFile, os.path.join(outCode, 'zipsImport.csv'))
 
 	elif caseType == 'Targeting':
-		if not os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
+		# if not os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
+		if utils.codeCountReader() <= 1:
 			copyfile(downloads + listText, outFileFinal2)
 		else:
 			copyfile(downloads + listText, 'P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\Organic\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder))
@@ -867,6 +872,25 @@ def removeFiles():
 		copyfile(os.path.join(downloads, newest), os.path.join(outCode, newest))
 	if queryZips == 'Yes':
 		os.remove(zipsFile)
+
+	if caseType == 'listMatch':
+		if os.path.exists(os.path.join(desktop, 'Ewok', 'codeCount.csv')):
+			os.remove(os.path.join(desktop, 'Ewok', 'codeCount.csv'))
+		else:
+			pass
+
+	if utils.codeCountReader() > 1:
+		if os.path.exists(os.path.join(desktop, 'Ewok', 'codeCount.csv')):
+			os.remove(os.path.join(desktop, 'Ewok', 'codeCount.csv'))
+		else:
+			pass
+
+	if caseType == 'Targeting' and nbeTarget == 'No':
+		if os.path.exists(os.path.join(desktop, 'Ewok', 'codeCount.csv')):
+			os.remove(os.path.join(desktop, 'Ewok', 'codeCount.csv'))
+		else:
+			pass		
+
 
 def fixSas():
 	#fixes the listMatch Code
@@ -939,7 +963,8 @@ def fixSas():
 		else:
 			segList = segmentList
 
-		if not os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
+		# if not os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
+		if utils.codeCountReader() <= 1:
 			copyfile(targetAuto, os.path.join(outCode2, 'Targeting Automation Code_OFFICIAL.sas'))
 			newInput = os.path.join(outCode2, 'Targeting Automation Code_OFFICIAL.sas')
 		else:
@@ -1217,6 +1242,38 @@ def checkDrugs2():
 
 	finalDrugs2 = []
 	unmatchedDrugs2 = []
+
+# def codeCounter():
+# 	codeCount = 0
+# 	if not os.path.exists(os.path.join(desktop, 'Ewok', 'codeCount.csv')):
+# 		with open(os.path.join(desktop, 'Ewok', 'codeCount.csv'), 'w') as outFile:
+# 			writer = csv.writer(outFile, lineterminator='\n')
+# 			headers = ['count']
+# 			writer.writerow(headers)
+# 			writer.writerow(['1'])
+# 			codeCount = 1
+
+# 	else:
+# 		with open(os.path.join(desktop, 'Ewok', 'codeCount.csv'), 'r') as inFile:
+# 			reader = csv.reader(inFile)
+# 			headers = next(reader)
+# 			for line in reader:
+# 				value = int(line[0])
+# 			value += 1
+# 			codeCount = value
+# 	print('Code Count is: ', codeCount)
+# 	return codeCount
+
+# def codeCountReader():
+# 	if os.path.exists(os.path.join(desktop, 'Ewok', 'codeCount.csv')):
+# 		with open(os.path.join(desktop, 'Ewok', 'codeCount.csv'), 'r') as inFile:
+# 			reader = csv.reader(inFile)
+# 			headers = next(reader)
+# 			for line in reader:
+# 				value = int(line[0])
+
+# 		return value
+
 
 if (caseType == 'listMatch' or caseType == 'Targeting') and listMatchType != 'None':
 	get_cols_names()

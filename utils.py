@@ -446,8 +446,62 @@ def prepSqlSegments(lmType):
 
 		return sqlSegments
 
+def codeCounter():
+	codeCount = 0
+	if not os.path.exists(os.path.join(desktop, 'Ewok', 'codeCount.csv')):
+		with open(os.path.join(desktop, 'Ewok', 'codeCount.csv'), 'w') as outFile:
+			writer = csv.writer(outFile, lineterminator='\n')
+			headers = ['count']
+			writer.writerow(headers)
+			writer.writerow(['1'])
+			codeCount = 1
+
+	else:
+		with open(os.path.join(desktop, 'Ewok', 'codeCountTEMP.csv'), 'w') as outFile2:
+			tempWriter = csv.writer(outFile2, lineterminator='\n')
+			headers = ['count']
+			tempWriter.writerow(headers)
+			with open(os.path.join(desktop, 'Ewok', 'codeCount.csv'), 'r') as inFile:
+				reader = csv.reader(inFile)
+				headers = next(reader)
+				for row in reader:
+					value = int(row[0])
+					value += 1
+
+			tempWriter.writerow([value])
+
+		os.remove(os.path.join(desktop, 'Ewok', 'codeCount.csv'))
+		os.rename(os.path.join(desktop, 'Ewok', 'codeCountTEMP.csv'), os.path.join(desktop, 'Ewok', 'codeCount.csv'))
+
+		print('Code Count is: ', value)
+	# 					# print(row[self.returnSourceIndexes()[0]], selectedItems)
+	# 					row[self.returnSourceIndexes()[0]] = str(self.renameValueEdit.text())
+	# 				row_writer.writerow(row)
+
+	# 		for line in reader:
+	# 			value = int(line[0])
+	# 		value += 1
+	# 		codeCount = value
+	# print('Code Count is: ', codeCount)
+	# return codeCount
+
+def codeCountReader():
+	if os.path.exists(os.path.join(desktop, 'Ewok', 'codeCount.csv')):
+		with open(os.path.join(desktop, 'Ewok', 'codeCount.csv'), 'r') as inFile:
+			reader = csv.reader(inFile)
+			headers = next(reader)
+			for line in reader:
+				value = int(line[0])
+		# print('Reader Value:', value)
+		return value
+
+	else:
+		return 0
+
 
 def main():
+	codeCounter()
+	codeCountReader()
 	fetchColumns()
 	checkExtension()
 	pipe_to_csv()
