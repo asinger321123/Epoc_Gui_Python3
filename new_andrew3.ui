@@ -1531,6 +1531,11 @@ background: rgb(248, 248, 255, 0);
              </item>
              <item>
               <property name="text">
+               <string>Dermira</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
                <string>Eisai</string>
               </property>
              </item>
@@ -1547,6 +1552,11 @@ background: rgb(248, 248, 255, 0);
              <item>
               <property name="text">
                <string>GSK</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Intra-Cellular</string>
               </property>
              </item>
              <item>
