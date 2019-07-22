@@ -436,6 +436,8 @@ class State_Zip(base_6, form_6):
             self.applyToBda = 'No'
 
     def setStates(self):
+        self.statesStringFinal = ""
+        self.statesString = ""
         if self.stateCheckBox.isChecked():
             for state in range(self.stateZipListFinal.count()):
                 # self.stateObject = '"'+str(self.stateZipListFinal.item(state).text())+'"'+', '+'\n'
