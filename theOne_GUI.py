@@ -242,7 +242,7 @@ if len(args) > 0:
 				backFillValue = ''
 			dSharing = str(config['dSharing'])
 			if dSharing == 'Y' and config['cmi_compass_client'] == 'N':
-				if manu not in ['Merck', 'AstraZeneca', 'Novartis', 'GSK', 'Boehringer', 'Amgen', 'Biogen', 'Sanofi-Aventis']:
+				if manu not in ['Merck', 'AstraZeneca', 'Novartis', 'GSK', 'Boehringer', 'Amgen', 'Biogen', 'Sanofi-Aventis', 'AbbVie']:
 					addSeg1 = config['finalSegs']
 					addSeg = ", ".join(addSeg1).lower().replace('Group', '_group').replace('group', '_group').replace('GROUP', '_group')
 					if config['segVariable'] != "":
@@ -268,7 +268,7 @@ if len(args) > 0:
 					segmentList = utils.prepSasSegments(listMatchType)
 					
 			if dSharing == 'Y' and config['cmi_compass_client'] == 'Y':
-				if manu not in ['Merck', 'AstraZeneca', 'Novartis', 'GSK', 'Boehringer', 'Amgen', 'Biogen', 'Sanofi-Aventis']:
+				if manu not in ['Merck', 'AstraZeneca', 'Novartis', 'GSK', 'Boehringer', 'Amgen', 'Biogen', 'Sanofi-Aventis', 'AbbVie']:
 					addSeg = cmiCompasSegmentation
 					segVariable = str(config['segVariable']).lower()
 					if config['segVariable'] != "":
@@ -477,11 +477,11 @@ def getMain():
 				print(cellVal, ': ', colored('I found a ME Number', 'green'))
 				headers[index] = 'me'
 				foundMain.append('me')
-			elif cellVal == 'fname' or cellVal == 'firstname' or re.search('^first.+name', cellVal) or re.search('.+first.+name', cellVal) or re.search('.+fname', cellVal) or re.search('.+first', cellVal) or re.search('.+frst.+', cellVal):
+			elif cellVal == 'fname' or cellVal == 'firstname' or cellVal == 'first_nm' or re.search('^first.+name', cellVal) or re.search('.+first.+name', cellVal) or re.search('.+fname', cellVal) or re.search('.+first', cellVal) or re.search('.+frst.+', cellVal):
 				print(cellVal, ': ', colored('I found a First Name', 'green'))
 				headers[index] = 'fname'
 				foundMain.append('fname')
-			elif re.search(r'^lname|^last.+name|.+last|.+last.+name', cellVal) or cellVal == 'lastname':
+			elif re.search(r'^lname|^last.+name|.+last|.+last.+name|last_nm', cellVal) or cellVal == 'lastname':
 				print(cellVal, ': ',  colored('I found a Last Name', 'green'))
 				headers[index] = 'lname'
 				foundMain.append('lname')
@@ -958,7 +958,7 @@ def fixSas():
 		targetOut = """P:\\Epocrates Analytics\\TARGETS\\{date}\\{manu} {brand}""".format(date = date, manu = manu, brand = brand)
 		outCode2 = """P:\\Epocrates Analytics\\TARGETS\\{date}\\{manu} {brand}{slashes}""".format(date = date, slashes = "\\", manu = manu, brand = brand)
 		# if dSharing == 'Y' and (listMatchType == 'Standard' or listMatchType == 'Standard_Seg' or listMatchType == 'Exact' or listMatchType == 'Exact_Seg'):
-		if manu not in ['Merck', 'AstraZeneca', 'Novartis', 'GSK', 'Boehringer', 'Amgen', 'Biogen', 'Sanofi-Aventis']:
+		if manu not in ['Merck', 'AstraZeneca', 'Novartis', 'GSK', 'Boehringer', 'Amgen', 'Biogen', 'Sanofi-Aventis', 'AbbVie']:
 			segList = ', '.join(segmentList)
 		else:
 			segList = segmentList

@@ -281,6 +281,8 @@ def prepSasSegments(lmType):
 					sasSegments = specialDataSharingDict[manu]
 				if manu == 'Biogen':
 					sasSegments = specialDataSharingDict[manu]
+				if manu == 'AbbVie':
+					sasSegments = specialDataSharingDict[manu]
 
 			if config3['cmi_compass_client'] == 'Y':
 				if manu == 'Merck':
@@ -313,6 +315,8 @@ def prepSasSegments(lmType):
 				if manu == 'Sanofi-Aventis':
 					sasSegments = specialDataSharingDict[manu] + ', ' + segVariable
 				if manu == 'Biogen':
+					sasSegments = specialDataSharingDict[manu] + ', ' + segVariable
+				if manu == 'AbbVie':
 					sasSegments = specialDataSharingDict[manu] + ', ' + segVariable
 
 			if config3['cmi_compass_client'] == 'Y':
@@ -368,6 +372,8 @@ def prepSqlSegments(lmType):
 					sqlSegments = specialDataSharingDict[manu]
 				if manu == 'Biogen':
 					sqlSegments = specialDataSharingDict[manu]
+				if manu == 'AbbVie':
+					sqlSegments = specialDataSharingDict['abbvieSegmentation']
 
 			if config3['cmi_compass_client'] == 'Y':
 				if manu == 'Merck':
@@ -405,6 +411,8 @@ def prepSqlSegments(lmType):
 					sqlSegments = specialDataSharingDict[manu] + ', ' + segVariable
 				if manu == 'Biogen':
 					sqlSegments = specialDataSharingDict[manu] + ', ' + segVariable
+				if manu == 'AbbVie':
+					sqlSegments = specialDataSharingDict['abbvieSegmentation'] + ', ' + segVariable
 
 			if config3['cmi_compass_client'] == 'Y':
 				if manu == 'Merck':
