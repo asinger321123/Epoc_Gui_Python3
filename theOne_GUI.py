@@ -1274,6 +1274,16 @@ def checkDrugs2():
 
 # 		return value
 
+def deleteCodeCount():
+	if os.path.exists(os.path.join(desktop, 'Ewok', 'codeCount.csv')):
+		os.remove(os.path.join(desktop, 'Ewok', 'codeCount.csv'))
+	if os.path.exists(os.path.join(downloads, csvFileMod)):
+		os.remove(os.path.join(downloads, csvFileMod))
+	if os.path.exists(os.path.join(downloads, csvFileModTemp2)):
+		os.remove(os.path.join(downloads, csvFileModTemp2))
+	else:
+		pass
+
 
 if (caseType == 'listMatch' or caseType == 'Targeting') and listMatchType != 'None':
 	get_cols_names()
@@ -1282,7 +1292,10 @@ if (caseType == 'listMatch' or caseType == 'Targeting') and listMatchType != 'No
 	if 'cmi_compass_client' in config:
 		if config['cmi_compass_client'] == 'Y':
 			cmiCompasColumns()
-	postgresConn()
+	try:
+		postgresConn()
+	except:
+		deleteCodeCount()
 	checkDrugs()
 	fixSas()
 	copyTarget()
