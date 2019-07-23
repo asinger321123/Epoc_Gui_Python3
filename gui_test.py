@@ -1094,6 +1094,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.targetManuName.currentIndexChanged.connect(self.dataSharingClients)
         self.targetManuName.currentIndexChanged.connect(self.highlightCMI)
         self.targetManuName.currentIndexChanged.connect(self.dataIntegratyCheck)
+        self.targetManuName.currentIndexChanged.connect(self.gskCallback)
         self.getUniqueValuesButton.clicked.connect(self.getUniqueSegmentValues)
         self.renameButton.clicked.connect(self.renameValue)
         self.renameButton.clicked.connect(self.bajabThread)
@@ -1117,7 +1118,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.sdaOnly.toggled.connect(self.sdaOnlyCallback)
         self.bdaOnly.toggled.connect(self.sdaOnlyCallback)
         self.tabWidget.currentChanged.connect(self.sdaOnlyCallback)
-        self.presalesManuName.textChanged.connect(self.gskCallback)
+        self.presalesManuName.textChanged.connect(self.gskCallback2)
         self.segmentList.toggled.connect(self.segmentedListCallback)
         self.uniqueValuesList.customContextMenuRequested.connect(self.listItemRightClicked)
         self.suppCheck.toggled.connect(self.showFileSelection)
@@ -2137,7 +2138,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.finalSegs.setEnabled(False)
             if self.finalSegs:
                 self.finalSegs.clear()
-            self.finalSegs.addItem('GSK_Metadata_Tag')
+            # self.finalSegs.addItem('GSK_Metadata_Tag')
         if str(self.targetManuName.currentText()) == 'Amgen':
             # self.segmentList.setEnabled(False)
             # self.keepSeg.setEnabled(False)
@@ -2941,7 +2942,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
 
 
-    def gskCallback(self):
+    def gskCallback2(self):
         brandLower = str(self.presalesManuName.text()).lower()
         if brandLower == 'gsk':
             self.exactMatch.setChecked(True)
@@ -3114,15 +3115,34 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         isStandardChecked = self.standardMatch.isChecked()
         isFuzzyBoxChecked = self.fuzzyBox.isChecked()
         isExactChecked = self.exactMatch.isChecked()
-        if isStandardChecked:
+        if isStandardChecked and str(self.targetManuName.currentText()) != 'GSK':
             self.standardMatch.setStyleSheet("color: green; font-weight: bold")
             self.exactMatch.setChecked(False)
             self.exactMatch.setStyleSheet("color: black")
             self.fuzzyBox.setChecked(False)
             self.fuzzyBox.setStyleSheet("color: black")
+            self.runProgramButton.setEnabled(True)
+        elif isStandardChecked and str(self.targetManuName.currentText()) == 'GSK':
+            self.standardMatch.setStyleSheet("color: green; font-weight: bold")
+            self.exactMatch.setChecked(False)
+            self.exactMatch.setStyleSheet("color: black")
+            self.fuzzyBox.setChecked(False)
+            self.fuzzyBox.setStyleSheet("color: black")
+            self.runProgramButton.setEnabled(False)
         elif not isStandardChecked and not isExactChecked and not isFuzzyBoxChecked:
             self.exactMatch.setChecked(True)
             self.standardMatch.setStyleSheet("color: black")
+
+    def gskCallback(self):
+        # print(self.targetManuName.currentText())
+        # self.exactMatch.setChecked(True)
+        if str(self.targetManuName.currentText()) == 'GSK':
+            self.exactMatch.setChecked(True)
+        elif str(self.targetManuName.currentText()) == 'GSK' and self.standardMatch.isChecked():
+            self.runProgramButton.setEnabled(False)
+        else:
+            self.runProgramButton.setEnabled(True)
+            self.standardMatch.setChecked(True)
 
     def exactCallback(self):
         isStandardChecked = self.standardMatch.isChecked()
@@ -3134,6 +3154,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.standardMatch.setStyleSheet("color: black")
             self.fuzzyBox.setChecked(False)
             self.fuzzyBox.setStyleSheet("color: black")
+            self.runProgramButton.setEnabled(True)
         elif not isStandardChecked and not isExactChecked and not isFuzzyBoxChecked:
             self.exactMatch.setStyleSheet("color: black")
             self.standardMatch.setChecked(True)
