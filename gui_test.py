@@ -960,6 +960,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.postgresTable = self.findChild(QLineEdit, 'postgresTable_line_edit')
         self.docAlert = self.findChild(QCheckBox, 'docAlert_check_box')
         self.epocQuiz = self.findChild(QCheckBox, 'epocQuiz_check_box')
+        self.triggeredAlert = self.findChild(QCheckBox, 'triggeredAlert_checkBox')
         self.myInIt = self.findChild(QLineEdit, 'myInit_line_edit')
         self.requesterInIt = self.findChild(QLineEdit, 'requestInit_line_edit')
         self.refreshButton = self.findChild(QPushButton, 'refreshButton')
@@ -1075,6 +1076,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.refreshButton.released.connect(self.refreshSuccessful)
         self.docAlert.toggled.connect(self.docalertCallback)
         self.epocQuiz.toggled.connect(self.epocquizCallback)
+        self.triggeredAlert.toggled.connect(self.triggeredAlertCallback)
         self.segBox.toggled.connect(self.segmentCallBack)
         self.standardMatch.toggled.connect(self.standardCallback)
         self.exactMatch.toggled.connect(self.exactCallback)
@@ -1703,9 +1705,23 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 else:
                     pass
 
-                # soureColumns = sorted([index.row() for index in self.sourceSegs.selectedIndexes()], reverse=True)
-                # for row in reader:
+        if str(self.targetManuName.currentText()) == 'GSK':
+            with open(downloads + 'csvFile.csv', 'r') as f:
+                reader = csv.reader(f)
+                first_row = next(reader)
+                itemsTextList =  [str(self.sourceSegs.item(i).text()).lower() for i in range(self.sourceSegs.count())]
+                if 'gskmetadatatag' in itemsTextList:
+                    for row in reader:
+                        if str(row[self.returnIndex('gskmetadatatag')]).endswith(' '):
+                            msg = QMessageBox()
+                            msg.setIcon(QMessageBox.Warning)
+                            msg.setText("There are bad spaces at the end of the GSK_Metadata_Tag in the source data. Please review and remove bad characters/spaces.")
+                            msg.setStandardButtons(QMessageBox.Ok)
+                            msg.exec_()
+                            break
 
+                else:
+                    pass
 
     def returnSelectedValues(self):
         selectedList = []
@@ -2762,6 +2778,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.config['listProduct'] = str('DocAlert')
         if self.epocQuiz.isChecked():
             self.config['listProduct'] = str('Epoc_Quiz')
+        if self.triggeredAlert.isChecked():
+            self.config['listProduct'] = str('Triggered')
         if self.standardMatch.isChecked() and not isSegmentChecked and not isSegListChecked:
             self.config['listMatchType'] = str('Standard')
             if self.sdaOnly.isChecked() or self.bdaOnly.isChecked():
@@ -3175,21 +3193,48 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
     def docalertCallback(self):
         isDocChecked = self.docAlert.isChecked()
+        isEpocChecked = self.epocQuiz.isChecked()
+        isTriggeredChecked = self.triggeredAlert.isChecked()
         if isDocChecked:
             self.docAlert.setStyleSheet("color: green; font-weight: bold")
             self.epocQuiz.setChecked(False)
-        elif not isDocChecked:
+            self.epocQuiz.setStyleSheet("color: black")
+            self.triggeredAlert.setChecked(False)
+            self.triggeredAlert.setStyleSheet("color: black")
+        elif not isTriggeredChecked and not isEpocChecked and not isDocChecked:
             self.epocQuiz.setChecked(True)
             self.docAlert.setStyleSheet("color: black")
+            self.triggeredAlert.setStyleSheet("color: black")
 
     def epocquizCallback(self):
+        isDocChecked = self.docAlert.isChecked()
         isEpocChecked = self.epocQuiz.isChecked()
+        isTriggeredChecked = self.triggeredAlert.isChecked()
         if isEpocChecked:
             self.epocQuiz.setStyleSheet("color: green; font-weight: bold")
             self.docAlert.setChecked(False)
-        elif not isEpocChecked:
+            self.docAlert.setStyleSheet("color: black")
+            self.triggeredAlert.setChecked(False)
+            self.triggeredAlert.setStyleSheet("color: black")
+        elif not isTriggeredChecked and not isEpocChecked and not isDocChecked:
             self.docAlert.setChecked(True)
             self.epocQuiz.setStyleSheet("color: black")
+            self.triggeredAlert.setStyleSheet("color: black")
+
+    def triggeredAlertCallback(self):
+        isDocChecked = self.docAlert.isChecked()
+        isEpocChecked = self.epocQuiz.isChecked()
+        isTriggeredChecked = self.triggeredAlert.isChecked()
+        if isTriggeredChecked:
+            self.triggeredAlert.setStyleSheet("color: green; font-weight: bold")
+            self.docAlert.setChecked(False)
+            self.docAlert.setStyleSheet("color: black")
+            self.epocQuiz.setChecked(False)
+            self.epocQuiz.setStyleSheet("color: black")
+        elif not isTriggeredChecked and not isEpocChecked and not isDocChecked:
+            self.docAlert.setChecked(True)
+            self.epocQuiz.setStyleSheet("color: black")
+            self.triggeredAlert.setStyleSheet("color: black")
 
     def cmiCompasCallback(self):
         isCMIChecked = self.cmiCompass.isChecked()

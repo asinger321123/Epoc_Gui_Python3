@@ -967,7 +967,7 @@ def fixSas():
 		if utils.codeCountReader() <= 1:
 			copyfile(targetAuto, os.path.join(outCode2, 'Targeting Automation Code_OFFICIAL.sas'))
 			newInput = os.path.join(outCode2, 'Targeting Automation Code_OFFICIAL.sas')
-		else:
+		if nbeTarget == 'Yes' and utils.codeCountReader() > 1: 
 			copyfile(targetAutoOrganic, os.path.join(outCode2, 'Organic', 'Targeting Automation Code_ORGANIC.sas'))
 			newInput = os.path.join(outCode2, 'Organic', 'Targeting Automation Code_ORGANIC.sas')
 
