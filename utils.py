@@ -346,6 +346,13 @@ def prepSasSegments(lmType):
 	return sasSegments
 
 def prepSqlSegments(lmType):
+	foundIMSDR = 'No'
+	with open(os.path.join(downloads,'csvFile.csv'), 'r') as infile:
+		reader = csv.reader(infile)
+		headers = next(reader)
+		finalHeaders = [header.lower() for header in headers]
+		if 'imsdr' in finalHeaders:
+			foundIMSDR = 'Yes'
 	with open(os.path.join(desktop,'Ewok\\Datasharing', 'dataSharing.json'), 'r') as infile:
 		config = json.loads(infile.read(), encoding='utf8')
 
@@ -359,7 +366,11 @@ def prepSqlSegments(lmType):
 				if manu == 'Merck':
 					sqlSegments = specialDataSharingDict[manu]
 				if manu == 'AstraZeneca':
-					sqlSegments = specialDataSharingDict['azSegmentation']
+					print('Found IMSDR: ', foundIMSDR)
+					if foundIMSDR == 'Yes':
+						sqlSegments = specialDataSharingDict['azSegmentationIMSDR']
+					if foundIMSDR == 'No':
+						sqlSegments = specialDataSharingDict['azSegmentationNPI']
 				if manu == 'Novartis':
 					sqlSegments = specialDataSharingDict['novartisSegmentation']
 				if manu == 'Boehringer':
