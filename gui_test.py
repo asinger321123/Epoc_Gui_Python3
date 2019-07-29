@@ -2500,6 +2500,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             os.remove(os.path.join(downloads, 'csvFile1.csv'))
         if os.path.exists(os.path.join(downloads, 'target_mod_temp2.csv')):
             os.remove(os.path.join(downloads, 'target_mod_temp2.csv'))
+        if os.path.exists(os.path.join(desktop, 'Ewok', 'codeCount.csv')):
+            os.remove(os.path.join(desktop, 'Ewok', 'codeCount.csv'))
 
     def runProgram(self):
         isSdaChecked = self.sdaOnly.isChecked()
