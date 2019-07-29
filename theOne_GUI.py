@@ -1312,6 +1312,10 @@ if (caseType == 'listMatch' or caseType == 'Targeting') and listMatchType == 'No
 	if bDa_only == 'Y':
 		checkDrugs()
 	fixSas()
+	if os.path.exists(os.path.join(desktop, 'Ewok', 'codeCount.csv')):
+		os.remove(os.path.join(desktop, 'Ewok', 'codeCount.csv'))
+	else:
+		pass
 
 
 if nbeTarget == 'Yes' and not os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\Organic'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
