@@ -1295,6 +1295,7 @@ if (caseType == 'listMatch' or caseType == 'Targeting') and listMatchType != 'No
 	try:
 		postgresConn()
 	except:
+		print(colored('The SQL Export Failed. Ask Andrew why. . . Good place to start is maybe a bad SQL Column Name (e.g GROUP) or unsatified conditional which never exported the TXT File', 'red'))
 		deleteCodeCount()
 	checkDrugs()
 	fixSas()
