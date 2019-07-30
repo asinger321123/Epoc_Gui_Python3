@@ -380,7 +380,7 @@ def prepSqlSegments(lmType):
 				if manu == 'Amgen':
 					sqlSegments = specialDataSharingDict['amgenSegmentation']
 				if manu == 'Sanofi-Aventis':
-					sqlSegments = specialDataSharingDict[manu]
+					sqlSegments = specialDataSharingDict['Sanofi-AventisSegmentation']
 				if manu == 'Biogen':
 					sqlSegments = specialDataSharingDict[manu]
 				if manu == 'AbbVie':
@@ -419,7 +419,7 @@ def prepSqlSegments(lmType):
 				if manu == 'Amgen':
 					sqlSegments = segVariable + ', ' + specialDataSharingDict['amgenSegmentation']
 				if manu == 'Sanofi-Aventis':
-					sqlSegments = specialDataSharingDict[manu] + ', ' + segVariable
+					sqlSegments = specialDataSharingDict['Sanofi-AventisSegmentation'] + ', ' + segVariable
 				if manu == 'Biogen':
 					sqlSegments = specialDataSharingDict[manu] + ', ' + segVariable
 				if manu == 'AbbVie':
