@@ -29,7 +29,7 @@ def csv_from_excel():
 	wb = xlrd.open_workbook(headerFile)
 	sh = wb.sheet_by_index(0)
 	your_csv_file = open (downloads + '\\headerPipe.csv', 'w')
-	wr = unicodecsv.writer(your_csv_file, encoding='utf8', delimiter='|')
+	wr = csv.writer(your_csv_file, delimiter='|')
 	# reader = csv.reader(open(downloads + '\\headerPipe.csv', 'r'))
 
 	for rownum in range(sh.nrows):
