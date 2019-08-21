@@ -974,6 +974,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.fuzzyBox = self.findChild(QCheckBox, 'fuzzy_checkBox')
         # self.testTextEdit = MyHighlighter(self.findChild(QTextEdit, 'Test_textEdit'), "classic")
         self.loadAction = self.findChild(QAction, 'actionLoad_List')
+        self.saveAction = self.findChild(QAction, 'actionSave_Working_List')
         self.stateZipEditor = self.findChild(QAction, 'actionState_Zip_Editor')
         self.clearStateZipEditor = self.findChild(QAction, 'actionClear_State_Zip_Settings')
         self.nbeEditorTab = self.findChild(QAction, 'actionNBE_Editor')
@@ -1126,6 +1127,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.suppCheck.toggled.connect(self.showFileSelection)
         # self.pivotTableCheck.toggled.connect(self.showPivotSelection)
         self.loadAction.triggered.connect(self.getfiles)
+        self.saveAction.triggered.connect(self.file_save)
         self.sdaOnly.toggled.connect(self.set_SDA_BDA_Only_colors)
         self.bdaOnly.toggled.connect(self.set_SDA_BDA_Only_colors)
         self.suppMatchPath.textChanged.connect(self.set_SDA_BDA_Only_colors)
@@ -1405,6 +1407,15 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         # self.stateZip.applyToCBda = ''
 
         window.setStyleSheet("""QMenuBar::item {;}""")
+
+    def file_save(self):
+        name = QtGui.QFileDialog.getSaveFileName(None, "Save Current Working File", "", "CSV files (*.csv)")
+        with open(name,'w') as file, open(os.path.join(downloads, 'csvFile.csv'), 'r') as inFile:
+            # file = open(name,'w')
+            reader = csv.reader(inFile)
+            writer = csv.writer(file, lineterminator='\n')
+            for line in reader:
+                writer.writerows([line])
 
 
     def getfiles(self):
@@ -1705,6 +1716,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 else:
                     pass
 
+# or len(str(row[self.returnIndex('gskmetadatatag')])) > 12
         if str(self.targetManuName.currentText()) == 'GSK':
             with open(downloads + 'csvFile.csv', 'r') as f:
                 reader = csv.reader(f)
@@ -1712,7 +1724,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 itemsTextList =  [str(self.sourceSegs.item(i).text()).lower() for i in range(self.sourceSegs.count())]
                 if 'gskmetadatatag' in itemsTextList:
                     for row in reader:
-                        if str(row[self.returnIndex('gskmetadatatag')]).endswith(' '):
+                        if str(row[self.returnIndex('gskmetadatatag')]).endswith(' '):
                             msg = QMessageBox()
                             msg.setIcon(QMessageBox.Warning)
                             msg.setText("There are bad spaces at the end of the GSK_Metadata_Tag in the source data. Please review and remove bad characters/spaces.")

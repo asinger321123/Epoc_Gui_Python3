@@ -994,7 +994,7 @@ border-radius: 6px;
 </string>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="listMatchTab">
        <attribute name="title">
@@ -2266,6 +2266,7 @@ border-right: 2px solid black;
      <string>File</string>
     </property>
     <addaction name="actionLoad_List"/>
+    <addaction name="actionSave_Working_List"/>
    </widget>
    <widget class="QMenu" name="menuEditor">
     <property name="title">
@@ -2313,6 +2314,11 @@ border-right: 2px solid black;
   <action name="actionNBE_Editor">
    <property name="text">
     <string>NBE Editor</string>
+   </property>
+  </action>
+  <action name="actionSave_Working_List">
+   <property name="text">
+    <string>Save Working List</string>
    </property>
   </action>
  </widget>
