@@ -1031,14 +1031,17 @@ def buildSDAPreSalesMacro():
 	totalAdditionalSDAs = int(config['totalAdditionalSDAs'])
 	sdaMacro = """%macro multipleSDAAdd_Ons;
 %do i=1 %to 1;
-	%if &totalSDAS. > 1 %then %do;\n"""
+	%if &totalSDAS. >= 1 %then %do;\n"""
 	macroEnd = """
 	%end;
 %end;
 %mend;
 %multipleSDAAdd_Ons;"""
 	while totalIncludesBuilt <= totalAdditionalSDAs:
-		includePath = '		%include "&filepath.\PS_SDA_plus_CL_Email_'+str(totalIncludesBuilt)+'.sas";'
+		if sDa_only == 'N':
+			includePath = '		%include "&filepath.\PS_SDA_plus_CL_Email_'+str(totalIncludesBuilt)+'.sas";'
+		else:
+			includePath = '		%include "{}\PS_SDA_plus_CL_Email_'.format(str(config['matchedFile']))+str(totalIncludesBuilt)+'.sas";'
 		totalIncludesBuilt +=1
 		includePath = '{}\n'.format(includePath)
 		# totalIncludesBuilt +=1
@@ -1047,7 +1050,10 @@ def buildSDAPreSalesMacro():
 	finalSDAMacro = sdaMacro + macroEnd
 	# print finalSDAMacro
 
-	newInput = os.path.join(outCode, 'Presales Automation_Email_Final.sas')
+	if sDa_only == 'N':
+		newInput = os.path.join(outCode, 'Presales Automation_Email_Final.sas')
+	else:
+		newInput = os.path.join(str(config['matchedFile']), 'PS_SDA_plus_CL_Email.sas')
 	line_file = open(os.path.join(newInput),'r').readlines()
 	new_file = open(os.path.join(newInput),'w')
 	for line_in in line_file:
@@ -1062,6 +1068,24 @@ def buildSDACodes():
 	sdaCode = 'PS_SDA_plus_CL_Email'
 	suppApplied = str(config['suppressionApplied'])
 	sDa_only = str(config['sdaOnly'])
+	if sDa_only == 'Y':
+		listMatchFolder = config['matchedFile']
+		onlyFiles = [f for f in listdir(listMatchFolder) if isfile(join(listMatchFolder, f))]
+
+		for files in sorted(set(onlyFiles)):
+			file = files.split('.')[0]
+			if re.search('_matched_.+', file):
+				matchedFile = file
+
+
+	else:
+		listMatchFolder = '/*folder*/'
+		matchedFile = '/*matchedFile*/'
+
+	# print(listMatchFolder, matchedFile)
+
+	matchFilePath = os.path.join(listMatchFolder, matchedFile)
+
 	
 	# if suppApplied == 'Y':
 	# 	suppFolder = config['suppSASFile']
@@ -1085,16 +1109,24 @@ def buildSDACodes():
 		specialty2 = str(config['additonalSdaSpec_'+str(totalCodesBuilt)]).replace('"', '')
 
 
-		copiedSDAFile = os.path.join(outCode, sdaCode+'_'+str(totalCodesBuilt)+'.sas')
-		copyfile(os.path.join(sdaCodeHousing, sdaCode+'.sas'), copiedSDAFile)
+		# copiedSDAFile = os.path.join(outCode, sdaCode+'_'+str(totalCodesBuilt)+'.sas')
+		if sDa_only == 'N':
+			copiedSDAFile = os.path.join(outCode, sdaCode+'_'+str(totalCodesBuilt)+'.sas')
+			copyfile(os.path.join(sdaCodeHousing, sdaCode+'.sas'), copiedSDAFile)
+		if sDa_only == 'Y':
+			copiedSDAFile = os.path.join(listMatchFolder, sdaCode+'_'+str(totalCodesBuilt)+'.sas')
+			copyfile(os.path.join(sdaCodeHousing, sdaCode+'.sas'), copiedSDAFile)
 		
 		newInput = copiedSDAFile
 		line_file = open(os.path.join(newInput),'r').readlines()
 		new_file = open(os.path.join(newInput),'w')
+		print(matchFilePath)
 		for line_in in line_file:
 			# target_out = line_in.replace('/*folder*/', listMatchFolder)
-			# target_out = target_out.replace('/*matchedFile*/', matchedFile)
-			target_out = line_in.replace('/*suppApplied*/', suppApplied)
+			target_out = line_in.replace('/*matchedFilePath*/', matchFilePath)
+			target_out = target_out.replace('/*suppApplied*/', suppApplied)
+			target_out = target_out.replace('/*sda_only*/', sDa_only)
+			target_out = target_out.replace('/*SDA_Total*/', str(totalAdditionalSDAs))
 			# target_out = target_out.replace('/*suppFolder*/', suppFolder)
 			# target_out = target_out.replace('/*suppFile*/', suppFile)
 			target_out = target_out.replace('/*SDA_Occ*/', config['additonalSdaOcc_'+str(totalCodesBuilt)])
@@ -1243,36 +1275,6 @@ def checkDrugs2():
 	finalDrugs2 = []
 	unmatchedDrugs2 = []
 
-# def codeCounter():
-# 	codeCount = 0
-# 	if not os.path.exists(os.path.join(desktop, 'Ewok', 'codeCount.csv')):
-# 		with open(os.path.join(desktop, 'Ewok', 'codeCount.csv'), 'w') as outFile:
-# 			writer = csv.writer(outFile, lineterminator='\n')
-# 			headers = ['count']
-# 			writer.writerow(headers)
-# 			writer.writerow(['1'])
-# 			codeCount = 1
-
-# 	else:
-# 		with open(os.path.join(desktop, 'Ewok', 'codeCount.csv'), 'r') as inFile:
-# 			reader = csv.reader(inFile)
-# 			headers = next(reader)
-# 			for line in reader:
-# 				value = int(line[0])
-# 			value += 1
-# 			codeCount = value
-# 	print('Code Count is: ', codeCount)
-# 	return codeCount
-
-# def codeCountReader():
-# 	if os.path.exists(os.path.join(desktop, 'Ewok', 'codeCount.csv')):
-# 		with open(os.path.join(desktop, 'Ewok', 'codeCount.csv'), 'r') as inFile:
-# 			reader = csv.reader(inFile)
-# 			headers = next(reader)
-# 			for line in reader:
-# 				value = int(line[0])
-
-# 		return value
 
 def deleteCodeCount():
 	if os.path.exists(os.path.join(desktop, 'Ewok', 'codeCount.csv')):
@@ -1303,15 +1305,18 @@ if (caseType == 'listMatch' or caseType == 'Targeting') and listMatchType != 'No
 	removeFiles()
 if int(config['totalAdditionalSDAs']) != 0:
 	buildSDACodes()
+	# if sDa_only == 'N':
 	buildSDAPreSalesMacro()
 if int(config['totalAdditionalBDAs']) != 0:
 	buildBDACodes()
 	buildBDAPreSalesMacro()
 if (caseType == 'listMatch' or caseType == 'Targeting') and listMatchType == 'None':
-	createFolders()
+	if (int(config['totalAdditionalSDAs']) == 0 and int(config['totalAdditionalBDAs']) == 0):
+		createFolders()
+		fixSas()
 	if bDa_only == 'Y':
 		checkDrugs()
-	fixSas()
+	# fixSas()
 	if os.path.exists(os.path.join(desktop, 'Ewok', 'codeCount.csv')):
 		os.remove(os.path.join(desktop, 'Ewok', 'codeCount.csv'))
 	else:

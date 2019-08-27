@@ -2520,6 +2520,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         isBdaChecked = self.bdaOnly.isChecked()
         self.writeConfigFile()
         showError = False
+        with open(os.path.join(desktop, 'Ewok\\Configs\\config.json'), 'r') as infile:
+            self.config_final = json.loads(infile.read(), encoding='utf8')
 
         for i in range(self.sourceSegs.count()):
             checkCol =  str(self.sourceSegs.item(i).text()).lower()
@@ -2544,7 +2546,14 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                         subprocess.call(['python.exe', os.path.join(desktop, 'Ewok','theOne_GUI.py'), 'config.json'])
                     elif isSdaChecked and not isBdaChecked:
                         if self.config['matchedFile'] != "":
-                            subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\SDA.py', 'config.json'])
+                            if int(self.config_final['totalAdditionalSDAs']) < 1:
+                                print('Running the Wrong Code')
+                                subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\SDA.py', 'config.json'])
+                            elif int(self.config_final['totalAdditionalSDAs']) > 0:
+                                print('Running Right Code')
+                                subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\SDA.py', 'config.json'])
+                                subprocess.call(['python.exe', os.path.join(desktop, 'Ewok','theOne_GUI.py'), 'config.json'])
+                                # print('Running Right Code')
                         else:
                             subprocess.call(['python.exe', os.path.join(desktop, 'Ewok','theOne_GUI.py'), 'config.json'])
                     elif not isSdaChecked and isBdaChecked:
