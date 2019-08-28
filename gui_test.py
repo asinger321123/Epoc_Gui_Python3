@@ -1161,6 +1161,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.countSheets()
         print('Gui Started')
 
+        utils.state_to_abbrev()
+
     def showSDAToolTip(self):
         with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json', 'r') as infile:
             configCheck = json.loads(infile.read())

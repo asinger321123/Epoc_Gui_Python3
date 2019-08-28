@@ -518,6 +518,93 @@ def codeCountReader():
 		return 0
 
 
+def state_to_abbrev():
+	us_state_abbrev = {
+		'alabama': 'AL', 
+		'alaska': 'AK', 
+		'arizona': 'AZ',
+		'arkansas': 'AR',
+		'california': 'CA',
+		'colorado': 'CO',
+		'connecticut': 'CT',
+		'delaware': 'DE',
+		'district of columbia': 'DC',
+		'dist. of columbia': 'DC',
+		'florida': 'FL',
+		'georgia': 'GA',
+		'guam': 'GU',
+		'hawaii': 'HI',
+		'idaho': 'ID',
+		'illinois': 'IL',
+		'indiana': 'IN',
+		'iowa': 'IA',
+		'kansas': 'KS',
+		'kentucky': 'KY',
+		'louisiana': 'LA',
+		'maine': 'ME',
+		'maryland': 'MD',
+		'massachusetts': 'MA',
+		'michigan': 'MI',
+		'minnesota': 'MN',
+		'mississippi': 'MS',
+		'missouri': 'MO',
+		'montana': 'MT',
+		'nebraska': 'NE',
+		'nevada': 'NV',
+		'new hampshire': 'NH',
+		'new jersey': 'NJ',
+		'new mexico': 'NM',
+		'new york': 'NY',
+		'north carolina': 'NC',
+		'north dakota': 'ND',
+		'northern mariana sslands':'MP',
+		'ohio': 'OH',
+		'oklahoma': 'OK',
+		'oregon': 'OR',
+		'palau': 'PW',
+		'pennsylvania': 'PA',
+		'puerto rico': 'PR',
+		'rhode island': 'RI',
+		'south carolina': 'SC',
+		'south dakota': 'SD',
+		'tennessee': 'TN',
+		'texas': 'TX',
+		'utah': 'UT',
+		'vermont': 'VT',
+		'virgin islands': 'VI',
+		'virginia': 'VA',
+		'washington': 'WA',
+		'west virginia': 'WV',
+		'wisconsin': 'WI',
+		'wyoming': 'WY'}
+
+	statesChanged = False
+
+	with open(os.path.join(downloads, 'csvFile.csv'), 'r') as inFile, open(os.path.join(downloads, 'csvFile_STATES.csv'), 'w') as outFile:
+		reader = csv.reader(inFile)
+		writer = csv.writer(outFile, lineterminator='\n')
+
+		headers = next(reader)
+		for index, col in enumerate(headers):
+			cellVal = str(col).lower().replace('/', '_').replace('-', '_')
+			if re.search('^state.+', cellVal) or re.search('.+state.+', cellVal) or cellVal == 'state':
+				state_index = index
+
+		writer.writerow(headers)
+		keys = us_state_abbrev.keys()
+		for row in reader:
+			if row[state_index].lower() in keys:
+				statesChanged = True
+				row[state_index] = us_state_abbrev[row[state_index].lower()]
+			writer.writerow(row)
+
+	os.chdir(downloads)
+	os.remove(os.path.join(downloads, 'csvFile.csv'))
+	os.rename(os.path.join(downloads, 'csvFile_STATES.csv'), os.path.join(downloads, 'csvFile.csv'))
+
+	if statesChanged == True:
+		print('State Names Were Converted to Abbrevations. . . Please Quickly Check All Were Converted!')
+
 def main():
 	codeCounter()
 	codeCountReader()
