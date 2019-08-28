@@ -1146,14 +1146,17 @@ def buildBDAPreSalesMacro():
 	totalAdditionalBDAs = int(config['totalAdditionalBDAs'])
 	bdaMacro = """%macro multipleBDAAdd_Ons;
 %do i=1 %to 1;
-	%if &totalBDAS. > 1 %then %do;\n"""
+	%if &totalBDAS. >= 1 %then %do;\n"""
 	macroEnd = """
 	%end;
 %end;
 %mend;
 %multipleBDAAdd_Ons;"""
 	while totalIncludesBuilt <= totalAdditionalBDAs:
-		includePath = '		%include "&filepath.\PS_BDA_Mult_Lookup_plus_CL_Email_'+str(totalIncludesBuilt)+'.sas";'
+		if bDa_only == 'N':
+			includePath = '		%include "&filepath.\PS_BDA_Mult_Lookup_plus_CL_Email_'+str(totalIncludesBuilt)+'.sas";'
+		else:
+			includePath = '		%include "{}\PS_BDA_Mult_Lookup_plus_CL_Email_'.format(str(config['matchedFile']))+str(totalIncludesBuilt)+'.sas";'
 		totalIncludesBuilt +=1
 		includePath = '{}\n'.format(includePath)
 		# totalIncludesBuilt +=1
@@ -1162,7 +1165,10 @@ def buildBDAPreSalesMacro():
 	finalBDAMacro = bdaMacro + macroEnd
 	# print finalSDAMacro
 
-	newInput = os.path.join(outCode, 'Presales Automation_Email_Final.sas')
+	if bDa_only == 'N':
+		newInput = os.path.join(outCode, 'Presales Automation_Email_Final.sas')
+	else:
+		newInput = os.path.join(str(config['matchedFile']), 'PS_BDA_Mult_Lookup_plus_CL_Email.sas')
 	line_file = open(os.path.join(newInput),'r').readlines()
 	new_file = open(os.path.join(newInput),'w')
 	for line_in in line_file:
@@ -1176,6 +1182,24 @@ def buildBDACodes():
 	bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\CUSTOM\\Email Codes\\additionalBDA'
 	bdaCode = 'PS_BDA_Mult_Lookup_plus_CL_Email'
 	suppApplied = str(config['suppressionApplied'])
+	bDa_only = str(config['bdaOnly'])
+	if bDa_only == 'Y':
+		listMatchFolder = config['matchedFile']
+		onlyFiles = [f for f in listdir(listMatchFolder) if isfile(join(listMatchFolder, f))]
+
+		for files in sorted(set(onlyFiles)):
+			file = files.split('.')[0]
+			if re.search('_matched_.+', file):
+				matchedFile = file
+
+
+	else:
+		listMatchFolder = '/*folder*/'
+		matchedFile = '/*matchedFile*/'
+
+	# print(listMatchFolder, matchedFile)
+
+	matchFilePath = os.path.join(listMatchFolder, matchedFile)
 	
 	# if suppApplied == 'Y':
 	# 	suppFolder = config['suppSASFile']
@@ -1225,14 +1249,24 @@ def buildBDACodes():
 		finalDrugs2 = []
 		unmatchedDrugs2 = []
 
-		copiedBDAFile = os.path.join(outCode, bdaCode+'_'+str(totalCodesBuilt)+'.sas')
-		copyfile(os.path.join(bdaCodeHousing, bdaCode+'.sas'), copiedBDAFile)
+		# copiedBDAFile = os.path.join(outCode, bdaCode+'_'+str(totalCodesBuilt)+'.sas')
+		# copyfile(os.path.join(bdaCodeHousing, bdaCode+'.sas'), copiedBDAFile)
+
+		if bDa_only == 'N':
+			copiedBDAFile = os.path.join(outCode, bdaCode+'_'+str(totalCodesBuilt)+'.sas')
+			copyfile(os.path.join(bdaCodeHousing, bdaCode+'.sas'), copiedBDAFile)
+		if bDa_only == 'Y':
+			copiedBDAFile = os.path.join(listMatchFolder, bdaCode+'_'+str(totalCodesBuilt)+'.sas')
+			copyfile(os.path.join(bdaCodeHousing, bdaCode+'.sas'), copiedBDAFile)
 		
 		newInput = copiedBDAFile
 		line_file = open(os.path.join(newInput),'r').readlines()
 		new_file = open(os.path.join(newInput),'w')
 		for line_in in line_file:
 			target_out = line_in.replace('/*suppApplied*/', suppApplied)
+			target_out = target_out.replace('/*matchedFilePath*/', matchFilePath)
+			target_out = target_out.replace('/*bda_only*/', bDa_only)
+			target_out = target_out.replace('/*BDA_Total*/', str(totalAdditionalBDAs))
 			# target_out = target_out.replace('/*suppFolder*/', suppFolder)
 			# target_out = target_out.replace('/*suppFile*/', suppFile)
 			target_out = target_out.replace('/*therapyClass*/', therapyClass)
@@ -1305,7 +1339,6 @@ if (caseType == 'listMatch' or caseType == 'Targeting') and listMatchType != 'No
 	removeFiles()
 if int(config['totalAdditionalSDAs']) != 0:
 	buildSDACodes()
-	# if sDa_only == 'N':
 	buildSDAPreSalesMacro()
 if int(config['totalAdditionalBDAs']) != 0:
 	buildBDACodes()
