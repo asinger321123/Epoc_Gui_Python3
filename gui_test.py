@@ -1446,6 +1446,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             utils.checkExtension2(filenames)
             utils.removeChar()
             utils.incDupColumns()
+            utils.state_to_abbrev()
 
             colList = utils.fetchColumns()
             for i in colList:
@@ -2482,6 +2483,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         utils.checkExtension()
         utils.removeChar()
         utils.incDupColumns()
+        utils.state_to_abbrev()
 
         #populates the listWidget
         colList = utils.fetchColumns()
