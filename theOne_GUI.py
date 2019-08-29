@@ -1130,7 +1130,6 @@ def buildSDACodes():
 		newInput = copiedSDAFile
 		line_file = open(os.path.join(newInput),'r').readlines()
 		new_file = open(os.path.join(newInput),'w')
-		print(matchFilePath)
 		for line_in in line_file:
 			# target_out = line_in.replace('/*folder*/', listMatchFolder)
 			target_out = line_in.replace('/*matchedFilePath*/', matchFilePath)
@@ -1302,9 +1301,6 @@ def buildBDACodes():
 
 		totalCodesBuilt +=1
 
-def build_addtional_presales_codes():
-	print('Whats good wit a Jawn?')
-
 def checkDrugs2():
 	finalDrugs2 = []
 	unmatchedDrugs2 = []
@@ -1378,7 +1374,6 @@ if (caseType == 'listMatch' or caseType == 'Targeting') and listMatchType == 'No
 		else:
 			createFolders()
 			fixSas()
-			build_addtional_presales_codes()
 			buildSDACodes()
 			buildSDAPreSalesMacro()
 
