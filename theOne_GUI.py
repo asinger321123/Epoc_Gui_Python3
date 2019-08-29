@@ -1041,7 +1041,10 @@ def buildSDAPreSalesMacro():
 		if sDa_only == 'N':
 			includePath = '		%include "&filepath.\PS_SDA_plus_CL_Email_'+str(totalIncludesBuilt)+'.sas";'
 		else:
-			includePath = '		%include "{}\PS_SDA_plus_CL_Email_'.format(str(config['matchedFile']))+str(totalIncludesBuilt)+'.sas";'
+			if str(config['matchedFile']) != '':
+				includePath = '		%include "{}\PS_SDA_plus_CL_Email_'.format(str(config['matchedFile']))+str(totalIncludesBuilt)+'.sas";'
+			else:
+				includePath = '		%include "&filepath.\PS_SDA_plus_CL_Email_'+str(totalIncludesBuilt)+'.sas";'
 		totalIncludesBuilt +=1
 		includePath = '{}\n'.format(includePath)
 		# totalIncludesBuilt +=1
@@ -1052,8 +1055,12 @@ def buildSDAPreSalesMacro():
 
 	if sDa_only == 'N':
 		newInput = os.path.join(outCode, 'Presales Automation_Email_Final.sas')
+
 	else:
-		newInput = os.path.join(str(config['matchedFile']), 'PS_SDA_plus_CL_Email.sas')
+		if str(config['matchedFile']) != '':
+			newInput = os.path.join(str(config['matchedFile']), 'PS_SDA_plus_CL_Email.sas')
+		else:
+			newInput = os.path.join(outCode, 'Presales Automation_Email_Final.sas')
 	line_file = open(os.path.join(newInput),'r').readlines()
 	new_file = open(os.path.join(newInput),'w')
 	for line_in in line_file:
@@ -1070,21 +1077,20 @@ def buildSDACodes():
 	sDa_only = str(config['sdaOnly'])
 	if sDa_only == 'Y':
 		listMatchFolder = config['matchedFile']
-		onlyFiles = [f for f in listdir(listMatchFolder) if isfile(join(listMatchFolder, f))]
+		if listMatchFolder != '':
+			onlyFiles = [f for f in listdir(listMatchFolder) if isfile(join(listMatchFolder, f))]
 
-		for files in sorted(set(onlyFiles)):
-			file = files.split('.')[0]
-			if re.search('_matched_.+', file):
-				matchedFile = file
+			for files in sorted(set(onlyFiles)):
+				file = files.split('.')[0]
+				if re.search('_matched_.+', file):
+					matchedFile = file
+			matchFilePath = os.path.join(listMatchFolder, matchedFile)
+		else:
+			matchFilePath = ''
 
 
 	else:
-		listMatchFolder = '/*folder*/'
-		matchedFile = '/*matchedFile*/'
-
-	# print(listMatchFolder, matchedFile)
-
-	matchFilePath = os.path.join(listMatchFolder, matchedFile)
+		matchFilePath = ''
 
 	
 	# if suppApplied == 'Y':
@@ -1114,8 +1120,12 @@ def buildSDACodes():
 			copiedSDAFile = os.path.join(outCode, sdaCode+'_'+str(totalCodesBuilt)+'.sas')
 			copyfile(os.path.join(sdaCodeHousing, sdaCode+'.sas'), copiedSDAFile)
 		if sDa_only == 'Y':
-			copiedSDAFile = os.path.join(listMatchFolder, sdaCode+'_'+str(totalCodesBuilt)+'.sas')
-			copyfile(os.path.join(sdaCodeHousing, sdaCode+'.sas'), copiedSDAFile)
+			if listMatchFolder != '':
+				copiedSDAFile = os.path.join(listMatchFolder, sdaCode+'_'+str(totalCodesBuilt)+'.sas')
+				copyfile(os.path.join(sdaCodeHousing, sdaCode+'.sas'), copiedSDAFile)
+			else:
+				copiedSDAFile = os.path.join(outCode, sdaCode+'_'+str(totalCodesBuilt)+'.sas')
+				copyfile(os.path.join(sdaCodeHousing, sdaCode+'.sas'), copiedSDAFile)			
 		
 		newInput = copiedSDAFile
 		line_file = open(os.path.join(newInput),'r').readlines()
@@ -1135,6 +1145,8 @@ def buildSDACodes():
 			target_out = target_out.replace('/*SDA_Spec_Disp*/', specialty2)			
 			target_out = target_out.replace('/*username*/', email)
 			target_out = target_out.replace('/*inc*/', '_'+str(totalCodesBuilt))
+			target_out = target_out.replace('/*list_match_type*/', listMatchType)
+			target_out = target_out.replace('/*product_type*/', listProduct)
 			new_file.write(target_out)
 			line_file = new_file
 
@@ -1185,21 +1197,24 @@ def buildBDACodes():
 	bDa_only = str(config['bdaOnly'])
 	if bDa_only == 'Y':
 		listMatchFolder = config['matchedFile']
-		onlyFiles = [f for f in listdir(listMatchFolder) if isfile(join(listMatchFolder, f))]
+		if listMatchFolder != '':
+			onlyFiles = [f for f in listdir(listMatchFolder) if isfile(join(listMatchFolder, f))]
 
-		for files in sorted(set(onlyFiles)):
-			file = files.split('.')[0]
-			if re.search('_matched_.+', file):
-				matchedFile = file
+			for files in sorted(set(onlyFiles)):
+				file = files.split('.')[0]
+				if re.search('_matched_.+', file):
+					matchedFile = file
+			matchFilePath = os.path.join(listMatchFolder, matchedFile)
+		else:
+			matchFilePath = ''
 
 
 	else:
-		listMatchFolder = '/*folder*/'
-		matchedFile = '/*matchedFile*/'
+		matchFilePath = ''
 
 	# print(listMatchFolder, matchedFile)
 
-	matchFilePath = os.path.join(listMatchFolder, matchedFile)
+	# matchFilePath = os.path.join(listMatchFolder, matchedFile)
 	
 	# if suppApplied == 'Y':
 	# 	suppFolder = config['suppSASFile']
@@ -1287,6 +1302,9 @@ def buildBDACodes():
 
 		totalCodesBuilt +=1
 
+def build_addtional_presales_codes():
+	print('Whats good wit a Jawn?')
+
 def checkDrugs2():
 	finalDrugs2 = []
 	unmatchedDrugs2 = []
@@ -1337,16 +1355,33 @@ if (caseType == 'listMatch' or caseType == 'Targeting') and listMatchType != 'No
 	fixSas()
 	copyTarget()
 	removeFiles()
-if int(config['totalAdditionalSDAs']) != 0:
-	buildSDACodes()
-	buildSDAPreSalesMacro()
-if int(config['totalAdditionalBDAs']) != 0:
-	buildBDACodes()
-	buildBDAPreSalesMacro()
+	if int(config['totalAdditionalSDAs']) != 0:
+		buildSDACodes()
+		buildSDAPreSalesMacro()
+	if int(config['totalAdditionalBDAs']) != 0:
+		buildBDACodes()
+		buildBDAPreSalesMacro()
 if (caseType == 'listMatch' or caseType == 'Targeting') and listMatchType == 'None':
 	if (int(config['totalAdditionalSDAs']) == 0 and int(config['totalAdditionalBDAs']) == 0):
 		createFolders()
 		fixSas()
+
+	if (int(config['totalAdditionalSDAs']) >= 1 or int(config['totalAdditionalBDAs']) >= 1):
+		if str(config['matchedFile']) != "":
+			if int(config['totalAdditionalSDAs']) != 0:
+				buildSDACodes()
+				buildSDAPreSalesMacro()
+			if int(config['totalAdditionalBDAs']) != 0:
+				buildBDACodes()
+				buildBDAPreSalesMacro()
+
+		else:
+			createFolders()
+			fixSas()
+			build_addtional_presales_codes()
+			buildSDACodes()
+			buildSDAPreSalesMacro()
+
 	if bDa_only == 'Y':
 		checkDrugs()
 	# fixSas()
