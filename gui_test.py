@@ -632,6 +632,7 @@ class NBE_Editor(base_7, form_7):
         utils.checkExtension2(self.selectNBEFile)
         utils.removeChar()
         utils.incDupColumns()
+        utils.state_to_abbrev()
 
         #populates the listWidget
         colList = utils.fetchColumns()
@@ -642,6 +643,7 @@ class NBE_Editor(base_7, form_7):
         window.resetEditTab()
         window.highlightSourceSegs()
         window.detectMatchType()
+        window.highlightBadColumnNames()
 
     def organicFileCheckboxesStandard(self):
         isStandardOrganicChecked = self.standardOrganicCheck.isChecked()
@@ -810,6 +812,7 @@ class FilePage(base_2, form_2):
         utils.checkExtension2(self.selectMatchFile)
         utils.removeChar()
         utils.incDupColumns()
+        utils.state_to_abbrev()
 
         #populates the listWidget
         colList = utils.fetchColumns()
@@ -820,6 +823,7 @@ class FilePage(base_2, form_2):
         window.resetEditTab()
         window.highlightSourceSegs()
         window.detectMatchType()
+        window.highlightBadColumnNames()
 
 
 
@@ -1163,6 +1167,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         print('Gui Started')
 
         utils.state_to_abbrev()
+        self.highlightBadColumnNames()
 
     def showSDAToolTip(self):
         with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json', 'r') as infile:
@@ -1448,6 +1453,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             utils.removeChar()
             utils.incDupColumns()
             utils.state_to_abbrev()
+            self.highlightBadColumnNames()
 
             colList = utils.fetchColumns()
             for i in colList:
@@ -1795,6 +1801,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 self.sourceSegs.addItem(item)
         self.concatenateList.addItem("Concatenation Complete")
         self.concatenateList.setStyleSheet('background-color: rgb(213, 233, 221,255);')
+        self.highlightBadColumnNames()
 
     def getFieldnames(self):
         fieldNames = []
@@ -1874,6 +1881,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
         self.highlightCMI()
         self.detectMatchType()
+        self.highlightBadColumnNames()
 
     def countFullFile(self):
         with open(downloads + 'csvFile.csv', 'r') as f:
@@ -1896,6 +1904,15 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                         total += 1
             selectedTotal = total
             self.fullListCount.setText("Count: " + str(total))
+
+    def highlightBadColumnNames(self):
+        for i in range(self.sourceSegs.count()):
+            checkCol =  str(self.sourceSegs.item(i).text()).lower()
+            col = self.sourceSegs.item(i)
+            if checkCol == 'group' or re.search('.+group.+', checkCol):
+                # foundCMIColumns.append('state_code')
+                # self.columnIndex.append(i)
+                col.setBackground(QColor(247,154,0,255))
 
 
     def highlightCMI(self):
@@ -2485,6 +2502,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         utils.removeChar()
         utils.incDupColumns()
         utils.state_to_abbrev()
+        self.highlightBadColumnNames()
 
         #populates the listWidget
         colList = utils.fetchColumns()
@@ -2497,6 +2515,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.detectMatchType()
         # self.playGoy()
         # self.refreshSuccessful()
+        self.highlightBadColumnNames()
 
     def refreshSuccessful(self):
         self.refreshLabel.setText("Refresh Successful")
