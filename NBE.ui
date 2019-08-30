@@ -14,7 +14,7 @@
    <string>Next Best Engagement Editor</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <item row="0" column="0">
+   <item row="1" column="0">
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
       <string>GroupBox</string>
@@ -157,6 +157,19 @@
        </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QPushButton" name="openNBEMerger_pushButton">
+     <property name="maximumSize">
+      <size>
+       <width>100</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Open NBE Merger</string>
+     </property>
     </widget>
    </item>
   </layout>

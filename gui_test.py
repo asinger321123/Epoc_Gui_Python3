@@ -27,6 +27,7 @@ from threading import Thread
 import sqlite3
 from termcolor import *
 from colorama import init, Fore, Back, Style
+import pandas as pd
 
 init(autoreset=True)
 
@@ -49,6 +50,7 @@ uifile_4 = os.path.join(desktop, 'Ewok','AdditionalSDA.ui')
 uifile_5 = os.path.join(desktop, 'Ewok','AdditionalBDA.ui')
 uifile_6 = os.path.join(desktop, 'Ewok','state_zip_editor.ui')
 uifile_7 = os.path.join(desktop, 'Ewok','NBE.ui')
+uifile_8 = os.path.join(desktop, 'Ewok','nbe_merger.ui')
 
 form_2, base_2 = uic.loadUiType(uifile_2)
 form_3, base_3 = uic.loadUiType(uifile_3)
@@ -56,6 +58,7 @@ form_4, base_4 = uic.loadUiType(uifile_4)
 form_5, base_5 = uic.loadUiType(uifile_5)
 form_6, base_6 = uic.loadUiType(uifile_6)
 form_7, base_7 = uic.loadUiType(uifile_7)
+form_8, base_8 = uic.loadUiType(uifile_8)
 
 class Completer(QtGui.QCompleter):
     def __init__(self, *args, **kwargs):
@@ -105,6 +108,106 @@ class TextEdit2(QLineEdit):
         # self.setMaximumWidth(500)
         # self.setMinimumSize(QtCore.QSize(134, 0))
         self.setFixedWidth(134)
+
+class NBE_Merger_Widget(form_8, base_8):
+    # self.nbeEditWindow = NBE_Editor()
+
+    def __init__(self):
+        super(base_8, self).__init__()
+        self.setupUi(self)
+
+        self.finalNBEFileList = []
+
+        self.downloadFiles = self.findChild(QListWidget, 'downloads_listWidget')
+        self.nbeFilesList = self.findChild(QListWidget, 'nbeFile_listWidget')
+        self.mergeFileButton = self.findChild(QPushButton, 'merge_pushButton')
+        self.closeButton = self.findChild(QPushButton, 'close_pushButton')
+
+        for i in downloadFilesDirectory:
+            self.downloadFiles.addItem(i)
+
+        self.mergeFileButton.pressed.connect(self.run_conversion)
+        self.mergeFileButton.released.connect(self.closeWindow)
+
+        totalFiles = 0
+
+    def run_conversion(self):
+        for i in range(self.nbeFilesList.count()):
+            self.nbeFile = str(self.nbeFilesList.item(i).text())
+            self.nbe_number1 = self.nbeFile.rsplit('_')[-1]
+            self.nbe_number = '_' + self.nbe_number1.split('.')[0]
+            # print(self.nbeFile, self.nbe_number)
+
+            # print(self.nbeFile)
+            self.nbe_csv_from_excel(self.nbeFile, self.nbe_number)
+
+    def nbe_csv_from_excel(self, file, nbeNum):
+        newest = file
+        fileNum = nbeNum
+        w = xlrd.open_workbook(downloads + newest)
+        sh = w.sheet_by_index(0)
+        your_csv_file = open (downloads + 'NBE_File{}.csv'.format(fileNum), 'w')
+        wr = csv.writer(your_csv_file, lineterminator='\n')
+        reader = csv.reader(open(downloads + newest, 'r'))
+
+        for rownum in range(sh.nrows):
+            for item in sh.row_values(rownum):
+                item = str(item).replace('\x8D', '')
+            # print ", ".join(map(str, sh.row_values(rownum)))
+            # if ", ".join(map(str, sh.row_values(rownum))).strip().strip(", ") != "":
+            wr.writerow(sh.row_values(rownum))
+
+        your_csv_file.close()
+        self.addNBEColumn(downloads + 'NBE_File{}.csv'.format(fileNum), fileNum)
+
+    def addNBEColumn(self, file, nbeNum):
+        # finalNBEFileList = []
+        nbeFile = file
+        fileNum = nbeNum
+        print(nbeFile)
+        with open(nbeFile, 'r') as inputFile, open(downloads + 'NBE_File{}Temp.csv'.format(fileNum), 'w') as outputFile:
+            reader = csv.reader(inputFile)
+            csvwriter = csv.writer(outputFile, lineterminator='\n')
+            header = next(reader)
+            header.append(str('nbe'))
+            csvwriter.writerow(header)
+            for row in reader:
+                if fileNum == '_1':
+                    row.append("one")
+                if fileNum == '_2':
+                    row.append("two")
+                if fileNum == '_3':
+                    row.append("three")
+                if fileNum == '_4':
+                    row.append("four")
+                csvwriter.writerow(row)
+
+        os.chdir(downloads)
+        os.remove(nbeFile)
+        os.rename(os.path.join(downloads, 'NBE_File{}Temp.csv'.format(fileNum)), nbeFile)
+        self.finalNBEFileList.append(nbeFile)
+        self.finalNBEMerge(self.finalNBEFileList)
+
+    def finalNBEMerge(self, files):
+
+        allFiles = files
+        combined_csv = pd.concat([pd.read_csv(f) for f in allFiles])
+        #export to csv
+        combined_csv.to_csv("nbe_merged.csv", index=False)
+
+    def deleteNBEFiles(self):
+        files = self.finalNBEFileList
+        for file in files:
+            os.remove(file)
+
+    def closeWindow(self):
+        self.close()
+        self.deleteNBEFiles()
+        # self.nbeEditWindow.refreshDownloadFiles
+
+
+
+
 
 class SDA_Widget(base_4, form_4):
 
@@ -538,6 +641,7 @@ class NBE_Editor(base_7, form_7):
         self.refreshDownloads = self.findChild(QPushButton, 'refreshFiles_pushButton')
         self.openerScheduleIDLine = self.findChild(QLineEdit, 'openerScheduleID_lineEdit')
         self.organicTarget = self.findChild(QLineEdit, 'organicTargetNumber_lineEdit')
+        self.openNBEMerger = self.findChild(QPushButton, 'openNBEMerger_pushButton')
 
         for i in downloadFilesDirectory:
             self.downloadFiles.addItem(i)
@@ -553,6 +657,11 @@ class NBE_Editor(base_7, form_7):
         self.exactOrganicCheck.toggled.connect(self.organicFileCheckboxesExact)
         self.organicModel.rowsRemoved.connect(self.organicSheetCount)
         self.refreshDownloads.pressed.connect(self.refreshDownloadFiles)
+        self.openNBEMerger.released.connect(self.open_NBE_Merger)
+
+    def open_NBE_Merger(self):
+        self.nbeMergerWindow = NBE_Merger_Widget()
+        self.nbeMergerWindow.show()
 
     def setScheduleIDS(self):
         if str(self.openerScheduleIDLine.text()) != "":
