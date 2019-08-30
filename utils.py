@@ -583,24 +583,33 @@ def state_to_abbrev():
 	with open(os.path.join(downloads, 'csvFile.csv'), 'r') as inFile, open(os.path.join(downloads, 'csvFile_STATES.csv'), 'w') as outFile:
 		reader = csv.reader(inFile)
 		writer = csv.writer(outFile, lineterminator='\n')
+		found_state = False
 
 		headers = next(reader)
 		for index, col in enumerate(headers):
 			cellVal = str(col).lower().replace('/', '_').replace('-', '_')
 			if re.search('^state.+', cellVal) or re.search('.+state.+', cellVal) or cellVal == 'state':
+				found_state = True
 				state_index = index
+				
+				writer.writerow(headers)
+				keys = us_state_abbrev.keys()
+				for row in reader:
+					if row[state_index].lower() in keys:
+						statesChanged = True
+						row[state_index] = us_state_abbrev[row[state_index].lower()]
+					writer.writerow(row)
 
-		writer.writerow(headers)
-		keys = us_state_abbrev.keys()
-		for row in reader:
-			if row[state_index].lower() in keys:
-				statesChanged = True
-				row[state_index] = us_state_abbrev[row[state_index].lower()]
-			writer.writerow(row)
+		if found_state == False:
+			state_index = 'No'
 
-	os.chdir(downloads)
-	os.remove(os.path.join(downloads, 'csvFile.csv'))
-	os.rename(os.path.join(downloads, 'csvFile_STATES.csv'), os.path.join(downloads, 'csvFile.csv'))
+	if found_state == True:
+		os.chdir(downloads)
+		os.remove(os.path.join(downloads, 'csvFile.csv'))
+		os.rename(os.path.join(downloads, 'csvFile_STATES.csv'), os.path.join(downloads, 'csvFile.csv'))
+	else:
+		print('No State Column Found')
+		os.remove(os.path.join(downloads, 'csvFile_STATES.csv'))
 
 	if statesChanged == True:
 		print('State Names Were Converted to Abbrevations. . . Please Quickly Check All Were Converted!')
