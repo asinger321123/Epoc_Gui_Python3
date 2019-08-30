@@ -110,6 +110,7 @@ if len(args) > 0:
 		therapyClass = str(config['therapyChecked'])
 		sDa_only = str(config['sdaOnly'])
 		bDa_only = str(config['bdaOnly'])
+		run_30_60_90 = str(config['seg_30_60_90'])
 		# finalSDATotal = int(config["totalAdditionalSDAs"]) + 1
 		createPivotTable = str(config['createPivotTable'])
 		if createPivotTable == 'Y':
@@ -951,6 +952,7 @@ def fixSas():
 			target_out = target_out.replace('/*applyToClientList*/', applyToClientList)
 			target_out = target_out.replace('/*applyToSda*/', applyToSda)
 			target_out = target_out.replace('/*applytoBda*/', applyToBda)
+			target_out = target_out.replace('/*run_30_60_90*/', run_30_60_90)
 			new_file.write(target_out)
 			line_file = new_file
 
@@ -1167,7 +1169,10 @@ def buildBDAPreSalesMacro():
 		if bDa_only == 'N':
 			includePath = '		%include "&filepath.\PS_BDA_Mult_Lookup_plus_CL_Email_'+str(totalIncludesBuilt)+'.sas";'
 		else:
-			includePath = '		%include "{}\PS_BDA_Mult_Lookup_plus_CL_Email_'.format(str(config['matchedFile']))+str(totalIncludesBuilt)+'.sas";'
+			if str(config['matchedFile']) != '':
+				includePath = '		%include "{}\PS_BDA_Mult_Lookup_plus_CL_Email_'.format(str(config['matchedFile']))+str(totalIncludesBuilt)+'.sas";'
+			else:
+				includePath = '		%include "&filepath.\PS_BDA_Mult_Lookup_plus_CL_Email_'+str(totalIncludesBuilt)+'.sas";'
 		totalIncludesBuilt +=1
 		includePath = '{}\n'.format(includePath)
 		# totalIncludesBuilt +=1
@@ -1179,7 +1184,10 @@ def buildBDAPreSalesMacro():
 	if bDa_only == 'N':
 		newInput = os.path.join(outCode, 'Presales Automation_Email_Final.sas')
 	else:
-		newInput = os.path.join(str(config['matchedFile']), 'PS_BDA_Mult_Lookup_plus_CL_Email.sas')
+		if str(config['matchedFile']) != '':
+			newInput = os.path.join(str(config['matchedFile']), 'PS_BDA_Mult_Lookup_plus_CL_Email.sas')
+		else:
+			newInput = os.path.join(outCode, 'Presales Automation_Email_Final.sas')
 	line_file = open(os.path.join(newInput),'r').readlines()
 	new_file = open(os.path.join(newInput),'w')
 	for line_in in line_file:
@@ -1270,8 +1278,13 @@ def buildBDACodes():
 			copiedBDAFile = os.path.join(outCode, bdaCode+'_'+str(totalCodesBuilt)+'.sas')
 			copyfile(os.path.join(bdaCodeHousing, bdaCode+'.sas'), copiedBDAFile)
 		if bDa_only == 'Y':
-			copiedBDAFile = os.path.join(listMatchFolder, bdaCode+'_'+str(totalCodesBuilt)+'.sas')
-			copyfile(os.path.join(bdaCodeHousing, bdaCode+'.sas'), copiedBDAFile)
+			if listMatchFolder != '':
+				copiedBDAFile = os.path.join(listMatchFolder, bdaCode+'_'+str(totalCodesBuilt)+'.sas')
+				copyfile(os.path.join(bdaCodeHousing, bdaCode+'.sas'), copiedBDAFile)
+			else:
+				copiedBDAFile = os.path.join(outCode, bdaCode+'_'+str(totalCodesBuilt)+'.sas')
+				copyfile(os.path.join(bdaCodeHousing, bdaCode+'.sas'), copiedBDAFile)
+
 		
 		newInput = copiedBDAFile
 		line_file = open(os.path.join(newInput),'r').readlines()
@@ -1296,6 +1309,8 @@ def buildBDACodes():
 			target_out = target_out.replace('/*username*/', email)
 			target_out = target_out.replace('/*inc*/', '_'+str(totalCodesBuilt))
 			target_out = target_out.replace('/*Yes_OR_No*/', dedupe)
+			target_out = target_out.replace('/*list_match_type*/', listMatchType)
+			target_out = target_out.replace('/*product_type*/', listProduct)
 			new_file.write(target_out)
 			line_file = new_file
 
@@ -1374,8 +1389,12 @@ if (caseType == 'listMatch' or caseType == 'Targeting') and listMatchType == 'No
 		else:
 			createFolders()
 			fixSas()
-			buildSDACodes()
-			buildSDAPreSalesMacro()
+			if int(config['totalAdditionalSDAs']) != 0:
+				buildSDACodes()
+				buildSDAPreSalesMacro()
+			if int(config['totalAdditionalBDAs']) != 0:
+				buildBDACodes()
+				buildBDAPreSalesMacro()
 
 	if bDa_only == 'Y':
 		checkDrugs()

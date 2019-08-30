@@ -988,6 +988,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.bdaLabel = self.findChild(QLabel, 'addBDA_Label')
         self.suppSDAOnly = self.findChild(QCheckBox, 'supressSDA_checkBox')
         self.suppBDAOnly = self.findChild(QCheckBox, 'supressBDA_checkBox')
+        self.seg_30_60_90 = self.findChild(QCheckBox, 'seg_30_60_90_checkBox')
 
         #Targeting Objects
         self.targetManuName = self.findChild(QComboBox, 'targetManuName_comboBox')
@@ -2892,6 +2893,11 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.config['bdaOnly'] = 'N'
         # print self.filePage.fileDict
         self.config['loadedFile'] = str(self.loadedFile)
+
+        if self.seg_30_60_90.isChecked():
+            self.config['seg_30_60_90'] = 'Yes'
+        if not self.seg_30_60_90.isChecked():
+            self.config['seg_30_60_90'] = 'No'
 
 
         if self.stateZip.applyToClientList != '' or self.stateZip.applyToSda != '' or self.stateZip.applyToBda != '':

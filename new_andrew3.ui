@@ -780,7 +780,7 @@ Columns:</string>
          </property>
         </widget>
        </item>
-       <item row="8" column="0">
+       <item row="9" column="0">
         <widget class="QPushButton" name="refreshButton">
          <property name="font">
           <font>
@@ -834,7 +834,7 @@ Columns:</string>
          </property>
         </widget>
        </item>
-       <item row="8" column="2">
+       <item row="9" column="2">
         <widget class="QPushButton" name="runProgramButton">
          <property name="maximumSize">
           <size>
@@ -860,18 +860,22 @@ Columns:</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="2">
-        <widget class="QLabel" name="label_2">
+       <item row="1" column="0">
+        <widget class="QLabel" name="sheetCount_Label">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>12</height>
+          </size>
+         </property>
          <property name="font">
           <font>
-           <pointsize>10</pointsize>
            <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
          <property name="text">
-          <string>Segmentation 
-DatasharingList:</string>
+          <string>Sheet Count: </string>
          </property>
         </widget>
        </item>
@@ -894,22 +898,18 @@ DatasharingList:</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="sheetCount_Label">
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>12</height>
-          </size>
-         </property>
+       <item row="0" column="2">
+        <widget class="QLabel" name="label_2">
          <property name="font">
           <font>
+           <pointsize>10</pointsize>
            <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
          <property name="text">
-          <string>Sheet Count: </string>
+          <string>Segmentation 
+DatasharingList:</string>
          </property>
         </widget>
        </item>
@@ -917,6 +917,13 @@ DatasharingList:</string>
         <widget class="QCheckBox" name="pivotCheck_checkBox">
          <property name="text">
           <string>Pivot Table</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="2">
+        <widget class="QCheckBox" name="seg_30_60_90_checkBox">
+         <property name="text">
+          <string>Run 30_60_90 Segs</string>
          </property>
         </widget>
        </item>
@@ -932,6 +939,7 @@ DatasharingList:</string>
       <zorder>refreshLabel_QLabel</zorder>
       <zorder>sheetCount_Label</zorder>
       <zorder>pivotCheck_checkBox</zorder>
+      <zorder>seg_30_60_90_checkBox</zorder>
      </widget>
     </item>
     <item row="1" column="0" colspan="2">
