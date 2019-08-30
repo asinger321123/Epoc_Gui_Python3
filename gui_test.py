@@ -180,6 +180,14 @@ class NBE_Merger_Widget(form_8, base_8):
                     row.append("three")
                 if fileNum == '_4':
                     row.append("four")
+                if fileNum == '_5':
+                    row.append("five")
+                if fileNum == '_6':
+                    row.append("six")
+                if fileNum == '_7':
+                    row.append("seven")
+                if fileNum == '_8':
+                    row.append("eight")
                 csvwriter.writerow(row)
 
         os.chdir(downloads)
