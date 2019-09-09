@@ -131,6 +131,55 @@ class NBE_Merger_Widget(form_8, base_8):
 
         totalFiles = 0
 
+    def checkExtension(self, file, nbeNum):
+        nbeFile = file
+        fileNum = nbeNum
+        filename, extension = os.path.splitext(os.path.join(downloads, nbeFile))
+        # print(extension)
+        if extension == '.xlsx':
+            self.nbe_csv_from_excel(nbeFile, fileNum)
+        elif extension == '.txt':
+            with open(os.path.join(downloads, nbeFile), 'r') as f:
+                f = f.read()
+                totalpipecount = 0
+                totaltabcount = 0
+                for char in f:
+                    if char == '\t':
+                        totaltabcount += 1
+                    if char == '|':
+                        totalpipecount += 1
+                if totalpipecount > totaltabcount:
+                    self.pipe_to_csv(nbeFile, fileNum)
+                if totaltabcount > totalpipecount:
+                    self.tab_to_csv(nbeFile, fileNum)
+        elif extension == '.csv':
+            copyfile(os.path.join(downloads, newest), os.path.join(downloads,'NBE_File{}.csv'.format(fileNum)))
+            self.addNBEColumn(downloads + 'NBE_File{}.csv'.format(fileNum), fileNum)
+        else:
+            print(nbeFile, 'is ')
+
+    def pipe_to_csv(self, file, nbeNum):
+        nbeFile = file
+        fileNum = nbeNum
+        with open(os.path.join(downloads, nbeFile), 'r') as f, open(os.path.join(downloads,'NBE_File{}.csv'.format(fileNum)), 'w') as out:
+            pipereader = csv.reader(f, delimiter='|')
+            csvwriter = csv.writer(out, delimiter=',', lineterminator='\n')
+            for row in pipereader:
+                csvwriter.writerow(row)
+
+        self.addNBEColumn(downloads + 'NBE_File{}.csv'.format(fileNum), fileNum)
+
+    def tab_to_csv(self, file, nbeNum):
+        nbeFile = file
+        fileNum = nbeNum
+        with open(os.path.join(downloads, nbeFile), 'r') as f, open(os.path.join(downloads, 'NBE_File{}.csv'.format(fileNum)), 'w') as out:
+            tabreader = csv.reader(f, delimiter='\t')
+            csvwriter = csv.writer(out, delimiter=',', lineterminator='\n')
+            for row in tabreader:
+                csvwriter.writerow(row)
+
+        self.addNBEColumn(downloads + 'NBE_File{}.csv'.format(fileNum), fileNum)
+
     def run_conversion(self):
         for i in range(self.nbeFilesList.count()):
             self.nbeFile = str(self.nbeFilesList.item(i).text())
@@ -139,7 +188,8 @@ class NBE_Merger_Widget(form_8, base_8):
             # print(self.nbeFile, self.nbe_number)
 
             # print(self.nbeFile)
-            self.nbe_csv_from_excel(self.nbeFile, self.nbe_number)
+            self.checkExtension(self.nbeFile, self.nbe_number)
+            # self.nbe_csv_from_excel(self.nbeFile, self.nbe_number)
 
     def nbe_csv_from_excel(self, file, nbeNum):
         newest = file
