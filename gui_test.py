@@ -436,9 +436,12 @@ class State_Zip(base_6, form_6):
         super(base_6, self).__init__()
         self.setupUi(self)
 
-        self.statesList = ["Alabama","Alaska","Arizona","Arkansas","California","Colorado", "Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois", "Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland", "Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana", "Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York", "North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania", "Puerto Rico", "Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah", "Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"]
-        
+        self.statesList = ["Alabama","Alaska","Arizona","Arkansas","California", "Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois", "Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland", "Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana", "Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York", "North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania", "Puerto Rico", "Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah", "Virginia","Washington","West Virginia","Wisconsin","Wyoming"]
+        self.defaultExcludeList = ["Colorado", "Vermont"]
+        # self.finalExcludeStates = []
+
         #config Variables
+        self.finalExcludeStates = ""
         self.statesString = ""
         self.statesStringFinal = ""
         self.sqlStates = ""
@@ -460,6 +463,7 @@ class State_Zip(base_6, form_6):
         #ListWidgest
         self.stateZipListSource = self.findChild(QListWidget, 'state_zip_listWidget')
         self.stateZipListFinal = self.findChild(QListWidget, 'final_state_zip_listWidget')
+        self.excludeStatesList = self.findChild(QListWidget, 'excludeStates_listWidget')
 
         #QPushButtons
         self.importZip = self.findChild(QPushButton, 'import_pushButton')
@@ -480,6 +484,7 @@ class State_Zip(base_6, form_6):
             obj.toggled.connect(self.applyTo)
 
         self.stateZipOkButton.pressed.connect(self.setStates)
+        self.stateZipOkButton.pressed.connect(self.statesToExclude)
         self.importZip.pressed.connect(self.importZipFile)
         self.stateZipOkButton.released.connect(self.close)
         self.fetchZipCode.pressed.connect(self.sqlFetchZips)
@@ -488,6 +493,22 @@ class State_Zip(base_6, form_6):
 
         #default settings
         self.importZip.setEnabled(False)
+
+        for excludeState in self.defaultExcludeList:
+            self.excludeStatesList.addItem(excludeState)
+
+    def statesToExclude(self):
+        self.finalExcludeStates = ""
+        self.excludeStatesString = ""
+        # if self.stateCheckBox.isChecked():
+        for state in range(self.excludeStatesList.count()):
+            # self.stateObject = '"'+str(self.stateZipListFinal.item(state).text())+'"'+', '+'\n'
+            self.stateObject = '{}{}{}{}{}'.format('"', str(self.excludeStatesList.item(state).text()), '"', ', ', '\n')
+            self.excludeStatesString += self.stateObject
+
+        self.finalExcludeStates = self.excludeStatesString[:-3]
+    
+        print('You have Selected to EXCLUDE the Following States: \n', self.finalExcludeStates)
 
     def resetAll(self):
         self.stateCheckBox.setChecked(False)
@@ -498,12 +519,18 @@ class State_Zip(base_6, form_6):
         self.sdaBox.setChecked(False)
         self.bdaBox.setChecked(False)
 
+        self.finalExcludeStates = ""
         self.statesString = ""
         self.statesStringFinal = ""
         self.sqlStates = ""
         self.applyToClientList = ''
         self.applyToSda = ''
         self.applyToBda = ''
+
+        self.excludeStatesList.clear()
+        self.stateZipListSource.clear()
+        for excludeState in self.defaultExcludeList:
+            self.excludeStatesList.addItem(excludeState)
 
     def zipCityTip(self):
         selectedZipCodes = sorted([index.row() for index in self.stateZipListFinal.selectedIndexes()], reverse=True)
@@ -3097,6 +3124,9 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             else:
                 self.config['queryStates'] = 'No'
                 self.config['queryZips'] = 'Yes'
+
+        if self.stateZip.finalExcludeStates != "":
+            self.config['excludeStates'] = self.stateZip.finalExcludeStates
 
         #write all the new setting first when the RUN BUTTON is clicked
         with open(desktop+'\\Ewok\\Configs\\'+'config.json', 'w') as outfile1:

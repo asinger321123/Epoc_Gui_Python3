@@ -106,6 +106,13 @@ if len(args) > 0:
 			applyToSda = ''
 			applyToBda = ''
 			statesToQuery = ''
+
+		if 'excludeStates' in config:
+			statesToExclude = config['excludeStates']
+		if 'excludeStates' not in config:
+			statesToExclude = """\"Colorado", "Vermont\""""
+
+		print(statesToExclude)
 		caseType = str(config['caseType'])
 		therapyClass = str(config['therapyChecked'])
 		sDa_only = str(config['sdaOnly'])
@@ -953,6 +960,7 @@ def fixSas():
 			target_out = target_out.replace('/*applyToSda*/', applyToSda)
 			target_out = target_out.replace('/*applytoBda*/', applyToBda)
 			target_out = target_out.replace('/*run_30_60_90*/', run_30_60_90)
+			target_out = target_out.replace('/*statesToExclude*/', statesToExclude)
 			new_file.write(target_out)
 			line_file = new_file
 
