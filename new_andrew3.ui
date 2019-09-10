@@ -1002,7 +1002,7 @@ border-radius: 6px;
 </string>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="listMatchTab">
        <attribute name="title">
@@ -1504,6 +1504,11 @@ background: rgb(248, 248, 255, 0);
              <item>
               <property name="text">
                <string>AstraZeneca</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Bausch</string>
               </property>
              </item>
              <item>
