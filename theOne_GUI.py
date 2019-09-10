@@ -112,7 +112,6 @@ if len(args) > 0:
 		if 'excludeStates' not in config:
 			statesToExclude = """\"Colorado", "Vermont\""""
 
-		print(statesToExclude)
 		caseType = str(config['caseType'])
 		therapyClass = str(config['therapyChecked'])
 		sDa_only = str(config['sdaOnly'])
@@ -1156,6 +1155,7 @@ def buildSDACodes():
 			target_out = target_out.replace('/*inc*/', '_'+str(totalCodesBuilt))
 			target_out = target_out.replace('/*list_match_type*/', listMatchType)
 			target_out = target_out.replace('/*product_type*/', listProduct)
+			target_out = target_out.replace('/*statesToExclude*/', statesToExclude)
 			new_file.write(target_out)
 			line_file = new_file
 
@@ -1319,6 +1319,7 @@ def buildBDACodes():
 			target_out = target_out.replace('/*Yes_OR_No*/', dedupe)
 			target_out = target_out.replace('/*list_match_type*/', listMatchType)
 			target_out = target_out.replace('/*product_type*/', listProduct)
+			target_out = target_out.replace('/*statesToExclude*/', statesToExclude)
 			new_file.write(target_out)
 			line_file = new_file
 
