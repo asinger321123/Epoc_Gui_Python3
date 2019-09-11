@@ -490,12 +490,68 @@ class State_Zip(base_6, form_6):
         self.fetchZipCode.pressed.connect(self.sqlFetchZips)
         self.resetAllButton.pressed.connect(self.resetAll)
         self.stateZipListFinal.itemClicked.connect(self.zipCityTip)
+        # self.stateZipOkButton.pressed.connect(self.statesToExclude)
+
+        self.stateZipOkButton.pressed.connect(self.warningMessage)
 
         #default settings
         self.importZip.setEnabled(False)
 
         for excludeState in self.defaultExcludeList:
             self.excludeStatesList.addItem(excludeState)
+
+        self.keepVermont = False
+
+    def warningMessage(self):
+        # self.keepVermont = False
+        missing = False
+        newListofStates = []
+        for state in range(self.excludeStatesList.count()):
+            state = str(self.excludeStatesList.item(state).text())
+            newListofStates.append(state)
+
+        # print(newListofStates)
+    # while missing == False:          
+        if 'Vermont' in newListofStates:
+            pass
+
+        else:
+            if self.keepVermont == False:
+                redText = "<span style=\" font-size:8pt; font-weight:600; color:#dd000d;\" >"
+                blueText = "<span style=\" font-size:8pt; color:#0f0d0e;\" >"
+                endTag = "</span>"
+                message = blueText + "Are you sure you to" + endTag + redText + " NOT EXCLUDE " + endTag + blueText + "Vermont in the Match Results?" + endTag
+                # window.edit1.append(greenText+gettingData+endTag)
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Warning)
+                msg.setText(message)
+                msg.addButton(QtGui.QPushButton('Yes'), QtGui.QMessageBox.YesRole)
+                msg.addButton(QtGui.QPushButton('No'), QtGui.QMessageBox.NoRole)
+                # msg.addButton(QtGui.QPushButton('Cancel'), QtGui.QMessageBox.RejectRole)
+                result = msg.exec_()
+                # print(result)
+                # print(result)
+                if result == 0:
+                    pass
+                    self.keepVermont = True
+                    # print(self.keepVermont)
+                    # print('Totally ')
+                    # msg.exec_()
+                if result == 1:
+                    # rows = sorted([index.row() for index in self.stateZipListSource],  reverse=True)
+                    # bothLists = self.stateZipListSource + self.stateZipListFinal
+                    rows = [row for row in range(self.stateZipListSource.count())]
+                    for row in rows:
+                        stateValue = str(self.stateZipListSource.item(row).text())
+                        # print('dis it: ', stateValue)
+                        if stateValue == "Vermont":
+                            self.excludeStatesList.addItem(self.stateZipListSource.takeItem(row))
+                            self.keepVermont = False
+                    # print(self.keepVermont)
+            else:
+                # print('You have already selected to Retain Vermont in the list match. Please Move to EXCLUDE list if you want to suppress Vermont Users')
+                pass
+
 
     def statesToExclude(self):
         self.finalExcludeStates = ""
@@ -511,6 +567,7 @@ class State_Zip(base_6, form_6):
         print('You have Selected to EXCLUDE the Following States: \n', self.finalExcludeStates)
 
     def resetAll(self):
+        self.keepVermont = False
         self.stateCheckBox.setChecked(False)
         self.zipCheckBox.setChecked(False)
         self.zipsByState.setChecked(False)

@@ -1031,6 +1031,7 @@ def fixSas():
 			target_out = target_out.replace('/*applytoBda*/', applyToBda)
 			target_out = target_out.replace('/*nbeTarget*/', nbeTarget)
 			target_out = target_out.replace('/*openerScheduleIDs*/', openerIDs)
+			target_out = target_out.replace('/*statesToExclude*/', statesToExclude)
 
 			new_file.write(target_out)
 			line_file = new_file
