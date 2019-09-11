@@ -520,7 +520,7 @@ class State_Zip(base_6, form_6):
                 redText = "<span style=\" font-size:8pt; font-weight:600; color:#dd000d;\" >"
                 blueText = "<span style=\" font-size:8pt; color:#0f0d0e;\" >"
                 endTag = "</span>"
-                message = blueText + "Are you sure you to" + endTag + redText + " NOT EXCLUDE " + endTag + blueText + "Vermont in the Match Results?" + endTag
+                message = blueText + "Are you sure you want to" + endTag + redText + " INCLUDE " + endTag + blueText + "Vermont in the Match Results?" + endTag
                 # window.edit1.append(greenText+gettingData+endTag)
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Warning)
