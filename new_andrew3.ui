@@ -1473,6 +1473,11 @@ background: rgb(248, 248, 255, 0);
              </item>
              <item>
               <property name="text">
+               <string>Test</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
                <string>AbbVie</string>
               </property>
              </item>
