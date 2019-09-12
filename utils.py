@@ -593,6 +593,7 @@ def state_to_abbrev():
 				state_index = index
 				
 				# writer.writerow(headers)
+				#cool
 				keys = us_state_abbrev.keys()
 				for row in reader:
 					if row[state_index].lower() in keys:
