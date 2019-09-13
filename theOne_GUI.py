@@ -87,6 +87,14 @@ if len(args) > 0:
 	with open(os.path.join(desktop, 'Ewok\\Configs', args[0]), 'r') as infile:
 		config = json.loads(infile.read(), encoding='utf8')
 		foundFullName = 'n'
+		if 'sdaCap' in config:
+			sdaCap = str(config['sdaCap'])
+		else:
+			sdaCap = '""'
+		if 'bdaCap' in config:
+			bdaCap = str(config['bdaCap'])
+		else:
+			bdaCap = '""'
 		if 'foundFullName' in config:
 			foundFullName = config['foundFullName']
 		if 'queryStates' in config:
@@ -1032,6 +1040,8 @@ def fixSas():
 			target_out = target_out.replace('/*nbeTarget*/', nbeTarget)
 			target_out = target_out.replace('/*openerScheduleIDs*/', openerIDs)
 			target_out = target_out.replace('/*statesToExclude*/', statesToExclude)
+			target_out = target_out.replace('/*sdaCap*/', sdaCap)
+			target_out = target_out.replace('/*bdaCap*/', bdaCap)
 
 			new_file.write(target_out)
 			line_file = new_file

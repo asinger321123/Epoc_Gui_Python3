@@ -1262,6 +1262,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.backFillBox = self.findChild(QCheckBox, 'backFill_checkBox')
         self.nbeCheckBox = self.findChild(QCheckBox, 'nbe_checkBox')
         self.splitBox = self.findChild(QCheckBox, 'randomSplit_checkBox')
+        self.sdaCap = self.findChild(QLineEdit, 'sdaCap_lineEdit')
+        self.bdaCap = self.findChild(QLineEdit, 'bdaCap_lineEdit')
 
         #Edit List Objects
         self.uniqueValuesList = self.findChild(QListWidget, 'uniqueValues_listWidget')
@@ -2967,6 +2969,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 self.config['deDup'] = str('Yes')
             if not isDedupChecked:
                 self.config['deDup'] = str('No')
+        # Target Only Objects are written
         if self.tabWidget.currentIndex() == 1:
             if self.splitBox.isChecked():
                 self.config['randomSplit'] = 'Yes'
@@ -3049,6 +3052,11 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 self.config['cmi_compass_client'] = 'Y'
             if not isCmiCompassChecked:
                 self.config['cmi_compass_client'] = 'N'
+# targeting add on capping conditional
+            if str(self.sdaCap.text()) != '':
+                self.config['sdaCap'] = str(self.sdaCap.text())
+            if str(self.bdaCap.text()) != '':
+                self.config['bdaCap'] = str(self.bdaCap.text())
 
         if self.suppCheck.isChecked():
             self.config['matchFileName'] = self.fileWindow.selectMatchFile
@@ -3259,9 +3267,12 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.suppSDAOnly.setEnabled(isSdaChecked)
         if self.tabWidget.currentIndex() == 1:
             self.sdaTargetNum.setEnabled(isSdaChecked)
+            self.sdaCap.setEnabled(isSdaChecked)
         if self.tabWidget.currentIndex() == 0:
             self.sdaTargetNum.setEnabled(False)
             self.sdaTargetNum.clear()
+            self.sdaCap.setEnabled(False)
+            self.sdaCap.clear()
         if self.sdaOnly.isChecked():
             self.segBox.setEnabled(False)
             self.segBox.setChecked(False)
@@ -3272,6 +3283,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.sdaOnly.setChecked(False)
             self.segBox.setEnabled(True)
             self.suppSDAOnly.setChecked(False)
+            self.sdaCap.setEnabled(False)
+            self.sdaCap.clear()
 
 
 
@@ -3333,8 +3346,11 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.suppBDAOnly.setEnabled(isBdaChecked)
         if self.tabWidget.currentIndex() == 1:
             self.bdaTargetNum.setEnabled(isBdaChecked)
+            self.bdaCap.setEnabled(isBdaChecked)
         if self.tabWidget.currentIndex() == 0:
             self.bdaTargetNum.setEnabled(False)
+            self.bdaCap.setEnabled(False)
+            self.bdaCap.clear()
             self.bdaTargetNum.clear()
         if not isBdaChecked:
             self.bdaOcc.clear()
@@ -3348,6 +3364,9 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.therapyClassBox.setChecked(False)
             self.suppBDAOnly.setChecked(False)
             self.bdaAddOn.setStyleSheet("color: black")
+            self.bdaCap.setEnabled(False)
+            self.bdaCap.clear()
+
 
     def set_SDA_BDA_Only_colors(self):
         sdaBdaNone = [self.caseNumber, self.requesterInIt, self.presalesManuName, self.saleExecutive, self.brandName, self.myInIt]
@@ -3633,6 +3652,9 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.segValues.setEnabled(False)
         self.addSDAButton.setEnabled(False)
         self.addBDAButton.setEnabled(False)
+        self.sdaCap.setEnabled(False)
+        self.bdaCap.setEnabled(False)
+
 
     def attachCallbacks(self):
         # self.refreshFile()
