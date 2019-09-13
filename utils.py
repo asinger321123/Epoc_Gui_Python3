@@ -606,11 +606,11 @@ def state_to_abbrev():
 
 	if found_state == True:
 		os.chdir(downloads)
-		# os.remove(os.path.join(downloads, 'csvFile.csv'))
-		# os.rename(os.path.join(downloads, 'csvFile_STATES.csv'), os.path.join(downloads, 'csvFile.csv'))
+		os.remove(os.path.join(downloads, 'csvFile.csv'))
+		os.rename(os.path.join(downloads, 'csvFile_STATES.csv'), os.path.join(downloads, 'csvFile.csv'))
 	else:
 		print('No State Column Found')
-		# os.remove(os.path.join(downloads, 'csvFile_STATES.csv'))
+		os.remove(os.path.join(downloads, 'csvFile_STATES.csv'))
 
 	if statesChanged == True:
 		print('State Names Were Converted to Abbrevations. . . Please Quickly Check All Were Converted!')
