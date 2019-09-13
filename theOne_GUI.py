@@ -25,6 +25,7 @@ import random
 import utils as utils
 from threading import Thread
 
+#test comment
 init(autoreset=True)
 
 args = sys.argv[1:]
