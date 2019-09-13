@@ -592,7 +592,8 @@ def state_to_abbrev():
 				found_state = True
 				state_index = index
 				
-				writer.writerow(headers)
+				# writer.writerow(headers)
+				#cool
 				keys = us_state_abbrev.keys()
 				for row in reader:
 					if row[state_index].lower() in keys:
@@ -605,31 +606,15 @@ def state_to_abbrev():
 
 	if found_state == True:
 		os.chdir(downloads)
-		os.remove(os.path.join(downloads, 'csvFile.csv'))
-		os.rename(os.path.join(downloads, 'csvFile_STATES.csv'), os.path.join(downloads, 'csvFile.csv'))
+		# os.remove(os.path.join(downloads, 'csvFile.csv'))
+		# os.rename(os.path.join(downloads, 'csvFile_STATES.csv'), os.path.join(downloads, 'csvFile.csv'))
 	else:
 		print('No State Column Found')
-		os.remove(os.path.join(downloads, 'csvFile_STATES.csv'))
+		# os.remove(os.path.join(downloads, 'csvFile_STATES.csv'))
 
 	if statesChanged == True:
 		print('State Names Were Converted to Abbrevations. . . Please Quickly Check All Were Converted!')
 
-def nbe_csv_from_excel(file):
-	newest = file
-	w = xlrd.open_workbook(downloads + newest)
-	sh = w.sheet_by_index(0)
-	your_csv_file = open (downloads + 'target.csv', 'w')
-	wr = csv.writer(your_csv_file, lineterminator='\n')
-	reader = csv.reader(open(downloads + 'target.csv', 'r'))
-
-	for rownum in range(sh.nrows):
-		for item in sh.row_values(rownum):
-			item = str(item).replace('\x8D', '')
-		# print ", ".join(map(str, sh.row_values(rownum)))
-		# if ", ".join(map(str, sh.row_values(rownum))).strip().strip(", ") != "":
-		wr.writerow(sh.row_values(rownum))
-
-	your_csv_file.close()
 
 def main():
 	codeCounter()
@@ -647,6 +632,7 @@ def main():
 	incDupColumns()
 	cmiCompasCheck()
 	sqlSegments()
+	state_to_abbrev()
 
 
 if __name__ == "__main__":
