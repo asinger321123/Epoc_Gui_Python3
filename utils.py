@@ -586,6 +586,7 @@ def state_to_abbrev():
 		found_state = False
 
 		headers = next(reader)
+		writer.writerow(headers)
 		for index, col in enumerate(headers):
 			cellVal = str(col).lower().replace('/', '_').replace('-', '_')
 			if re.search('^state.+', cellVal) or re.search('.+state.+', cellVal) or cellVal == 'state':

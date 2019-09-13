@@ -885,7 +885,7 @@ class NBE_Editor(base_7, form_7):
         utils.checkExtension2(self.selectNBEFile)
         utils.removeChar()
         utils.incDupColumns()
-        utils.state_to_abbrev()
+        # utils.state_to_abbrev()
 
         #populates the listWidget
         colList = utils.fetchColumns()
@@ -897,6 +897,7 @@ class NBE_Editor(base_7, form_7):
         window.highlightSourceSegs()
         window.detectMatchType()
         window.highlightBadColumnNames()
+        utils.state_to_abbrev()
 
     def organicFileCheckboxesStandard(self):
         isStandardOrganicChecked = self.standardOrganicCheck.isChecked()
@@ -1065,7 +1066,7 @@ class FilePage(base_2, form_2):
         utils.checkExtension2(self.selectMatchFile)
         utils.removeChar()
         utils.incDupColumns()
-        utils.state_to_abbrev()
+        # utils.state_to_abbrev()
 
         #populates the listWidget
         colList = utils.fetchColumns()
@@ -1077,6 +1078,7 @@ class FilePage(base_2, form_2):
         window.highlightSourceSegs()
         window.detectMatchType()
         window.highlightBadColumnNames()
+        utils.state_to_abbrev()
 
 
 
@@ -1707,7 +1709,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             utils.checkExtension2(filenames)
             utils.removeChar()
             utils.incDupColumns()
-            utils.state_to_abbrev()
+            # utils.state_to_abbrev()
             self.highlightBadColumnNames()
 
             colList = utils.fetchColumns()
@@ -1718,6 +1720,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.resetEditTab()
             self.highlightSourceSegs()
             self.detectMatchType()
+            utils.state_to_abbrev()
 
 
     def showFrwon(self):
@@ -2756,7 +2759,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         utils.checkExtension()
         utils.removeChar()
         utils.incDupColumns()
-        utils.state_to_abbrev()
+        # utils.state_to_abbrev()
         self.highlightBadColumnNames()
 
         #populates the listWidget
@@ -2771,6 +2774,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         # self.playGoy()
         # self.refreshSuccessful()
         self.highlightBadColumnNames()
+        utils.state_to_abbrev()
 
     def refreshSuccessful(self):
         self.refreshLabel.setText("Refresh Successful")
