@@ -1986,22 +1986,32 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
 # or len(str(row[self.returnIndex('gskmetadatatag')])) > 12
         if str(self.targetManuName.currentText()) == 'GSK':
-            with open(downloads + 'csvFile.csv', 'r') as f:
-                reader = csv.reader(f)
-                first_row = next(reader)
-                itemsTextList =  [str(self.sourceSegs.item(i).text()).lower() for i in range(self.sourceSegs.count())]
-                if 'gskmetadatatag' in itemsTextList:
-                    for row in reader:
-                        if str(row[self.returnIndex('gskmetadatatag')]).endswith(' '):
-                            msg = QMessageBox()
-                            msg.setIcon(QMessageBox.Warning)
-                            msg.setText("There are bad spaces at the end of the GSK_Metadata_Tag in the source data. Please review and remove bad characters/spaces.")
-                            msg.setStandardButtons(QMessageBox.Ok)
-                            msg.exec_()
-                            break
+            with open(downloads + 'csvFileStrip.csv', 'w') as yup:
+                with open(downloads + 'csvFile.csv', 'r') as f:
+                    reader = csv.reader(f)
+                    first_row = next(reader)
+                    itemsTextList =  [str(self.sourceSegs.item(i).text()).lower() for i in range(self.sourceSegs.count())]
+                    if 'gskmetadatatag' in itemsTextList:                       
+                        writer = csv.writer(yup, lineterminator='\n')
+                        writer.writerow(first_row)
+                        for row in reader:
+                            pooper = str(row[self.returnIndex('gskmetadatatag')]).strip()
+                            row[self.returnIndex('gskmetadatatag')] = pooper
+                            writer.writerow(row)
+                        # for row in reader:
+                            if pooper.endswith(' '):
+                                msg = QMessageBox()
+                                msg.setIcon(QMessageBox.Warning)
+                                msg.setText("There are bad spaces at the end of the GSK_Metadata_Tag in the source data. Please review and remove bad characters/spaces.")
+                                msg.setStandardButtons(QMessageBox.Ok)
+                                msg.exec_()
+                                break
 
-                else:
-                    pass
+                    else:
+                        print('No GSK Metadatatag Found')
+                        pass
+            os.remove(downloads + 'csvFile.csv')
+            os.rename(downloads + 'csvFileStrip.csv', downloads + 'csvFile.csv')
 
     def returnSelectedValues(self):
         selectedList = []

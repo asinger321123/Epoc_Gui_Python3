@@ -419,6 +419,7 @@ segmentListSingle = []
 #Set Sas Code Variables
 targetAuto = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Targeting Automation Code_OFFICIAL.sas'
 targetAutoOrganic = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Targeting Automation Code_ORGANIC.sas'
+targetLillyHibbert = 'P:\Epocrates Analytics\Code_Library\Standard_Codes\Pre Sales\DocAlert_Python_Reference\Lilly Hibbert Targeting Code.sas'
 basicMatch = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\TGT_NPI_ME_3PT_20170515.sas'
 dataSharing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\TGT_NPI_ME_3PT_DataSharing_20170515.sas'
 autoCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Presales Automation.sas'
@@ -509,6 +510,9 @@ def getMain():
 				headers[index] = 'whatever'
 			elif cellVal == 'Group' or cellVal == 'group':
 				headers[index] = '_group'
+			elif cellVal == 'userid':
+				headers[index] = 'userid'
+				print(cellVal, ': ', colored('I found a userid', 'green'))
 			elif cellVal == 'zip' or cellVal == 'Postal' or (re.search('^zip.+', cellVal) and (cellVal != 'zip_4' or cellVal != 'zip4')) or re.search('^postal.+', cellVal) or re.search('.+_zip', cellVal) or re.search('.+ zip', cellVal) or re.search('.+_postal', cellVal) or re.search('.+ zip', cellVal) or re.search('.+ postal', cellVal):
 				print(cellVal, ': ',  colored('I found a Zip/Postal Code', 'green'))
 				headers[index] = 'zip'
@@ -791,8 +795,12 @@ def postgresConn():
 							continue
 
 				if listMatchType =='Standard' and config['cmi_compass_client'] == 'Y':
-					export = """{select}, {seg} from {tableName};""".format(select=selectMain5, seg=splitList, tableName=tableName)
-					pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
+					if not re.search('Hibbert', brand):
+						export = """{select}, {seg} from {tableName};""".format(select=selectMain5, seg=splitList, tableName=tableName)
+						pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
+					else:
+						export = """Select REPLACE(userid, '.0', '') as userid, REPLACE(npi, '.0', '') as npi, {seg} from {tableName};""".format(seg=splitList, tableName=tableName)
+						pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')						
 
 
 				elif listMatchType =='Standard_Seg' and config['cmi_compass_client'] == 'Y':
@@ -983,8 +991,12 @@ def fixSas():
 
 		# if not os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
 		if utils.codeCountReader() <= 1:
-			copyfile(targetAuto, os.path.join(outCode2, 'Targeting Automation Code_OFFICIAL.sas'))
-			newInput = os.path.join(outCode2, 'Targeting Automation Code_OFFICIAL.sas')
+			if not re.search('Hibbert', brand):
+				copyfile(targetAuto, os.path.join(outCode2, 'Targeting Automation Code_OFFICIAL.sas'))
+				newInput = os.path.join(outCode2, 'Targeting Automation Code_OFFICIAL.sas')
+			else:
+				copyfile(targetLillyHibbert, os.path.join(outCode2, 'Lilly Hibbert Targeting Code.sas'))
+				newInput = os.path.join(outCode2, 'Lilly Hibbert Targeting Code.sas')				
 		if nbeTarget == 'Yes' and utils.codeCountReader() > 1: 
 			copyfile(targetAutoOrganic, os.path.join(outCode2, 'Organic', 'Targeting Automation Code_ORGANIC.sas'))
 			newInput = os.path.join(outCode2, 'Organic', 'Targeting Automation Code_ORGANIC.sas')
