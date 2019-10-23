@@ -13,6 +13,7 @@ import pprint
 from collections import Counter
 import datetime
 import json
+from pyxlsb import open_workbook
 # from colorama import init, Fore, Back, Style
 # from termcolor import colored
 
@@ -39,6 +40,9 @@ def checkExtension():
 	# print extension
 	if extension == '.xlsx':
 		csv_from_excel()
+
+	elif extension == '.xlsb':
+		xlsb_to_csv()
 	elif extension == '.txt':
 		with open(os.path.join(downloads, newest), 'r') as f:
 			f = f.read()
@@ -60,6 +64,16 @@ def checkExtension():
 			writer = csv.writer(out, lineterminator='\n')
 			writer.writerows([['No File Found']])
 
+def xlsb_to_csv():
+	newest = max(os.listdir(downloads), key=lambda f: os.path.getmtime("{}/{}".format(downloads, f)))
+	with open_workbook(os.path.join(downloads, newest)) as wb, open(os.path.join(downloads, 'target.csv'), 'w') as out:
+		writer = csv.writer(out, lineterminator='\n')
+
+		# for sheetname in wb.sheets:
+		sheet = wb.get_sheet(1)
+		for row in sheet.rows():
+			values = [r.v for r in row]  # retrieving content
+			writer.writerow(values)
 
 def pipe_to_csv():
 	newest = max(os.listdir(downloads), key=lambda f: os.path.getmtime("{}/{}".format(downloads, f)))
