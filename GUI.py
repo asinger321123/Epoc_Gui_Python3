@@ -1172,6 +1172,15 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         os.rename(desktop+'\\Ewok\\Configs\\'+'bdaConfig2.json', desktop+'\\Ewok\\Configs\\'+'bdaConfig.json')
 
 
+        with open('G:\\Communicator Ops\\Epocrates\\Python Files\\GUI Manufacturers\\Manufacturers.txt', 'r') as manuFile:
+            f = manuFile.read()
+            manuList2 = f.replace('[', '').replace(']', '').replace("'", '')
+            manuList = manuList2.split(', ')
+
+
+        # print(manuList)
+
+
         self.dateButton = self.findChild(QToolButton, 'dateButton')
         self.calendarLine = self.findChild(QLineEdit, 'date_lineEdit')
 
@@ -1268,6 +1277,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.splitBox = self.findChild(QCheckBox, 'randomSplit_checkBox')
         self.sdaCap = self.findChild(QLineEdit, 'sdaCap_lineEdit')
         self.bdaCap = self.findChild(QLineEdit, 'bdaCap_lineEdit')
+
+        self.targetManuName.addItems(manuList)
 
         #Edit List Objects
         self.uniqueValuesList = self.findChild(QListWidget, 'uniqueValues_listWidget')
