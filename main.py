@@ -126,6 +126,7 @@ if len(args) > 0:
 		sDa_only = str(config['sdaOnly'])
 		bDa_only = str(config['bdaOnly'])
 		run_30_60_90 = str(config['seg_30_60_90'])
+		activeUserDate = str(config['activeUserDate'])
 		# finalSDATotal = int(config["totalAdditionalSDAs"]) + 1
 		createPivotTable = str(config['createPivotTable'])
 		if createPivotTable == 'Y':
@@ -977,6 +978,7 @@ def fixSas():
 			target_out = target_out.replace('/*applytoBda*/', applyToBda)
 			target_out = target_out.replace('/*run_30_60_90*/', run_30_60_90)
 			target_out = target_out.replace('/*statesToExclude*/', statesToExclude)
+			target_out = target_out.replace('/*activeUserDate*/', activeUserDate)
 			new_file.write(target_out)
 			line_file = new_file
 
@@ -1055,6 +1057,7 @@ def fixSas():
 			target_out = target_out.replace('/*statesToExclude*/', statesToExclude)
 			target_out = target_out.replace('/*sdaCap*/', sdaCap)
 			target_out = target_out.replace('/*bdaCap*/', bdaCap)
+			target_out = target_out.replace('/*activeUserDate*/', activeUserDate)
 
 			new_file.write(target_out)
 			line_file = new_file

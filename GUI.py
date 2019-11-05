@@ -1102,6 +1102,35 @@ class FilePage(base_2, form_2):
             self.standardSuppCheck.setChecked(True)
             self.exactSuppCheck.setStyleSheet("color: black")
 
+class ClickableLineEdit(QLineEdit):
+    clicked = pyqtSignal() # signal when the text entry is left clicked
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton: self.clicked.emit()
+        else: super().mousePressEvent(event)
+
+def clickable(widget):
+
+    class Filter(QObject):
+
+        clicked = pyqtSignal()
+
+        def eventFilter(self, obj, event):
+
+            if obj == widget:
+                if event.type() == QEvent.MouseButtonRelease:
+                    if obj.rect().contains(event.pos()):
+                        self.clicked.emit()
+                        # The developer can opt for .emit(obj) to get the object within the slot.
+                        return True
+
+            return False
+
+    filter = Filter(widget)
+    widget.installEventFilter(filter)
+    return filter.clicked
+
+
  
 class MyApp(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -1181,7 +1210,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         # print(manuList)
 
 
-        self.dateButton = self.findChild(QToolButton, 'dateButton')
+        # self.dateButton = self.findChild(QToolButton, 'dateButton')
         self.calendarLine = self.findChild(QLineEdit, 'date_lineEdit')
 
         #QTabWidget OBJECTS
@@ -1257,6 +1286,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.suppSDAOnly = self.findChild(QCheckBox, 'supressSDA_checkBox')
         self.suppBDAOnly = self.findChild(QCheckBox, 'supressBDA_checkBox')
         self.seg_30_60_90 = self.findChild(QCheckBox, 'seg_30_60_90_checkBox')
+        # self.activeUserDate = ClickableLineEdit(self.findChild(QLineEdit, 'activeUserDate_lineEdit'))
+        self.activeUserDate = self.findChild(QLineEdit, 'activeUserDate_lineEdit')
 
         #Targeting Objects
         self.targetManuName = self.findChild(QComboBox, 'targetManuName_comboBox')
@@ -1297,15 +1328,14 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.fullListCount = self.findChild(QLabel, 'itemCount_QLabel')
         self.uniqueValuesList.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 
+        #event filters
+        self.activeUserDate.installEventFilter(self)
+        self.calendarLine.installEventFilter(self)
+
+
         #console Objects
         self.consoleOutput = self.findChild(QTextEdit, 'console_textEdit')
 
-        # self.frwon = self.findChild(QWebView, 'frwon_webView')
-        # self.frwon.load(QUrl("http://172.18.13.10/analytics/saw.dll?bieehome"))
-        # self.frwon.load(QUrl("https://docs.google.com/spreadsheets/d/1go5cjJ7ORoJCR4bNV2pJZU3nkwHAJbOAor0hBbgp9ag/edit#gid=353317686"))
-
-        # self.frwon.load(QUrl("https://epocrates.my.salesforce.com/500?fcf=00Ba0000009bM2m"))
-        # self.frwon.show()
 
         self.dataSharingDetails = self.findChild(QTableView, 'target_tableView')
         self.model = QtGui.QStandardItemModel(self)
@@ -1363,7 +1393,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.removeSegButton.clicked.connect(self.removeSeg)
         self.runProgramButton.clicked.connect(self.runProgram)
         self.previousSettings.toggled.connect(self.usePreviousConfig)
-        self.dateButton.clicked.connect(self.showCalWid)
+        # self.dateButton.clicked.connect(self.showCalWid)
         self.tabWidget.currentChanged.connect(self.bdaCallback)
         self.tabWidget.currentChanged.connect(self.sdaCallback)
         self.tabWidget.currentChanged.connect(self.returnUserTable)
@@ -1426,6 +1456,9 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.clearStateZipEditor.triggered.connect(self.clearStateZipSettings)
         self.nbeCheckBox.toggled.connect(self.nbeEditor)
         self.nbeEditorTab.triggered.connect(self.nbeEditorMenu)
+        # self.activeUserDate.mouseReleaseEvent = self.showCalWid
+        clickable(self.activeUserDate).connect(self.showCalWidActiveUsers)
+        clickable(self.calendarLine).connect(self.showCalWid)
 
         # self.stateZip = State_Zip()
         # if stateZip.statesString == ""
@@ -1436,6 +1469,27 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
         utils.state_to_abbrev()
         self.highlightBadColumnNames()
+
+    # def clickable(widget):
+
+    #     class Filter(QObject):
+
+    #         clicked = pyqtSignal()
+
+    #         def eventFilter(self, obj, event):
+
+    #             if obj == widget:
+    #                 if event.type() == QEvent.MouseButtonRelease:
+    #                     if obj.rect().contains(event.pos()):
+    #                         self.clicked.emit()
+    #                         # The developer can opt for .emit(obj) to get the object within the slot.
+    #                         return True
+
+    #             return False
+
+    #     filter = Filter(widget)
+    #     widget.installEventFilter(filter)
+    #     return filter.clicked
 
     def showSDAToolTip(self):
         with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json', 'r') as infile:
@@ -1916,32 +1970,6 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         uniqueList = sorted(uniqueList2)
         for i in uniqueList:
             self.uniqueValuesList.addItem(i)
-
-    # def renameValue(self):
-    #     with open(downloads + 'csvFileTemp.csv', 'w') as outFile:
-    #         row_writer = csv.writer(outFile, lineterminator='\n')
-    #         # selectedValue = sorted([index.row() for index in self.uniqueValuesList.selectedIndexes()], reverse=True)
-    #         # for selectedItem in selectedValue:
-    #         #     selectedItem = str(self.uniqueValuesList.currentItem().text())
-    #         selectedItem = sorted([index.row() for index in self.uniqueValuesList.selectedIndexes()], reverse=True)
-    #         selectedItems = []
-    #         for i in selectedItem:
-    #             selectedItems.append(self.uniqueValuesList.item(i).text())
-
-    #         with open(downloads + 'csvFile.csv', 'r') as f:
-    #             reader = csv.reader(f)
-    #             first_row = next(reader)
-    #             row_writer.writerow(first_row)
-    #             for row in reader:
-    #                 for n, segVal in enumerate(row):
-    #                     if segVal in selectedItems:
-    #                         row[n] = str(self.renameValueEdit.text())
-    #                 row_writer.writerow(row)
-    #     os.chdir(downloads)
-    #     os.remove(os.path.join(downloads, 'csvFile.csv'))
-    #     os.rename(os.path.join(downloads, 'csvFileTemp.csv'), os.path.join(downloads, 'csvFile.csv'))
-    #     self.getUniqueSegmentValues()
-
 
     def renameValue(self):
         with open(downloads + 'csvFileTemp.csv', 'w') as outFile:
@@ -2567,9 +2595,18 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.calendar.setGeometry(pos.x(), pos.y(),300, 200)
         self.calendar.show()
 
-    # def windowChange(self):
-    #     self.fileWindow = FilePage()
-    #     self.fileWindow
+    def showCalWidActiveUsers(self):
+        self.calendar = QtGui.QCalendarWidget()
+        self.calendar.setMinimumDate(QtCore.QDate(1900, 1, 1))
+        self.calendar.setMaximumDate(QtCore.QDate(3000, 1, 1))
+        self.calendar.setGridVisible(True)
+        self.calendar.clicked.connect(self.updateDateActive)
+        self.calendar.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        self.calendar.setStyleSheet('background: white; color: black')
+        self.calendar.setGridVisible(True)
+        pos = QtGui.QCursor.pos()
+        self.calendar.setGeometry(pos.x(), pos.y(),300, 200)
+        self.calendar.show()
 
     def showFileSelection(self):
         isSuppChecked = self.suppCheck.isChecked()
@@ -2584,6 +2621,11 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
     def updateDate(self,*args):
         getDate = self.calendar.selectedDate().toString('MM-dd-yy')
         self.calendarLine.setText(getDate)
+        self.calendar.deleteLater()
+
+    def updateDateActive(self,*args):
+        getDate = self.calendar.selectedDate().toString('MM/dd/yyyy')
+        self.activeUserDate.setText(getDate)
         self.calendar.deleteLater()
 
     def formatTableName(self):
@@ -3203,6 +3245,11 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.config['seg_30_60_90'] = 'Yes'
         if not self.seg_30_60_90.isChecked():
             self.config['seg_30_60_90'] = 'No'
+
+        if str(self.activeUserDate.text()) != '':
+            self.config['activeUserDate'] = '"{}"'.format(str(self.activeUserDate.text()))
+        else:
+            self.config['activeUserDate'] = '""'
 
 
         if self.stateZip.applyToClientList != '' or self.stateZip.applyToSda != '' or self.stateZip.applyToBda != '':
