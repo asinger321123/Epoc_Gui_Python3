@@ -557,13 +557,19 @@ def getMain():
 						print(cellVal, ': ', colored('I Found a fulfillment_kit_code', 'green'))
 						headers[index] = 'fulfillment_kit_code'
 
-
-
-
 		w = csv.writer(targetFile, lineterminator='\n')
 		w.writerow(headers)
+		full_name_index = None
+		for ind, col in enumerate(headers):
+			if col == 'full_name':
+				full_name_index = ind
+
 		for row in r:
-			w.writerow(row)
+			if re.search(',', row[full_name_index]):
+				row[full_name_index] = row[full_name_index].replace(',', '')
+				w.writerow(row)
+			else:
+				w.writerow(row)
 
 		# input('Press Enter to Continue . . . ')
 
@@ -861,33 +867,8 @@ def check_names_for_stupid_shit():
 				
 				#if Yes is clicked
 				if ret_val == 6:
-
 					switchNameColumns()
-					# print('Switching Name Columns')
-					# ctypes.windll.user32.MessageBoxW(0, 'Switching Name Columns', 'Action on Name Columns', 0)
-					# with open(downloads+'target_new.txt', 'w') as outFile:
-					# 	writer = csv.writer(outFile, lineterminator='\n', delimiter='\t')
-					# 	# writer.writerows(['npi', 'me', 'lname', 'fname', 'zip'])
-					# 	for index, col in enumerate(headers):
-					# 		if col.lower() == 'fname':
-					# 			headers[index] = 'lname_new'
-					# 		elif col.lower() == 'lname':
-					# 			headers[index] = 'fname_new'
 
-					# 	writer.writerow(headers)
-					# 	for row in reader:
-					# 		writer.writerow(row)
-
-					# 	# for index, col in enumerate(headers):
-					# 	# 	if col.lower() == 'lname_new':
-					# 	# 		headers[index] = 'lname'
-					# 	# 	elif col.lower() == 'fname_new':
-					# 	# 		headers[index] = 'fname'
-
-
-					# 	# writer.writerow(headers)
-					# 	# for row in reader:
-					# 	# 	writer.writerow(row)
 				else:
 					print('Leaving Names as is')
 					ctypes.windll.user32.MessageBoxW(0, 'Leaving Names as is', 'Action on Name Columns', 0)
