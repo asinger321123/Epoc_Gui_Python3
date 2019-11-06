@@ -565,9 +565,10 @@ def getMain():
 				full_name_index = ind
 
 		for row in r:
-			if re.search(',', row[full_name_index]):
-				row[full_name_index] = row[full_name_index].replace(',', '')
-				w.writerow(row)
+			if foundFullName == 'y':
+				if re.search(',', row[full_name_index]):
+					row[full_name_index] = row[full_name_index].replace(',', '')
+					w.writerow(row)
 			else:
 				w.writerow(row)
 
