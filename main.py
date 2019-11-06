@@ -4,6 +4,7 @@ import os
 import sys
 import xlrd
 import csv
+import ctypes
 from shutil import copyfile
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
@@ -821,6 +822,105 @@ def postgresConn():
 
 	print(random.choice(randomList)+'\n')
 
+
+
+
+def check_names_for_stupid_shit():
+	commonFirstNames = ['andrew', 'kathleen', 'mike', 'michael', 'john', 'sarah']
+	foundFirstNames = 0
+	foundFirstNamesInLast = 0
+	notFoundFirstNames = 0
+
+	if foundFullName == 'y':
+		with open(downloads+'target.txt', 'r') as inFile:
+			reader = csv.reader(inFile, delimiter='\t')
+			headers = next(reader)
+			for index, col in enumerate(headers):
+				if col.lower() == 'fname':
+					fnameIndex = index
+				elif col.lower() == 'lname':
+					lnameIndex = index
+
+			for row in reader:
+				fname = row[fnameIndex].lower()
+				lname = row[lnameIndex].lower()
+				if fname in commonFirstNames:
+					foundFirstNames += 1
+				elif lname in commonFirstNames:
+					foundFirstNamesInLast += 1
+				else:
+					notFoundFirstNames += 1
+
+			print('Found' , str(foundFirstNames), 'Common First Names in fname column')
+			print('Found' , str(foundFirstNamesInLast), 'Common First Names in lname column')
+
+			if foundFirstNamesInLast > foundFirstNames:
+				# subprocess.call(['cmd.exe msg %username% Your message here'])
+				# print(colored('Fname and Lname might be backwards . . . Please double check', 'red'))
+				ret_val = ctypes.windll.user32.MessageBoxW(0, 'Fname and Lname might be backwards . . . Please double check.\nDo you want to reverse the name columns?', 'Possible Bad Names', 4)
+				
+				#if Yes is clicked
+				if ret_val == 6:
+
+					switchNameColumns()
+					# print('Switching Name Columns')
+					# ctypes.windll.user32.MessageBoxW(0, 'Switching Name Columns', 'Action on Name Columns', 0)
+					# with open(downloads+'target_new.txt', 'w') as outFile:
+					# 	writer = csv.writer(outFile, lineterminator='\n', delimiter='\t')
+					# 	# writer.writerows(['npi', 'me', 'lname', 'fname', 'zip'])
+					# 	for index, col in enumerate(headers):
+					# 		if col.lower() == 'fname':
+					# 			headers[index] = 'lname_new'
+					# 		elif col.lower() == 'lname':
+					# 			headers[index] = 'fname_new'
+
+					# 	writer.writerow(headers)
+					# 	for row in reader:
+					# 		writer.writerow(row)
+
+					# 	# for index, col in enumerate(headers):
+					# 	# 	if col.lower() == 'lname_new':
+					# 	# 		headers[index] = 'lname'
+					# 	# 	elif col.lower() == 'fname_new':
+					# 	# 		headers[index] = 'fname'
+
+
+					# 	# writer.writerow(headers)
+					# 	# for row in reader:
+					# 	# 	writer.writerow(row)
+				else:
+					print('Leaving Names as is')
+					ctypes.windll.user32.MessageBoxW(0, 'Leaving Names as is', 'Action on Name Columns', 0)
+
+		if os.path.exists(downloads+'target_new.txt'):
+			os.remove(downloads+'target.txt')
+			os.rename(downloads+'target_new.txt', downloads+'target.txt')
+
+def switchNameColumns():
+	ctypes.windll.user32.MessageBoxW(0, 'Switching Name Columns', 'Action on Name Columns', 0)
+
+	with open(downloads+'target.txt', 'r') as inFile, open(downloads+'target_new.txt', 'w') as outFile:
+		reader = csv.reader(inFile, delimiter='\t')
+		writer = csv.writer(outFile, lineterminator='\n', delimiter='\t')
+		headers = next(reader)		
+		# writer.writerows(['npi', 'me', 'lname', 'fname', 'zip'])
+		for index, col in enumerate(headers):
+			if col.lower() == 'fname':
+				headers[index] = 'lname_new'
+			elif col.lower() == 'lname':
+				headers[index] = 'fname_new'
+
+		for index, col in enumerate(headers):
+			if col.lower() == 'lname_new':
+				headers[index] = 'lname'
+			elif col.lower() == 'fname_new':
+				headers[index] = 'fname'
+
+		writer.writerow(headers)
+		for row in reader:
+			writer.writerow(row)
+
+
 def csv_from_excel():
 	w = xlrd.open_workbook(downloads + newest)
 	sh = w.sheet_by_index(0)
@@ -1398,6 +1498,7 @@ if (caseType == 'listMatch' or caseType == 'Targeting') and listMatchType != 'No
 	except:
 		print(colored('The SQL Export Failed. Ask Andrew why. . . Good place to start is maybe a bad SQL Column Name (e.g GROUP) or unsatified conditional which never exported the TXT File', 'red'))
 		deleteCodeCount()
+	check_names_for_stupid_shit()
 	checkDrugs()
 	fixSas()
 	copyTarget()
