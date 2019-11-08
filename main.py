@@ -569,6 +569,8 @@ def getMain():
 				if re.search(',', row[full_name_index]):
 					row[full_name_index] = row[full_name_index].replace(',', '')
 					w.writerow(row)
+				else:
+					w.writerow(row)
 			else:
 				w.writerow(row)
 
