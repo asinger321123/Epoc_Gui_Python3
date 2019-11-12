@@ -630,6 +630,63 @@ def state_to_abbrev():
 	if statesChanged == True:
 		print('State Names Were Converted to Abbrevations. . . Please Quickly Check All Were Converted!')
 
+def format_zips():
+	zipsChanged = False
+
+	with open(os.path.join(downloads, 'csvFile.csv'), 'r') as inFile, open(os.path.join(downloads, 'csvFile_ZIPS.csv'), 'w') as outFile:
+		reader = csv.reader(inFile)
+		writer = csv.writer(outFile, lineterminator='\n')
+		found_zip = False
+
+		leadingZeros = 0
+		missingHyphens = 0
+		headers = next(reader)
+		writer.writerow(headers)
+		for index, col in enumerate(headers):
+			cellVal = str(col).lower().replace('/', '_').replace('-', '_')
+			if cellVal == 'zip' or cellVal == 'Postal' or (re.search('^zip.+', cellVal) and (cellVal != 'zip_4' or cellVal != 'zip4')) or re.search('^postal.+', cellVal) or re.search('.+_zip', cellVal) or re.search('.+ zip', cellVal) or re.search('.+_postal', cellVal) or re.search('.+ zip', cellVal) or re.search('.+ postal', cellVal):
+				zip_index = index
+				found_zip = True
+
+		for row in reader:
+			if row[zip_index] != '':
+				if len(str(row[zip_index])) < 5:
+					newzip = str(row[zip_index]).zfill(5)
+					row[zip_index] = str(row[zip_index]).zfill(5)
+					leadingZeros += 1
+					writer.writerow(row)
+					zipsChanged = True
+				elif len(str(row[zip_index])) == 9 and not re.search('-', row[zip_index]):
+					newzip = '-'.join([row[zip_index][:5], row[zip_index][5:9]])
+					row[zip_index] = '-'.join([row[zip_index][:5], row[zip_index][5:9]])
+					missingHyphens += 1
+					writer.writerow(row)
+					zipsChanged = True
+					# print(newzip)
+				else:
+					newzip = row[zip_index][:5]
+					row[zip_index] = row[zip_index][:5]
+					writer.writerow(row)
+					zipsChanged = True
+					# print(newzip)
+		print(leadingZeros, 'Leading 0\'s were added to zipcodes')
+		print(missingHyphens, 'Hyphens were added to 9 Digit Zipcodes')
+
+		
+		if found_zip == False:
+			zip_index = 'No'
+
+	if found_zip == True:
+		os.chdir(downloads)
+		os.remove(os.path.join(downloads, 'csvFile.csv'))
+		os.rename(os.path.join(downloads, 'csvFile_ZIPS.csv'), os.path.join(downloads, 'csvFile.csv'))
+	else:
+		print('No Zip Column Found')
+		os.remove(os.path.join(downloads, 'csvFile_ZIPS.csv'))
+
+	if zipsChanged == True:
+		print('Zips Were Formated. . . Please Quickly Check All Were Converted!')
+
 
 def main():
 	codeCounter()
@@ -648,6 +705,7 @@ def main():
 	cmiCompasCheck()
 	sqlSegments()
 	state_to_abbrev()
+	format_zips()
 
 
 if __name__ == "__main__":

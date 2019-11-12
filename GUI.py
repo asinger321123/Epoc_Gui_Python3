@@ -1468,6 +1468,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         print('Gui Started')
 
         utils.state_to_abbrev()
+        utils.format_zips()
         self.highlightBadColumnNames()
 
     # def clickable(widget):
