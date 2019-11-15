@@ -564,15 +564,17 @@ def getMain():
 			if col == 'full_name':
 				full_name_index = ind
 
-		for row in r:
-			if foundFullName == 'y':
-				if re.search(',', row[full_name_index]):
-					row[full_name_index] = row[full_name_index].replace(',', '')
-					w.writerow(row)
-				else:
-					w.writerow(row)
-			else:
-				w.writerow(row)
+        for row in r:
+            if foundFullName == 'y':
+                if re.search(',', row[full_name_index]):
+                    row[full_name_index] = row[full_name_index].replace(',', ' ')
+                    if re.search('  ', row[full_name_index]):
+                        row[full_name_index] = row[full_name_index].replace('  ', ' ')    
+                    w.writerow(row)
+                else:
+                    w.writerow(row)
+            else:
+                w.writerow(row)
 
 		# input('Press Enter to Continue . . . ')
 
