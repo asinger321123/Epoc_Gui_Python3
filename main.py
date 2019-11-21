@@ -906,6 +906,18 @@ def switchNameColumns():
 		for row in reader:
 			writer.writerow(row)
 
+def copyConfigs():
+	configFilesPath = desktop+'Ewok\\Configs'
+	file = 'config.json'
+
+
+	if caseType == 'listMatch':
+		copyfile(desktop+'Ewok\\Configs\\'+file, os.path.join(outFile, file))
+
+
+	elif caseType == 'Targeting':
+		if utils.codeCountReader() <= 1:
+			copyfile(desktop+'Ewok\\Configs\\'+file, os.path.join(outCode3, file))
 
 def csv_from_excel():
 	w = xlrd.open_workbook(downloads + newest)
@@ -1488,6 +1500,7 @@ if (caseType == 'listMatch' or caseType == 'Targeting') and listMatchType != 'No
 	checkDrugs()
 	fixSas()
 	copyTarget()
+	copyConfigs()
 	removeFiles()
 	if int(config['totalAdditionalSDAs']) != 0:
 		buildSDACodes()

@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>681</width>
-    <height>824</height>
+    <height>847</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -2089,6 +2089,8 @@ border-right: 2px solid black;
     </property>
     <addaction name="actionLoad_List"/>
     <addaction name="actionSave_Working_List"/>
+    <addaction name="separator"/>
+    <addaction name="actionLoad_Config_File"/>
    </widget>
    <widget class="QMenu" name="menuEditor">
     <property name="title">
@@ -2114,7 +2116,7 @@ border-right: 2px solid black;
   </action>
   <action name="actionLoad_List">
    <property name="text">
-    <string>Load List</string>
+    <string>Load List...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
@@ -2141,6 +2143,14 @@ border-right: 2px solid black;
   <action name="actionSave_Working_List">
    <property name="text">
     <string>Save Working List</string>
+   </property>
+  </action>
+  <action name="actionLoad_Config_File">
+   <property name="text">
+    <string>Load Config File...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
    </property>
   </action>
  </widget>

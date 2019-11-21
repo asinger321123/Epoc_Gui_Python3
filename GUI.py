@@ -1153,6 +1153,9 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 if element.startswith('additonal'):
                     configCheck.pop(element, None)
 
+                configCheck['totalAdditionalSDAs'] = 0
+                configCheck['totalAdditionalBDAs'] = 0
+
         with open(desktop+'\\Ewok\\Configs\\'+'config2.json', 'w') as outfile:
             json.dump(configCheck, outfile, indent=2, sort_keys=True)
 
@@ -1272,11 +1275,6 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.refreshLabel = self.findChild(QLabel, 'refreshLabel_QLabel')
         self.fuzzyBox = self.findChild(QCheckBox, 'fuzzy_checkBox')
         # self.testTextEdit = MyHighlighter(self.findChild(QTextEdit, 'Test_textEdit'), "classic")
-        self.loadAction = self.findChild(QAction, 'actionLoad_List')
-        self.saveAction = self.findChild(QAction, 'actionSave_Working_List')
-        self.stateZipEditor = self.findChild(QAction, 'actionState_Zip_Editor')
-        self.clearStateZipEditor = self.findChild(QAction, 'actionClear_State_Zip_Settings')
-        self.nbeEditorTab = self.findChild(QAction, 'actionNBE_Editor')
         self.therapyClassBox = self.findChild(QCheckBox, 'therapyClass_checkBox')
         self.sheetCount = self.findChild(QLabel, 'sheetCount_Label')
         self.dataCap = self.findChild(QLineEdit, 'dataCap_lineEdit')
@@ -1290,6 +1288,14 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.seg_30_60_90 = self.findChild(QCheckBox, 'seg_30_60_90_checkBox')
         # self.activeUserDate = ClickableLineEdit(self.findChild(QLineEdit, 'activeUserDate_lineEdit'))
         self.activeUserDate = self.findChild(QLineEdit, 'activeUserDate_lineEdit')
+
+        #Menu Bar Items
+        self.loadAction = self.findChild(QAction, 'actionLoad_List')
+        self.saveAction = self.findChild(QAction, 'actionSave_Working_List')
+        self.stateZipEditor = self.findChild(QAction, 'actionState_Zip_Editor')
+        self.clearStateZipEditor = self.findChild(QAction, 'actionClear_State_Zip_Settings')
+        self.nbeEditorTab = self.findChild(QAction, 'actionNBE_Editor')
+        self.loadConfigAction = self.findChild(QAction, 'actionLoad_Config_File')
 
         #Targeting Objects
         self.targetManuName = self.findChild(QComboBox, 'targetManuName_comboBox')
@@ -1331,8 +1337,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.uniqueValuesList.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 
         #event filters
-        self.activeUserDate.installEventFilter(self)
-        self.calendarLine.installEventFilter(self)
+        # self.activeUserDate.installEventFilter(self)
+        # self.calendarLine.installEventFilter(self)
 
 
         #console Objects
@@ -1458,7 +1464,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.clearStateZipEditor.triggered.connect(self.clearStateZipSettings)
         self.nbeCheckBox.toggled.connect(self.nbeEditor)
         self.nbeEditorTab.triggered.connect(self.nbeEditorMenu)
-        # self.activeUserDate.mouseReleaseEvent = self.showCalWid
+        self.loadConfigAction.triggered.connect(self.loadConfig)
+        # self.activeUserDate.mouseReleaseEvent = self.showCalWidActiveUsers
         clickable(self.activeUserDate).connect(self.showCalWidActiveUsers)
         clickable(self.calendarLine).connect(self.showCalWid)
 
@@ -1546,7 +1553,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                     joinDrugs = "".join(drugs)
                     splitDrugs = joinDrugs.split('\n')
                     totalDrugs = len(splitDrugs)
-                    print(totalDrugs)
+                    # print(totalDrugs)
 
                     shortenedList = []
                     myDrugs = ""
@@ -1562,7 +1569,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                                 myDrugs += '+ '+str(totalDrugs - 15)+' More Drugs . . .'
                                 break
                     
-                        print(myDrugs)
+                        # print(myDrugs)
 
                         drugs = myDrugs
                         dispDrugs = '<b>Drug List: </b>{}{}</p>'.format(drugs, '\n')
@@ -2064,13 +2071,19 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             selectedList.append(self.uniqueValuesList.item(i).text())
         return selectedList
 
-    def filterList(self):
+    def filterList(self, selectedValues=None):
+        if selectedValues == False:
+            selVals = self.returnSelectedValues()
+
+        else:
+            selVals = selectedValues
+
         with open(downloads + 'csvFile.csv', 'r') as inputFile, open(downloads + 'csvFileTemp.csv', 'w') as outputFile:
             reader = csv.reader(inputFile)
             csvwriter = csv.writer(outputFile, lineterminator='\n')
             headers = next(reader)
             csvwriter.writerow(headers)
-            selVals = self.returnSelectedValues()
+            # selVals = self.returnSelectedValues()
             filtered = filter(lambda p: p[self.segIndex] in selVals, reader)
             csvwriter.writerows(filtered)
 
@@ -2718,11 +2731,42 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             sqlLiteTables.append(row)
         return sqlLiteTables
 
-    def usePreviousConfig(self):
+
+
+    def loadConfig(self):
+
+        sidebarLocations = [QtCore.QUrl.fromLocalFile(os.path.join(desktop, 'Ewok', 'Configs')), QtCore.QUrl.fromLocalFile(desktop), QtCore.QUrl.fromLocalFile(downloads), QtCore.QUrl.fromLocalFile('P:\\Epocrates Analytics\\List Match\\List Match Folder')]
+        # QtCore.QUrl.fromLocalFile('P:\\Epocrates Analytics\\List Match\\List Match Folder')
+
+        dlg = QFileDialog()
+        dlg.setDirectory(downloads)
+        dlg.setFileMode(QFileDialog.ExistingFile)
+        dlg.setSidebarUrls(sidebarLocations)
+        dlg.setFilter("Config File (*.json)")
+        filenames = list()
+        
+        if dlg.exec_():
+            filenames = dlg.selectedFiles()[0]
+            # filenames = str(filenames[0]).rsplit('/', 1)[-1]
+            # self.setWindowTitle("File Loaded: "+filenames)
+            # self.loadedFile = filenames
+            self.previousSettings.blockSignals(True)
+            self.previousSettings.setChecked(True)
+            self.previousSettings.blockSignals(False)
+            self.usePreviousConfig(filenames)
+
+    def usePreviousConfig(self, file=None):
         isPreviousChecked = self.previousSettings.isChecked()
         if isPreviousChecked:
+            if file == True:
+                myConfigFile = os.path.join(desktop, 'Ewok\\Configs\\config.json')
+            else:
+                myConfigFile = file
+                # print(myConfigFile)
+
             self.previousSettings.setStyleSheet("color: green; font-weight: bold")
-            with open(os.path.join(desktop, 'Ewok\\Configs\\config.json'), 'r') as infile:
+            # with open(os.path.join(desktop, 'Ewok\\Configs\\config.json'), 'r') as infile:
+            with open(myConfigFile, 'r') as infile:
                 config = json.loads(infile.read())
                 if config['caseType'] == 'listMatch':
                     self.tabWidget.setCurrentIndex(0)
@@ -2798,6 +2842,55 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                     self.bdaTargetNum.setText(config['BDA_Target'])
                     self.drugList.setPlainText(config['drugList'])
 
+                if config['totalAdditionalBDAs'] > 0:
+                    self.bdainc = int(config['totalAdditionalBDAs'])
+                    data = {}
+                    with open(desktop+'\\Ewok\\Configs\\'+'bdaConfig.json', 'r') as infile:
+                        masterData = json.loads(infile.read())
+
+                    for keys in config.keys():
+                        if keys.startswith('additonalBda') or keys.startswith('totalAdditionalBDAs'):
+                            data[keys] = config[keys]
+                            # data = '{}: {}'.format(keys, config[keys])
+
+                            #Read the Newly written config file from above and load its data as masterFile and then update it with the other 2 config files
+                    with open(desktop+'\\Ewok\\Configs\\'+'bdaConfig2.json', 'w') as outfile2:
+                        json.dump(data, outfile2, indent=2, sort_keys=True)
+
+                    os.remove(desktop+'\\Ewok\\Configs\\'+'bdaConfig.json')
+                    os.rename(desktop+'\\Ewok\\Configs\\'+'bdaConfig2.json', desktop+'\\Ewok\\Configs\\'+'bdaConfig.json')
+
+                    self.addBDA = BDA_Widget()
+
+                    # self.addBDA.checkTotalBdas()
+                    # self.addBDA.setBDACountLabel()
+                self.bdaLabel.setText('Additional BDA\'s: '+ str(config['totalAdditionalBDAs']))
+                self.showDAToolTip()
+
+                if config['totalAdditionalSDAs'] > 0:
+                    self.sdainc = int(config['totalAdditionalSDAs'])
+                    data = {}
+                    with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json', 'r') as infile:
+                        masterData = json.loads(infile.read())
+
+                    for keys in config.keys():
+                        if keys.startswith('additonalSda') or keys.startswith('totalAdditionalSDAs'):
+                            data[keys] = config[keys]
+                            # data = '{}: {}'.format(keys, config[keys])
+
+                            #Read the Newly written config file from above and load its data as masterFile and then update it with the other 2 config files
+                    with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig2.json', 'w') as outfile2:
+                        json.dump(data, outfile2, indent=2, sort_keys=True)
+
+                    os.remove(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json')
+                    os.rename(desktop+'\\Ewok\\Configs\\'+'sdaConfig2.json', desktop+'\\Ewok\\Configs\\'+'sdaConfig.json')
+
+                    self.addSDA = SDA_Widget()
+
+                    # self.addSDA.checkTotalSdas()
+                    # self.addSDA.setSDACountLabel()
+                self.sdaLabel.setText('Additional SDA\'s: '+ str(config['totalAdditionalSDAs']))
+                self.showSDAToolTip()
 
         else:
             self.setDefaults()
@@ -2805,6 +2898,24 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             #sdaresets
             self.sdaAddOn.setChecked(False)
             self.bdaAddOn.setChecked(False)
+
+            defaultBDAData = {}
+            defaultSDAData = {}
+            defaultBDAData['totalAdditionalBDAs'] = 0
+            defaultSDAData['totalAdditionalSDAs'] = 0
+            self.bdainc = 1
+            self.sdainc = 1
+
+            with open(desktop+'\\Ewok\\Configs\\'+'bdaConfig.json', 'w') as outfile2:
+                json.dump(defaultBDAData, outfile2, indent=2, sort_keys=True)
+
+            with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json', 'w') as outfile2:
+                json.dump(defaultSDAData, outfile2, indent=2, sort_keys=True)
+
+            self.bdaLabel.setToolTip("There are 0 Additional BDA Add Ons")
+            self.bdaLabel.setText('Additional BDA\'s: '+ '0')
+            self.sdaLabel.setToolTip("There are 0 Additional SDA Add Ons")
+            self.sdaLabel.setText('Additional SDA\'s: '+ '0')
 
     def refreshFile(self):
         if os.path.exists(os.path.join(downloads, 'csvFile.csv')):
