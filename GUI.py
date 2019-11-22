@@ -2829,7 +2829,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             with open(myConfigFile, 'r') as infile:
                 config = json.loads(infile.read())
 
-            self.refreshFile(config['loadedFile'])
+            if config['loadedFile'] != 'csvFile.csv':
+                self.refreshFile(config['loadedFile'])
 
             with open(myConfigFile, 'r') as infile:
                 config = json.loads(infile.read())
@@ -2979,8 +2980,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             #     if 'functionRan' in config:
             #         self.replayFunctions(config)
 
-
-            self.refreshFile(config['loadedFile'])
+            if config['loadedFile'] != 'csvFile.csv':
+                self.refreshFile(config['loadedFile'])
             self.setDefaults()
             self.previousSettings.setStyleSheet("color: black")
             #sdaresets
