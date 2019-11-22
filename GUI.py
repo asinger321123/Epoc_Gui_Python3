@@ -17,7 +17,6 @@ from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 import json
 import subprocess
-import psycopg2
 import itertools
 import resource_rc
 import glob
@@ -30,6 +29,7 @@ from colorama import init, Fore, Back, Style
 import pandas as pd
 
 init(autoreset=True)
+optionalArgs = sys.argv[1:]
 
 # test comment
 
@@ -1145,6 +1145,24 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.bdainc = 1
         self.stateZip = State_Zip()
 
+
+        #Section for edit configs to build out
+        self.playBackEdits = {}
+        self.playBackEdits['functionRan'] = list()
+        self.renameInc = 0
+
+        #always reset the edits_config file uploading the GUI so when its merged to master config we know any data present should be merged to master config
+        with open(desktop+'\\Ewok\\Configs\\'+'edits_config.json', 'r') as editConfig_inFile:
+            self.resetDict = json.loads(editConfig_inFile.read())
+            # print(self.resetDict)
+            if self.resetDict:
+                self.resetDict.clear()
+
+        with open(desktop+'\\Ewok\\Configs\\'+'edits_config.json', 'w') as editConfig_outFile:
+            json.dump(self.resetDict, editConfig_outFile, indent=2, sort_keys=True)
+
+
+
         #clean masterConfig File
         with open(desktop+'\\Ewok\\Configs\\'+'config.json', 'r') as infile:
             configCheck = json.loads(infile.read())
@@ -2173,39 +2191,71 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.concatenateList.clear()
             self.concatenateList.setStyleSheet('')
 
-    def renameColumn(self):
-        selectedValue = sorted([index.row() for index in self.sourceSegs.selectedIndexes()], reverse=True)
-        for selectedItem in selectedValue:
-            selectedItem = str(self.sourceSegs.currentItem().text())
-            with open(downloads + 'csvFile.csv', 'r') as inputFile, open(downloads + 'csvFileTemp.csv', 'w') as outputFile:
-                newtext = str(self.newColumnName.text())
-                r = csv.reader(inputFile)
-                headers = next(r)
-                for index, col in enumerate(headers):
-                    headerVal = str(col)
-                    if headerVal == selectedItem:
-                        headers[index] = newtext
+    def renameColumn(self, oldCol=None, newCol=None):
+        if oldCol == False:
+            selectedValue = sorted([index.row() for index in self.sourceSegs.selectedIndexes()], reverse=True)
+            for selectedItem in selectedValue:
+                selectedItem = str(self.sourceSegs.currentItem().text())
+            newtext = str(self.newColumnName.text())
+        else:
+            selectedItem = oldCol
+            newtext = newCol
+        with open(downloads + 'csvFile.csv', 'r') as inputFile, open(downloads + 'csvFileTemp.csv', 'w') as outputFile:
+            # newtext = str(self.newColumnName.text())
+            r = csv.reader(inputFile)
+            headers = next(r)
+            for index, col in enumerate(headers):
+                headerVal = str(col)
+                if headerVal == selectedItem:
+                    headers[index] = newtext
 
 
-                w = csv.writer(outputFile, lineterminator='\n')
-                w.writerow(headers)
-                for row in r:
-                    w.writerow(row)
-            os.chdir(downloads)
-            os.remove(os.path.join(downloads, 'csvFile.csv'))
-            os.rename(os.path.join(downloads, 'csvFileTemp.csv'), os.path.join(downloads, 'csvFile.csv'))
-            if self.sourceSegs:
-                self.sourceSegs.clear()
-            with open(downloads + 'csvFile.csv', 'r') as f:
-                segReader = csv.reader(f)
-                i = next(segReader)
-                columns = [row for row in i]
-                for item in columns:
-                    self.sourceSegs.addItem(item)
+            w = csv.writer(outputFile, lineterminator='\n')
+            w.writerow(headers)
+            for row in r:
+                w.writerow(row)
+        os.chdir(downloads)
+        os.remove(os.path.join(downloads, 'csvFile.csv'))
+        os.rename(os.path.join(downloads, 'csvFileTemp.csv'), os.path.join(downloads, 'csvFile.csv'))
+        if self.sourceSegs:
+            self.sourceSegs.clear()
+        with open(downloads + 'csvFile.csv', 'r') as f:
+            segReader = csv.reader(f)
+            i = next(segReader)
+            columns = [row for row in i]
+            for item in columns:
+                self.sourceSegs.addItem(item)
 
         self.highlightCMI()
         self.detectMatchType()
         self.highlightBadColumnNames()
+
+        self.writeEditToConfig(selectedItem, newtext, 'self.renameColumn')
+
+    def writeEditToConfig(self, oldValue=None, newValue=None, functionName=None):
+        # self.playBackEdits = {}
+        editType = 'renameColumn'
+
+        functionName = functionName
+        if functionName == 'self.renameColumn':
+            self.editTypeCount(editType)
+            if functionName not in self.playBackEdits['functionRan']:
+                self.playBackEdits['functionRan'].append(str(functionName))
+            oldKey, oldValue = 'oldColumn_{}'.format(self.renameInc), str(oldValue)
+            newKey, newValue = 'newColumn_{}'.format(self.renameInc), str(newValue)
+
+            if oldKey not in self.playBackEdits:
+                self.playBackEdits['oldColumn_{}'.format(self.renameInc)] = str(oldValue)
+            if newKey not in self.playBackEdits:
+                self.playBackEdits['newColumn_{}'.format(self.renameInc)] = str(newValue)
+
+        #re write the final file one last time with all the new data
+        with open(desktop+'\\Ewok\\Configs\\'+'edits_config.json', 'w') as outfile2:
+            json.dump(self.playBackEdits, outfile2, indent=2, sort_keys=True)
+
+    def editTypeCount(self, editType):
+        if editType == 'renameColumn':
+            self.renameInc += 1
 
     def countFullFile(self):
         with open(downloads + 'csvFile.csv', 'r') as f:
@@ -2367,18 +2417,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 if checkCol in self.notFound:
                     col.setBackground(QColor(223, 138, 138, 255))
                     self.columnIndex.append(i)
-            #datacheck to see if yellow segments exist. If so it disables the run button until addressed
-            # for i in xrange(self.sourceSegs.count()):
-            #     checkCol =  str(self.sourceSegs.item(i).text()).lower()
-            #     col = self.sourceSegs.item(i)
-            #     rgbValue = str(col.background().color().getRgb())
-            #     if rgbValue == '(247, 243, 117, 255)':
-            #         self.runProgramButton.setEnabled(False)
-            #         # print 'i found a possible segment column'
-            #         break
-            #     else:
-            #         self.runProgramButton.setEnabled(True)
-                    # print 'Were good to run'
+
         if not isCmiCompassChecked:
             for i in range(self.sourceSegs.count()):
                 col = self.sourceSegs.item(i)
@@ -2399,10 +2438,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         isCMIChecked = self.cmiCompass.isChecked()
         self.cmiCompass.setEnabled(True)
         if str(self.targetManuName.currentText()) == 'Merck':
-            # self.segmentList.setEnabled(False)
-            # self.keepSeg.setEnabled(False)
-            # self.segValues.setEnabled(False)
-            # self.segVariable.setEnabled(False)
+
             self.segBox.setChecked(True)
             self.segBox.setEnabled(False)
             self.addSegButton.setEnabled(False)
@@ -2420,20 +2456,14 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 else:
                     self.finalSegs.addItem(i)
         if str(self.targetManuName.currentText()) == 'Boehringer':
-            # self.segmentList.setEnabled(False)
-            # self.keepSeg.setEnabled(False)
-            # self.segValues.setEnabled(False)
-            # self.segVariable.setEnabled(False)
-            # self.cmiCompass.setChecked(False)
-            # self.cmiCompass.setEnabled(False)
+
             self.segBox.setChecked(True)
             self.segBox.setEnabled(False)
             self.addSegButton.setEnabled(False)
             self.removeSegButton.setEnabled(False)
             self.sourceSegs.setEnabled(True)
             self.finalSegs.setEnabled(False)
-            # self.cmiCompass.setChecked(False)
-            # self.cmiCompass.setEnabled(False)
+
             if self.sourceSegs:
                 self.sourceSegs.clear()
             if self.finalSegs:
@@ -2442,10 +2472,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             for i in merckList:
                 self.sourceSegs.addItem(i)
         if str(self.targetManuName.currentText()) == 'Novartis':
-            # self.segmentList.setEnabled(False)
-            # self.keepSeg.setEnabled(False)
-            # self.segValues.setEnabled(False)
-            # self.segVariable.setEnabled(False)
+
             self.segBox.setChecked(True)
             self.segBox.setEnabled(False)
             self.addSegButton.setEnabled(False)
@@ -2454,18 +2481,10 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.finalSegs.setEnabled(False)
             if self.finalSegs:
                 self.finalSegs.clear()
-            # self.finalSegs.addItem('CL_ME')
-            # self.finalSegs.addItem('CL_NPI')
-            # self.finalSegs.addItem('NOV_ID')
-            # self.finalSegs.addItem('MDM_ID')
-            # self.finalSegs.addItem('vendor_contact_event_id')
-            # self.finalSegs.addItem('fulfillment_kit_code')
+
 
         if str(self.targetManuName.currentText()) == 'AstraZeneca':
-            # self.segmentList.setEnabled(False)
-            # self.keepSeg.setEnabled(False)
-            # self.segValues.setEnabled(False)
-            # self.segVariable.setEnabled(False)
+
             self.segBox.setChecked(True)
             self.segBox.setEnabled(False)
             self.addSegButton.setEnabled(False)
@@ -2478,10 +2497,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.finalSegs.addItem('HCP_AZ_CUSTOM_ID')
 
         if str(self.targetManuName.currentText()) == 'Biogen':
-            # self.segmentList.setEnabled(False)
-            # self.keepSeg.setEnabled(False)
-            # self.segValues.setEnabled(False)
-            # self.segVariable.setEnabled(False)
+
             self.segBox.setChecked(True)
             self.segBox.setEnabled(False)
             self.addSegButton.setEnabled(False)
@@ -2499,10 +2515,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
 
         if str(self.targetManuName.currentText()) == 'GSK':
-            # self.segmentList.setEnabled(False)
-            # self.keepSeg.setEnabled(False)
-            # self.segValues.setEnabled(False)
-            # self.segVariable.setEnabled(False)
+
             self.segBox.setChecked(True)
             self.segBox.setEnabled(False)
             self.addSegButton.setEnabled(False)
@@ -2513,10 +2526,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 self.finalSegs.clear()
             # self.finalSegs.addItem('GSK_Metadata_Tag')
         if str(self.targetManuName.currentText()) == 'Amgen':
-            # self.segmentList.setEnabled(False)
-            # self.keepSeg.setEnabled(False)
-            # self.segValues.setEnabled(False)
-            # self.segVariable.setEnabled(False)
+
             self.segBox.setChecked(True)
             self.segBox.setEnabled(False)
             self.addSegButton.setEnabled(False)
@@ -2534,10 +2544,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 else:
                     self.finalSegs.addItem(i)
         if str(self.targetManuName.currentText()) == 'Sanofi-Aventis':
-            # self.segmentList.setEnabled(False)
-            # self.keepSeg.setEnabled(False)
-            # self.segValues.setEnabled(False)
-            # self.segVariable.setEnabled(False)
+
             self.segBox.setChecked(True)
             self.segBox.setEnabled(False)
             self.sourceSegs.setEnabled(False)
@@ -2558,10 +2565,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                     i = i.replace('zip', 'zip2')
                     self.finalSegs.addItem(i)
         if str(self.targetManuName.currentText()) == 'Lilly':
-            # self.segmentList.setEnabled(False)
-            # self.keepSeg.setEnabled(False)
-            # self.segValues.setEnabled(False)
-            # self.segVariable.setEnabled(False)
+
             self.segBox.setChecked(True)
             self.segBox.setEnabled(False)
             self.addSegButton.setEnabled(False)
@@ -2578,10 +2582,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
         if str(self.targetManuName.currentText()) not in ['Merck', 'Amgen', 'Boehringer', 'AstraZeneca', 'GSK', 'Sanofi-Aventis', 'Lilly', 'Novartis', 'Biogen']:
             isSegmentChecked = self.segBox.isChecked()
-            # self.segmentList.setEnabled(True)
-            # self.keepSeg.setEnabled(True)
-            # self.segValues.setEnabled(True)
-            # self.segVariable.setEnabled(True)
+
             self.segBox.setEnabled(True)
             self.segBox.setChecked(False)
             self.standardMatch.setEnabled(True)
@@ -2765,7 +2766,6 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 # print(myConfigFile)
 
             self.previousSettings.setStyleSheet("color: green; font-weight: bold")
-            # with open(os.path.join(desktop, 'Ewok\\Configs\\config.json'), 'r') as infile:
             with open(myConfigFile, 'r') as infile:
                 config = json.loads(infile.read())
                 if config['caseType'] == 'listMatch':
@@ -2842,6 +2842,12 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                     self.bdaTargetNum.setText(config['BDA_Target'])
                     self.drugList.setPlainText(config['drugList'])
 
+
+                if 'functionRan' in config:
+                    self.replayFunctions(config)
+
+
+
                 if config['totalAdditionalBDAs'] > 0:
                     self.bdainc = int(config['totalAdditionalBDAs'])
                     data = {}
@@ -2893,6 +2899,19 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 self.showSDAToolTip()
 
         else:
+            if file == False:
+                myConfigFile = os.path.join(desktop, 'Ewok\\Configs\\config.json')
+                # print('im using default config')
+            else:
+                myConfigFile = file
+                # print(myConfigFile)
+
+            # self.previousSettings.setStyleSheet("color: green; font-weight: bold")
+            with open(myConfigFile, 'r') as infile:
+                config = json.loads(infile.read())
+
+                if 'functionRan' in config:
+                    self.replayFunctions(config)
             self.setDefaults()
             self.previousSettings.setStyleSheet("color: black")
             #sdaresets
@@ -2906,9 +2925,10 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.bdainc = 1
             self.sdainc = 1
 
+            #clear additional BDA Data
             with open(desktop+'\\Ewok\\Configs\\'+'bdaConfig.json', 'w') as outfile2:
                 json.dump(defaultBDAData, outfile2, indent=2, sort_keys=True)
-
+            #clear additional SDA Data
             with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json', 'w') as outfile2:
                 json.dump(defaultSDAData, outfile2, indent=2, sort_keys=True)
 
@@ -2916,6 +2936,20 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.bdaLabel.setText('Additional BDA\'s: '+ '0')
             self.sdaLabel.setToolTip("There are 0 Additional SDA Add Ons")
             self.sdaLabel.setText('Additional SDA\'s: '+ '0')
+
+    def replayFunctions(self, inConfig):
+        config = inConfig
+        newColCount = 0
+        for function in config['functionRan']:
+            if function == 'self.renameColumn':
+                for key in config.keys():
+                    if key.startswith('newColumn'):
+                        newColCount += 1
+                        if self.previousSettings.isChecked():
+                            self.renameColumn(config['oldColumn_{}'.format(newColCount)], config['newColumn_{}'.format(newColCount)])
+                        else:
+                            self.renameColumn(config['newColumn_{}'.format(newColCount)], config['oldColumn_{}'.format(newColCount)])
+
 
     def refreshFile(self):
         if os.path.exists(os.path.join(downloads, 'csvFile.csv')):
@@ -3395,12 +3429,17 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         with open(os.path.join(desktop, 'Ewok\\Configs\\bdaConfig.json'), 'r') as infileBDA:
             bdaData = json.loads(infileBDA.read())
 
+        #THis config contains edits made to the file for playback functions
+        with open(desktop+'\\Ewok\\Configs\\'+'edits_config.json', 'r') as editConfig_inFile:
+            editsData = json.loads(editConfig_inFile.read())
+
         #Read the Newly written config file from above and load its data as masterFile and then update it with the other 2 config files
         with open(desktop+'\\Ewok\\Configs\\'+'config.json', 'r') as infile:
             masterData = json.loads(infile.read())
 
             masterData.update(sdaData)
             masterData.update(bdaData)
+            masterData.update(editsData)
 
         #re write the final file one last time with all the new data
         with open(desktop+'\\Ewok\\Configs\\'+'config.json', 'w') as outfile2:
