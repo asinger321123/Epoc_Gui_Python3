@@ -1141,96 +1141,94 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.setWindowTitle("File Loaded: "+newest)
         # self.config = dict()
-        self.sdainc = 1
-        self.bdainc = 1
-        self.stateZip = State_Zip()
+        # self.sdainc = 1
+        # self.bdainc = 1
+        # self.stateZip = State_Zip()
 
 
-        #Section for edit configs to build out
-        self.playBackEdits = {}
-        self.playBackEdits['functionRan'] = list()
-        self.renameInc = 0
+        # #Section for edit configs to build out
+        # self.playBackEdits = {}
+        # self.playBackEdits['functionRan'] = list()
+        # self.renameInc = 0
 
-        #always reset the edits_config file uploading the GUI so when its merged to master config we know any data present should be merged to master config
-        with open(desktop+'\\Ewok\\Configs\\'+'edits_config.json', 'r') as editConfig_inFile:
-            self.resetDict = json.loads(editConfig_inFile.read())
-            # print(self.resetDict)
-            if self.resetDict:
-                self.resetDict.clear()
+        # #always reset the edits_config file uploading the GUI so when its merged to master config we know any data present should be merged to master config
+        # with open(desktop+'\\Ewok\\Configs\\'+'edits_config.json', 'r') as editConfig_inFile:
+        #     self.resetDict = json.loads(editConfig_inFile.read())
+        #     # print(self.resetDict)
+        #     if self.resetDict:
+        #         self.resetDict.clear()
 
-        with open(desktop+'\\Ewok\\Configs\\'+'edits_config.json', 'w') as editConfig_outFile:
-            json.dump(self.resetDict, editConfig_outFile, indent=2, sort_keys=True)
-
-
-
-        #clean masterConfig File
-        with open(desktop+'\\Ewok\\Configs\\'+'config.json', 'r') as infile:
-            configCheck = json.loads(infile.read())
-            for element in list(configCheck.keys()):
-                # print element
-                if element.startswith('additonal'):
-                    configCheck.pop(element, None)
-
-                configCheck['totalAdditionalSDAs'] = 0
-                configCheck['totalAdditionalBDAs'] = 0
-
-        with open(desktop+'\\Ewok\\Configs\\'+'config2.json', 'w') as outfile:
-            json.dump(configCheck, outfile, indent=2, sort_keys=True)
-
-        os.remove(desktop+'\\Ewok\\Configs\\'+'config.json')
-        os.rename(desktop+'\\Ewok\\Configs\\'+'config2.json', desktop+'\\Ewok\\Configs\\'+'config.json')
+        # with open(desktop+'\\Ewok\\Configs\\'+'edits_config.json', 'w') as editConfig_outFile:
+        #     json.dump(self.resetDict, editConfig_outFile, indent=2, sort_keys=True)
 
 
-        #clean sdaConfig File
-        with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json', 'w') as firstFile:
-            data = {'totalAdditionalSDAs': 0}
-            # data['totalAdditionalSDAs'] = 0
-            json.dump(data, firstFile, indent=2, sort_keys=True)
 
-        with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json', 'r') as infile:
-            configCheck = json.loads(infile.read())
-            for element in list(configCheck.keys()):
-                # print element
-                if element.startswith('additonal'):
-                    configCheck.pop(element, None)
-                if element.startswith('totalAdditional'):
-                    configCheck[element] = 0
+        # #clean masterConfig File
+        # with open(desktop+'\\Ewok\\Configs\\'+'config.json', 'r') as infile:
+        #     configCheck = json.loads(infile.read())
+        #     for element in list(configCheck.keys()):
+        #         # print element
+        #         if element.startswith('additonal'):
+        #             configCheck.pop(element, None)
 
-        with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig2.json', 'w') as outfile:
-            json.dump(configCheck, outfile, indent=2, sort_keys=True)
+        #         configCheck['totalAdditionalSDAs'] = 0
+        #         configCheck['totalAdditionalBDAs'] = 0
 
-        os.remove(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json')
-        os.rename(desktop+'\\Ewok\\Configs\\'+'sdaConfig2.json', desktop+'\\Ewok\\Configs\\'+'sdaConfig.json')
+        # with open(desktop+'\\Ewok\\Configs\\'+'config2.json', 'w') as outfile:
+        #     json.dump(configCheck, outfile, indent=2, sort_keys=True)
 
-        #clean bdaConfig File
-        with open(desktop+'\\Ewok\\Configs\\'+'bdaConfig.json', 'w') as firstFile:
-            data = {'totalAdditionalBDAs': 0}
-            # data['totalAdditionalSDAs'] = 0
-            json.dump(data, firstFile, indent=2, sort_keys=True)
+        # os.remove(desktop+'\\Ewok\\Configs\\'+'config.json')
+        # os.rename(desktop+'\\Ewok\\Configs\\'+'config2.json', desktop+'\\Ewok\\Configs\\'+'config.json')
 
-        with open(desktop+'\\Ewok\\Configs\\'+'bdaConfig.json', 'r') as infile:
-            configCheck = json.loads(infile.read())
-            for element in list(configCheck.keys()):
-                # print element
-                if element.startswith('additonal'):
-                    configCheck.pop(element, None)
-                if element.startswith('totalAdditional'):
-                    configCheck[element] = 0
 
-        with open(desktop+'\\Ewok\\Configs\\'+'bdaConfig2.json', 'w') as outfile:
-            json.dump(configCheck, outfile, indent=2, sort_keys=True)
+        # #clean sdaConfig File
+        # with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json', 'w') as firstFile:
+        #     data = {'totalAdditionalSDAs': 0}
+        #     # data['totalAdditionalSDAs'] = 0
+        #     json.dump(data, firstFile, indent=2, sort_keys=True)
 
-        os.remove(desktop+'\\Ewok\\Configs\\'+'bdaConfig.json')
-        os.rename(desktop+'\\Ewok\\Configs\\'+'bdaConfig2.json', desktop+'\\Ewok\\Configs\\'+'bdaConfig.json')
+        # with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json', 'r') as infile:
+        #     configCheck = json.loads(infile.read())
+        #     for element in list(configCheck.keys()):
+        #         # print element
+        #         if element.startswith('additonal'):
+        #             configCheck.pop(element, None)
+        #         if element.startswith('totalAdditional'):
+        #             configCheck[element] = 0
 
+        # with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig2.json', 'w') as outfile:
+        #     json.dump(configCheck, outfile, indent=2, sort_keys=True)
+
+        # os.remove(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json')
+        # os.rename(desktop+'\\Ewok\\Configs\\'+'sdaConfig2.json', desktop+'\\Ewok\\Configs\\'+'sdaConfig.json')
+
+        # #clean bdaConfig File
+        # with open(desktop+'\\Ewok\\Configs\\'+'bdaConfig.json', 'w') as firstFile:
+        #     data = {'totalAdditionalBDAs': 0}
+        #     # data['totalAdditionalSDAs'] = 0
+        #     json.dump(data, firstFile, indent=2, sort_keys=True)
+
+        # with open(desktop+'\\Ewok\\Configs\\'+'bdaConfig.json', 'r') as infile:
+        #     configCheck = json.loads(infile.read())
+        #     for element in list(configCheck.keys()):
+        #         # print element
+        #         if element.startswith('additonal'):
+        #             configCheck.pop(element, None)
+        #         if element.startswith('totalAdditional'):
+        #             configCheck[element] = 0
+
+        # with open(desktop+'\\Ewok\\Configs\\'+'bdaConfig2.json', 'w') as outfile:
+        #     json.dump(configCheck, outfile, indent=2, sort_keys=True)
+
+        # os.remove(desktop+'\\Ewok\\Configs\\'+'bdaConfig.json')
+        # os.rename(desktop+'\\Ewok\\Configs\\'+'bdaConfig2.json', desktop+'\\Ewok\\Configs\\'+'bdaConfig.json')
+
+        self.resetConfigs()
 
         with open('G:\\Communicator Ops\\Epocrates\\Python Files\\GUI Manufacturers\\Manufacturers.txt', 'r') as manuFile:
             f = manuFile.read()
             manuList2 = f.replace('[', '').replace(']', '').replace("'", '')
             manuList = manuList2.split(', ')
-
-
-        # print(manuList)
 
 
         # self.dateButton = self.findChild(QToolButton, 'dateButton')
@@ -1498,26 +1496,88 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         utils.format_zips()
         self.highlightBadColumnNames()
 
-    # def clickable(widget):
+    def resetConfigs(self):
+        self.sdainc = 1
+        self.bdainc = 1
+        self.stateZip = State_Zip()
 
-    #     class Filter(QObject):
 
-    #         clicked = pyqtSignal()
+        #Section for edit configs to build out
+        self.playBackEdits = {}
+        self.playBackEdits['functionRan'] = list()
+        self.renameInc = 0
 
-    #         def eventFilter(self, obj, event):
+        #always reset the edits_config file uploading the GUI so when its merged to master config we know any data present should be merged to master config
+        with open(desktop+'\\Ewok\\Configs\\'+'edits_config.json', 'r') as editConfig_inFile:
+            self.resetDict = json.loads(editConfig_inFile.read())
+            # print(self.resetDict)
+            if self.resetDict:
+                self.resetDict.clear()
 
-    #             if obj == widget:
-    #                 if event.type() == QEvent.MouseButtonRelease:
-    #                     if obj.rect().contains(event.pos()):
-    #                         self.clicked.emit()
-    #                         # The developer can opt for .emit(obj) to get the object within the slot.
-    #                         return True
+        with open(desktop+'\\Ewok\\Configs\\'+'edits_config.json', 'w') as editConfig_outFile:
+            json.dump(self.resetDict, editConfig_outFile, indent=2, sort_keys=True)
 
-    #             return False
 
-    #     filter = Filter(widget)
-    #     widget.installEventFilter(filter)
-    #     return filter.clicked
+
+        #clean masterConfig File
+        with open(desktop+'\\Ewok\\Configs\\'+'config.json', 'r') as infile:
+            configCheck = json.loads(infile.read())
+            for element in list(configCheck.keys()):
+                # print element
+                if element.startswith('additonal'):
+                    configCheck.pop(element, None)
+
+                configCheck['totalAdditionalSDAs'] = 0
+                configCheck['totalAdditionalBDAs'] = 0
+
+        with open(desktop+'\\Ewok\\Configs\\'+'config2.json', 'w') as outfile:
+            json.dump(configCheck, outfile, indent=2, sort_keys=True)
+
+        os.remove(desktop+'\\Ewok\\Configs\\'+'config.json')
+        os.rename(desktop+'\\Ewok\\Configs\\'+'config2.json', desktop+'\\Ewok\\Configs\\'+'config.json')
+
+
+        #clean sdaConfig File
+        with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json', 'w') as firstFile:
+            data = {'totalAdditionalSDAs': 0}
+            # data['totalAdditionalSDAs'] = 0
+            json.dump(data, firstFile, indent=2, sort_keys=True)
+
+        with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json', 'r') as infile:
+            configCheck = json.loads(infile.read())
+            for element in list(configCheck.keys()):
+                # print element
+                if element.startswith('additonal'):
+                    configCheck.pop(element, None)
+                if element.startswith('totalAdditional'):
+                    configCheck[element] = 0
+
+        with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig2.json', 'w') as outfile:
+            json.dump(configCheck, outfile, indent=2, sort_keys=True)
+
+        os.remove(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json')
+        os.rename(desktop+'\\Ewok\\Configs\\'+'sdaConfig2.json', desktop+'\\Ewok\\Configs\\'+'sdaConfig.json')
+
+        #clean bdaConfig File
+        with open(desktop+'\\Ewok\\Configs\\'+'bdaConfig.json', 'w') as firstFile:
+            data = {'totalAdditionalBDAs': 0}
+            # data['totalAdditionalSDAs'] = 0
+            json.dump(data, firstFile, indent=2, sort_keys=True)
+
+        with open(desktop+'\\Ewok\\Configs\\'+'bdaConfig.json', 'r') as infile:
+            configCheck = json.loads(infile.read())
+            for element in list(configCheck.keys()):
+                # print element
+                if element.startswith('additonal'):
+                    configCheck.pop(element, None)
+                if element.startswith('totalAdditional'):
+                    configCheck[element] = 0
+
+        with open(desktop+'\\Ewok\\Configs\\'+'bdaConfig2.json', 'w') as outfile:
+            json.dump(configCheck, outfile, indent=2, sort_keys=True)
+
+        os.remove(desktop+'\\Ewok\\Configs\\'+'bdaConfig.json')
+        os.rename(desktop+'\\Ewok\\Configs\\'+'bdaConfig2.json', desktop+'\\Ewok\\Configs\\'+'bdaConfig.json')
 
     def showSDAToolTip(self):
         with open(desktop+'\\Ewok\\Configs\\'+'sdaConfig.json', 'r') as infile:
@@ -2761,13 +2821,19 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         if isPreviousChecked:
             if file == True:
                 myConfigFile = os.path.join(desktop, 'Ewok\\Configs\\config.json')
+
             else:
                 myConfigFile = file
-                # print(myConfigFile)
 
             self.previousSettings.setStyleSheet("color: green; font-weight: bold")
             with open(myConfigFile, 'r') as infile:
                 config = json.loads(infile.read())
+
+            self.refreshFile(config['loadedFile'])
+
+            with open(myConfigFile, 'r') as infile:
+                config = json.loads(infile.read())
+
                 if config['caseType'] == 'listMatch':
                     self.tabWidget.setCurrentIndex(0)
                     self.caseNumber.setText(config['caseno'])
@@ -2910,8 +2976,11 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             with open(myConfigFile, 'r') as infile:
                 config = json.loads(infile.read())
 
-                if 'functionRan' in config:
-                    self.replayFunctions(config)
+            #     if 'functionRan' in config:
+            #         self.replayFunctions(config)
+
+
+            self.refreshFile(config['loadedFile'])
             self.setDefaults()
             self.previousSettings.setStyleSheet("color: black")
             #sdaresets
@@ -2945,13 +3014,13 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 for key in config.keys():
                     if key.startswith('newColumn'):
                         newColCount += 1
-                        if self.previousSettings.isChecked():
-                            self.renameColumn(config['oldColumn_{}'.format(newColCount)], config['newColumn_{}'.format(newColCount)])
-                        else:
-                            self.renameColumn(config['newColumn_{}'.format(newColCount)], config['oldColumn_{}'.format(newColCount)])
+                        # if self.previousSettings.isChecked():
+                        self.renameColumn(config['oldColumn_{}'.format(newColCount)], config['newColumn_{}'.format(newColCount)])
+                        # else:
+                        #     self.renameColumn(config['newColumn_{}'.format(newColCount)], config['oldColumn_{}'.format(newColCount)])
 
 
-    def refreshFile(self):
+    def refreshFile(self, daLoadedFizzile=None):
         if os.path.exists(os.path.join(downloads, 'csvFile.csv')):
             os.remove(os.path.join(downloads, 'csvFile.csv'))
         if os.path.exists(os.path.join(downloads, 'target.csv')):
@@ -2962,13 +3031,18 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             os.remove(os.path.join(downloads, 'csvFile1.csv'))
         if os.path.exists(os.path.join(downloads, 'target_mod_temp2.csv')):
             os.remove(os.path.join(downloads, 'target_mod_temp2.csv'))
-        self.loadedFile = newest
+        if daLoadedFizzile == True:
+            self.loadedFile = newest
+        else:
+            self.loadedFile = daLoadedFizzile
+
+        # print(self.loadedFile)
         self.setWindowTitle("File Loaded: "+self.loadedFile)
         self.countSheets()
         if self.sourceSegs:
             self.sourceSegs.clear()
             self.finalSegs.clear()
-        utils.checkExtension()
+        utils.checkExtension2(self.loadedFile)
         utils.removeChar()
         utils.incDupColumns()
         # utils.state_to_abbrev()
@@ -2988,6 +3062,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.highlightBadColumnNames()
         utils.state_to_abbrev()
         utils.format_zips()
+        self.resetConfigs()
 
     def refreshSuccessful(self):
         self.refreshLabel.setText("Refresh Successful")
