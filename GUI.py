@@ -36,6 +36,7 @@ optionalArgs = sys.argv[1:]
 userhome = os.path.expanduser('~')
 desktop = userhome + '\\Desktop\\'
 downloads = userhome + '\\Downloads\\'
+downloads2 = os.path.join(userhome, 'Downloads')
 newest = max(os.listdir(downloads), key=lambda f: os.path.getmtime("{}/{}".format(downloads, f)))
 userID = os.path.expanduser('~').split("""\\""")[-1]
 strList = ['MD', 'DO', 'Allergy and Immunology', 'Anesthesiology', 'Cardiology', 'Dermatology', 'Emergency Medicine', 'Endocrinology', 'Family Practice', 'Gastroenterology', 'Geriatrics', 'Hematology', 'Infectious Disease', 'Internal Medicine, General', 'Neonatology', 'Nephrology', 'Neurology', 'Neurosurgery', 'Obstetrics/Gynecology', 'Occupational Medicine', 'Oncology', 'Ophthalmology', 'Oral and Maxillofacial Surgery (OFMS)', 'Orthopaedic Surgery', 'Other', 'Otorhinolaryngology', 'Pathology', 'Pediatrics, General', 'Pediatrics, Subspecialty', 'Pediatrics, Surgical', 'Perinatology', 'Physical Medicine/Rehabilitation', 'Preventive Medicine', 'Psychiatry', 'Pulmonology', 'Radiation Oncology', 'Radiology, General', 'Radiology, Vascular and Interventional', 'Rheumatology', 'Student', 'Surgery, Cardiac/Thoracic', 'Surgery, General', 'Surgery, Plastic', 'Surgery, Transplant', 'Surgery, Vascular', 'Urology', 'Chiropractor', 'Clinical Research Associate', 'CNM', 'CNS', 'CRNA', 'Dental Hygienist', 'Dentist', 'Dietician/Nutritionist', 'EMT/Paramedic', 'Genetic Counselor', 'Geneticist', 'Healthcare IT', 'Hospital or Practice Administrator', 'Lab Director', 'Lab Technician', 'Law Enforcement', 'LPN', 'Managed Care - Director of Pharmacy', 'Managed Care - Medical Director', 'Managed Care - Other', 'Managed Care - Provider Relations', 'Medical Assistant', 'Medical Librarian', 'ND', 'NP', 'Optician', 'Optometrist', 'PA', 'Pharmacist - Community', 'Pharmacist - Hospital', 'Pharmacy Technician', 'Physical Therapist', 'Podiatrist', 'Psychologist', 'Research Scientist', 'Residency Coordinator', 'Respiratory Therapist', 'RN', 'Veterinarian']
@@ -773,6 +774,7 @@ class NBE_Editor(base_7, form_7):
         self.openerScheduleIDS = ""
         self.organicTargetNumber = ""
         # self.fileDict = defaultdict(list)
+        self.nbeMappingDict = {}
 
         self.downloadFiles = self.findChild(QListWidget, 'files_listWidget')
         self.listMatchFile = self.findChild(QListWidget, 'listMatchFile_listWidget')
@@ -786,6 +788,7 @@ class NBE_Editor(base_7, form_7):
         self.openerScheduleIDLine = self.findChild(QLineEdit, 'openerScheduleID_lineEdit')
         self.organicTarget = self.findChild(QLineEdit, 'organicTargetNumber_lineEdit')
         self.openNBEMerger = self.findChild(QPushButton, 'openNBEMerger_pushButton')
+        self.nbeFileSelection = self.findChild(QListWidget, 'nbeMappingFile_listWidget')
 
         for i in downloadFilesDirectory:
             self.downloadFiles.addItem(i)
@@ -796,12 +799,55 @@ class NBE_Editor(base_7, form_7):
         self.setFilesButton.pressed.connect(self.refreshFrom2Files)
         self.setFilesButton.pressed.connect(self.setScheduleIDS)
         self.setFilesButton.pressed.connect(self.setOrganicTargetNumber)
+        self.setFilesButton.pressed.connect(self.populateNBEMapping)
         self.setFilesButton.released.connect(self.close)
         self.standardOrganicCheck.toggled.connect(self.organicFileCheckboxesStandard)
         self.exactOrganicCheck.toggled.connect(self.organicFileCheckboxesExact)
         self.organicModel.rowsRemoved.connect(self.organicSheetCount)
         self.refreshDownloads.pressed.connect(self.refreshDownloadFiles)
         self.openNBEMerger.released.connect(self.open_NBE_Merger)
+
+
+    def populateNBEMapping(self):
+        # window.segVariable = "Tactic_ID"
+        # window.segValues = ""
+        # window.targetNumber = ""
+
+        self.segVariableFromNBE = "Tactic_ID"
+        self.segValuesFromNBE = ""
+        self.targetNumberFromNBE = ""
+
+        for i in range(self.nbeFileSelection.count()):
+            self.mappingFileText = str(self.nbeFileSelection.item(i).text())
+        self.mappingFile = os.path.join(downloads2, self.mappingFileText)
+
+        with open(self.mappingFile, 'r') as inFile:
+            reader = csv.DictReader(inFile)
+            # headers = next(reader)
+            for row in reader:
+                targetNum = row['Pulse Target: Pulse Target ID']
+                tacticID = row['Content Label: Client Job Code']
+
+                self.nbeMappingDict[targetNum] = tacticID
+ 
+                self.segValuesFromNBE += "{} ".format(tacticID)
+                self.targetNumberFromNBE += "{} ".format(targetNum)
+
+        self.segValuesFromNBE = self.segValuesFromNBE.strip()
+        self.targetNumberFromNBE = self.targetNumberFromNBE.strip()
+
+
+        window.segValues.setText(self.segValuesFromNBE)
+        window.targetNumber.setText(self.targetNumberFromNBE)
+        window.segVariable.setText("Tactic_ID")
+        window.keepSeg.setChecked(True)
+        window.segmentList.setChecked(True)
+        # print(self.targetNumberFromNBE)
+        # print(self.segValuesFromNBE)
+
+
+
+
 
     def open_NBE_Merger(self):
         self.nbeMergerWindow = NBE_Merger_Widget()
