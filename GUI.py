@@ -3078,10 +3078,14 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             os.remove(os.path.join(downloads, 'csvFile1.csv'))
         if os.path.exists(os.path.join(downloads, 'target_mod_temp2.csv')):
             os.remove(os.path.join(downloads, 'target_mod_temp2.csv'))
-        if daLoadedFizzile == True:
+
+        # print(daLoadedFizzile)
+        if daLoadedFizzile == None:
             self.loadedFile = newest
+            # print('Im here because daLoadedFizzile is None')
         else:
             self.loadedFile = daLoadedFizzile
+            # print('Using previousSettings FIle')
 
         # print(self.loadedFile)
         self.setWindowTitle("File Loaded: "+self.loadedFile)
