@@ -455,7 +455,15 @@ def createFolders():
 					os.mkdir('Organic')
 
 def checkDrugs():
-	#read master drug file, strip white space and load into a list for comparison
+	listOfDrug = drugList.split('\n')
+
+	itemDict = {i:listOfDrug.count(i) for i in listOfDrug}
+	for key, val in list(itemDict.items()):
+		if val > 1:
+			print('')
+			print(colored(key + ' is duplicated. Please review drugs and remove duplicates', 'red'))
+
+
 	if caseType == 'listMatch' or caseType == 'Targeting':
 		if bDa == 'y':
 			with open(masterDrugs, 'r') as myDrugs:
