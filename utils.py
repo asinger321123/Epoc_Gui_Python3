@@ -153,32 +153,6 @@ def checkExtension2(test=None):
 			writer = csv.writer(out, lineterminator='\n')
 			writer.writerows([['No File Found']])
 
-# def incDupColumns2(test=None):
-# 	matched = test
-# 	with open(downloads + 'csvFile1.csv', 'r') as myFile, open(downloads + 'csvFile.csv', 'w') as myOut:
-# 		reader = csv.reader(myFile)
-# 		headers = next(reader)
-# 		headersList = []
-# 		visited = []
-# 		inc = 1
-# 		for header in headers:
-# 			headersList.append(header)
-# 		for i, x in enumerate(headersList):
-# 			if x not in visited:
-# 				visited.append(headersList[i])
-# 			else:
-# 				dup = x +'_'+str(inc)
-# 				if dup not in visited:
-# 					visited.append(x+'_'+str(inc))
-# 				else:
-# 					inc += 1
-# 					visited.append(x+'_'+str(inc))
-
-# 		w = csv.writer(myOut, lineterminator='\n')
-# 		w.writerow(visited)
-# 		for row in reader:
-# 			w.writerow(row)
-
 def tab_to_csv2(test=None):
 	matched = test
 	with open(os.path.join(downloads, matched), 'r') as f, open(os.path.join(downloads, 'target.csv'), 'w') as out:

@@ -470,8 +470,12 @@ def checkDrugs():
 			print(colored('THESE DRUGS ARE SPELLED WRONG OR MISSING: ', 'yellow'), colored(unmatchedDrugs, 'yellow'))
 			print('----------------------------------------------------------------------------------------')
 			for drug in unmatchedDrugs:
-				print('Possible Correct Spelling: ', colored(process.extract(drug, finalDrugs, limit=2), 'green'), colored(' - ', 'red'), colored(drug, 'red'))
-				print('----------------------------------------------------------------------------------------')
+				if drug == 'Monistat Complete Care Itch Relief Cream':
+					print(colored('Possible Correct Spelling: (Monistat Care Instant Itch Relief Cream - 85)', 'green'), colored(' - ', 'red'), colored(drug, 'red'))
+					print('----------------------------------------------------------------------------------------')
+				else:
+					print('Possible Correct Spelling: ', colored(process.extract(drug, finalDrugs, limit=2), 'green'), colored(' - ', 'red'), colored(drug, 'red'))
+					print('----------------------------------------------------------------------------------------')
 		if bDa == 'n':
 			pass
 	else:
