@@ -808,6 +808,27 @@ class NBE_Editor(base_7, form_7):
         self.openNBEMerger.released.connect(self.open_NBE_Merger)
 
 
+
+    def crossCheckMapping(self):
+        mappingValuesList = self.segValuesFromNBE.split(' ')
+        unmatchedTactics = []
+        allFound = True
+        with open(os.path.join(downloads2, self.selectNBEFile)) as inFile:
+            reader = csv.DictReader(inFile)
+            sourceTacticList = set([row['Tactic ID'] for row in reader])
+
+        for item in mappingValuesList:
+            if item not in sourceTacticList:
+                unmatchedTactics.append(item)
+                allFound = False
+
+        if allFound == True:
+            print('All Tactics were Found between Mapping and Client List. . . YAY')
+
+        else:
+            print('These Tactics are from the SalesForce Mapping File and dont match anything in the NBE File\n', unmatchedTactics)
+
+
     def populateNBEMapping(self):
         # window.segVariable = "Tactic_ID"
         # window.segValues = ""
@@ -842,6 +863,8 @@ class NBE_Editor(base_7, form_7):
         window.segVariable.setText("Tactic_ID")
         window.keepSeg.setChecked(True)
         window.segmentList.setChecked(True)
+
+        self.crossCheckMapping()
         # print(self.targetNumberFromNBE)
         # print(self.segValuesFromNBE)
 
