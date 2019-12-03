@@ -967,7 +967,7 @@ class NBE_Editor(base_7, form_7):
         window.detectMatchType()
         window.highlightBadColumnNames()
         utils.state_to_abbrev()
-        utils.format_zips()
+        utils.format_zips(os.path.join(downloads2, 'csvFile.csv'))
 
     def organicFileCheckboxesStandard(self):
         isStandardOrganicChecked = self.standardOrganicCheck.isChecked()
@@ -1149,7 +1149,7 @@ class FilePage(base_2, form_2):
         window.detectMatchType()
         window.highlightBadColumnNames()
         utils.state_to_abbrev()
-        utils.format_zips()
+        utils.format_zips(os.path.join(downloads2, 'csvFile.csv'))
 
 
 
@@ -1562,7 +1562,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         print('Gui Started')
 
         utils.state_to_abbrev()
-        utils.format_zips()
+        utils.format_zips(os.path.join(downloads2, 'csvFile.csv'))
         self.highlightBadColumnNames()
 
     def resetConfigs(self):
@@ -1943,7 +1943,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.highlightSourceSegs()
             self.detectMatchType()
             utils.state_to_abbrev()
-            utils.format_zips()
+            utils.format_zips(os.path.join(downloads2, 'csvFile.csv'))
 
 
     def showFrwon(self):
@@ -3135,7 +3135,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         # self.refreshSuccessful()
         self.highlightBadColumnNames()
         utils.state_to_abbrev()
-        utils.format_zips()
+        utils.format_zips(os.path.join(downloads2, 'csvFile.csv'))
         self.resetConfigs()
 
     def refreshSuccessful(self):
