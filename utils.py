@@ -580,15 +580,19 @@ def state_to_abbrev():
 			if re.search('^state.+', cellVal) or re.search('.+state.+', cellVal) or cellVal == 'state':
 				found_state = True
 				state_index = index
+				break
 				
-				# writer.writerow(headers)
-				#cool
-				keys = us_state_abbrev.keys()
-				for row in reader:
-					if row[state_index].lower() in keys:
-						statesChanged = True
-						row[state_index] = us_state_abbrev[row[state_index].lower()]
-					writer.writerow(row)
+		# writer.writerow(headers)
+		#cool
+		keys = us_state_abbrev.keys()
+		for row in reader:
+			if row[state_index].lower() in keys:
+				statesChanged = True
+				row[state_index] = us_state_abbrev[row[state_index].lower()]
+				writer.writerow(row)
+			else:
+				writer.writerow(row)
+
 
 		if found_state == False:
 			state_index = 'No'
@@ -616,11 +620,20 @@ def format_zips():
 		missingHyphens = 0
 		headers = next(reader)
 		writer.writerow(headers)
+
 		for index, col in enumerate(headers):
 			cellVal = str(col).lower().replace('/', '_').replace('-', '_')
 			if cellVal == 'zip' or cellVal == 'Postal' or (re.search('^zip.+', cellVal) and (cellVal != 'zip_4' or cellVal != 'zip4')) or re.search('^postal.+', cellVal) or re.search('.+_zip', cellVal) or re.search('.+ zip', cellVal) or re.search('.+_postal', cellVal) or re.search('.+ zip', cellVal) or re.search('.+ postal', cellVal):
+				headers[index] = 'zip'
+				# zip_index = index
+
+		for index, col in enumerate(headers):
+			# print(headers)
+			cellVal = str(col).lower().replace('/', '_').replace('-', '_')
+			if cellVal == 'zip':	
 				zip_index = index
 				found_zip = True
+				break
 
 		if found_zip == True:
 			for row in reader:
@@ -644,6 +657,8 @@ def format_zips():
 						writer.writerow(row)
 						zipsChanged = True
 						# print(newzip)
+				else:
+					writer.writerow(row)
 			print(leadingZeros, 'Leading 0\'s were added to zipcodes')
 			print(missingHyphens, 'Hyphens were added to 9 Digit Zipcodes')
 

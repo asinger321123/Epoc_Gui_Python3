@@ -329,7 +329,7 @@ if len(args) > 0:
 
 			if dSharing == 'N' and (bDa_only  == 'Y' or sDa_only == 'Y'):
 				dSharing = 'N'
-				segmentList = []
+				segmentList = ""
 				keep_seg = str(config['keep_seg'])
 			keep_seg = str(config['keep_seg'])
 			yourIn = str(config['yourIn'])
