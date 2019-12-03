@@ -626,6 +626,7 @@ def format_zips(myFile, keepOld=None):
 
 		leadingZeros = 0
 		missingHyphens = 0
+		not5Digits = 0
 		headers = next(reader)
 		# writer.writerow(headers)
 
@@ -660,6 +661,7 @@ def format_zips(myFile, keepOld=None):
 						else:
 							newzip = row[zip_index][:5]
 							row[zip_index] = row[zip_index][:5]
+							not5Digits += 1
 							writer.writerow(row)
 							zipsChanged = True
 						# print(newzip)
@@ -683,6 +685,7 @@ def format_zips(myFile, keepOld=None):
 	if zipsChanged == True:
 		print(leadingZeros, 'Leading 0\'s were added to zipcodes')
 		print(missingHyphens, 'Hyphens were added to 9 Digit Zipcodes')
+		print(not5Digits, 'Were corrected to 5 digit Zipcodes')
 		print('Zips Were Formated. . . Please Quickly Check All Were Converted!')
 
 
