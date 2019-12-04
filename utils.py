@@ -59,7 +59,11 @@ def checkExtension():
 			if totaltabcount > totalpipecount:
 				tab_to_csv()
 	elif extension == '.csv':
-		copyfile(os.path.join(downloads, newest), os.path.join(downloads, 'target.csv'))
+		with open(os.path.join(downloads, newest), 'r') as inFile, open(os.path.join(downloads, 'target.csv'), 'w', encoding='utf-8') as out:
+			reader = csv.reader(inFile)
+			writer = csv.writer(out, lineterminator='\n')
+			for row in reader:
+				writer.writerows(row)
 	else:
 		with open(os.path.join(downloads, 'target.csv'), 'w') as out:
 			writer = csv.writer(out, lineterminator='\n')
@@ -98,38 +102,15 @@ def countSheets():
 
 def csv_from_excel():
 	newest = max(os.listdir(downloads), key=lambda f: os.path.getmtime("{}/{}".format(downloads, f)))
-	# w = xlrd.open_workbook(downloads + newest)
-	# sh = w.sheet_by_index(0)
-	# your_csv_file = open (downloads + 'target.csv', 'w')
-	# wr = csv.writer(your_csv_file, lineterminator='\n')
-	# reader = csv.reader(open(downloads + 'target.csv', 'r'))
-
-	# for rownum in range(sh.nrows):
-	# 	for item in sh.row_values(rownum):
-	# 		item = str(item).replace('\x8D', '')
-	# 	# print ", ".join(map(str, sh.row_values(rownum)))
-	# 	# if ", ".join(map(str, sh.row_values(rownum))).strip().strip(", ") != "":
-	# 	wr.writerow(sh.row_values(rownum))
-
-	# your_csv_file.close()
-
 	raw = pd.read_excel(downloads + newest, dtype=str)
 	raw.to_csv(downloads + 'target.csv', index=None, header=True, encoding='utf-8')
 
 
 def csv_from_excel2(test=None):
 	matched = test
-	w = xlrd.open_workbook(downloads + matched)
-	sh = w.sheet_by_index(0)
-	your_csv_file = open (downloads + 'target.csv', 'w')
-	wr = csv.writer(your_csv_file, lineterminator='\n')
-
-	for rownum in range(sh.nrows):
-		# print ", ".join(map(str, sh.row_values(rownum)))
-		# if ", ".join(map(str, sh.row_values(rownum))).strip().strip(", ") != "":
-		wr.writerow(sh.row_values(rownum))
-
-	your_csv_file.close()
+	# newest = max(os.listdir(downloads), key=lambda f: os.path.getmtime("{}/{}".format(downloads, f)))
+	raw = pd.read_excel(downloads + matched, dtype=str)
+	raw.to_csv(downloads + 'target.csv', index=None, header=True, encoding='utf-8')
 
 def checkExtension2(test=None):
 	matched = test
@@ -152,7 +133,12 @@ def checkExtension2(test=None):
 			if totaltabcount > totalpipecount:
 				tab_to_csv2(matched)
 	elif extension == '.csv':
-		copyfile(os.path.join(downloads, matched), os.path.join(downloads, 'target.csv'))
+		with open(os.path.join(downloads, matched), 'r') as inFile, open(os.path.join(downloads, 'target.csv'), 'w', encoding='utf-8') as out:
+			reader = csv.reader(inFile)
+			writer = csv.writer(out, lineterminator='\n')
+			for row in reader:
+				writer.writerows(row)
+		# copyfile(os.path.join(downloads, matched), os.path.join(downloads, 'target.csv'))
 	else:
 		with open(os.path.join(downloads, 'target.csv'), 'w') as out:
 			writer = csv.writer(out, lineterminator='\n')
@@ -590,17 +576,19 @@ def state_to_abbrev():
 		# writer.writerow(headers)
 		#cool
 		keys = us_state_abbrev.keys()
-		for row in reader:
-			if row[state_index].lower() in keys:
-				statesChanged = True
-				row[state_index] = us_state_abbrev[row[state_index].lower()]
-				writer.writerow(row)
-			else:
-				writer.writerow(row)
+
+		if found_state == True:
+			for row in reader:
+				if row[state_index].lower() in keys:
+					statesChanged = True
+					row[state_index] = us_state_abbrev[row[state_index].lower()]
+					writer.writerow(row)
+				else:
+					writer.writerow(row)
 
 
-		if found_state == False:
-			state_index = 'No'
+			if found_state == False:
+				state_index = 'No'
 
 	if found_state == True:
 		os.chdir(downloads)
@@ -615,20 +603,17 @@ def state_to_abbrev():
 
 def format_zips(myFile, keepOld=None):
 	zipsChanged = False
+	editsNeeded = False
 	myFilePart = myFile.split('.csv')[0]
-	# print(myFile)
-	# if myFile == 'csvFile.csv'
 
-	with open(os.path.join(myFile), 'r') as inFile:#, open('{}_ZIPS.csv'.format(myFilePart), 'w') as outFile:
+	with open(os.path.join(myFile), 'r') as inFile:
 		reader = csv.reader(inFile)
-		# writer = csv.writer(outFile, lineterminator='\n')
 		found_zip = False
 
 		leadingZeros = 0
 		missingHyphens = 0
 		not5Digits = 0
 		headers = next(reader)
-		# writer.writerow(headers)
 
 		for index, col in enumerate(headers):
 			cellVal = str(col).lower().replace('/', '_').replace('-', '_')
@@ -640,43 +625,56 @@ def format_zips(myFile, keepOld=None):
 				break
 
 		if found_zip == True:
-			with open('{}_ZIPS.csv'.format(myFilePart), 'w') as outFile:
-				writer = csv.writer(outFile, lineterminator='\n')
-				writer.writerow(headers)
-				for row in reader:
-					if row[zip_index] != '':
-						if len(str(row[zip_index])) < 5:
-							newzip = str(row[zip_index]).zfill(5)
-							row[zip_index] = str(row[zip_index]).zfill(5)
-							leadingZeros += 1
-							writer.writerow(row)
-							zipsChanged = True
-						elif len(str(row[zip_index])) == 9 and not re.search('-', row[zip_index]):
-							newzip = '-'.join([row[zip_index][:5], row[zip_index][5:9]])
-							row[zip_index] = '-'.join([row[zip_index][:5], row[zip_index][5:9]])
-							missingHyphens += 1
-							writer.writerow(row)
-							zipsChanged = True
-							# print(newzip)
-						else:
-							newzip = row[zip_index][:5]
-							row[zip_index] = row[zip_index][:5]
-							not5Digits += 1
-							writer.writerow(row)
-							zipsChanged = True
-						# print(newzip)
-					else:
+			for row in reader:
+				if row[zip_index] != '':
+					if len(str(row[zip_index])) < 5 or (len(str(row[zip_index])) == 9 and not re.search('-', row[zip_index])) or (len(str(row[zip_index])) != 5 and (len(str(row[zip_index])) != 10 and not re.search('-', row[zip_index]))):
+						editsNeeded = True
+						break
+
+	if editsNeeded == True:
+		with open(os.path.join(myFile), 'r') as inFile, open('{}_ZIPS.csv'.format(myFilePart), 'w') as outFile:
+			reader = csv.reader(inFile)
+			headers = next(reader)
+			writer = csv.writer(outFile, lineterminator='\n')
+			writer.writerow(headers)
+			for row in reader:
+				if row[zip_index] != '':
+					if len(str(row[zip_index])) < 5:
+						newzip = str(row[zip_index]).zfill(5)
+						row[zip_index] = str(row[zip_index]).zfill(5)
+						leadingZeros += 1
 						writer.writerow(row)
-				# print(leadingZeros, 'Leading 0\'s were added to zipcodes')
-				# print(missingHyphens, 'Hyphens were added to 9 Digit Zipcodes')
+						zipsChanged = True
+					elif len(str(row[zip_index])) == 9 and not re.search('-', row[zip_index]):
+						newzip = '-'.join([row[zip_index][:5], row[zip_index][5:9]])
+						row[zip_index] = '-'.join([row[zip_index][:5], row[zip_index][5:9]])
+						missingHyphens += 1
+						writer.writerow(row)
+						zipsChanged = True
+
+					elif len(str(row[zip_index])) == 5:
+						writer.writerow(row)
+
+					elif len(str(row[zip_index])) == 10 and re.search('-', row[zip_index]):
+							writer.writerow(row)
+					else:
+						row[zip_index] = row[zip_index][:5]
+						not5Digits += 1
+						writer.writerow(row)
+						zipsChanged = True
+				else:
+					writer.writerow(row)
+
+	else:
+		if found_zip == True:
+			print('No edits needed to Zipcodes')
+		else: 
+			print('No Zipcode Column Found')
 
 	if keepOld == None:
 		if os.path.exists('{}_ZIPS.csv'.format(myFilePart)):
 			os.remove(myFile)
 			os.rename('{}_ZIPS.csv'.format(myFilePart), myFile)
-
-		else:
-			print('No Zip Column Found')
 
 	if keepOld == 'Yes':
 		if os.path.exists('{}_ZIPS.csv'.format(myFilePart)):
@@ -711,3 +709,22 @@ def main():
 
 if __name__ == "__main__":
 	main()
+
+
+
+
+
+# w = xlrd.open_workbook(downloads + newest)
+# sh = w.sheet_by_index(0)
+# your_csv_file = open (downloads + 'target.csv', 'w')
+# wr = csv.writer(your_csv_file, lineterminator='\n')
+# reader = csv.reader(open(downloads + 'target.csv', 'r'))
+
+# for rownum in range(sh.nrows):
+# 	for item in sh.row_values(rownum):
+# 		item = str(item).replace('\x8D', '')
+# 	# print ", ".join(map(str, sh.row_values(rownum)))
+# 	# if ", ".join(map(str, sh.row_values(rownum))).strip().strip(", ") != "":
+# 	wr.writerow(sh.row_values(rownum))
+
+# your_csv_file.close()
