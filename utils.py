@@ -645,6 +645,13 @@ def format_zips(myFile, keepOld=None, tnum=None, manu=None):
 						leadingZeros += 1
 						writer.writerow(row)
 						zipsChanged = True
+
+					elif len(str(row[zip_index])) < 10 and re.search('-', row[zip_index]):
+						row[zip_index] = str(row[zip_index]).zfill(10)
+						leadingZeros += 1
+						writer.writerow(row)
+						zipsChanged = True
+
 					elif len(str(row[zip_index])) == 9 and not re.search('-', row[zip_index]):
 						newzip = '-'.join([row[zip_index][:5], row[zip_index][5:9]])
 						row[zip_index] = '-'.join([row[zip_index][:5], row[zip_index][5:9]])
