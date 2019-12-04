@@ -59,11 +59,15 @@ def checkExtension():
 			if totaltabcount > totalpipecount:
 				tab_to_csv()
 	elif extension == '.csv':
-		with open(os.path.join(downloads, newest), 'r') as inFile, open(os.path.join(downloads, 'target.csv'), 'w', encoding='utf-8') as out:
-			reader = csv.reader(inFile)
-			writer = csv.writer(out, lineterminator='\n')
-			for row in reader:
-				writer.writerows(row)
+		raw = pd.read_csv(os.path.join(downloads, newest))
+		raw.to_csv(os.path.join(downloads, 'target.csv'), index=None, encoding='utf-8')
+		# raw.to_csv(downloads + 'target.csv', index=None, header=True, encoding='utf-8')
+		# with open(os.path.join(downloads, newest), 'r', encoding='utf-8') as inFile, open(os.path.join(downloads, 'target.csv'), 'w', encoding='utf-8') as out:
+		# 	reader = csv.reader(inFile)
+		# 	writer = csv.writer(out, lineterminator='\n')
+		# 	for row in reader:
+		# 		print(row)
+		# 		writer.writerows([row])
 	else:
 		with open(os.path.join(downloads, 'target.csv'), 'w') as out:
 			writer = csv.writer(out, lineterminator='\n')
@@ -133,11 +137,14 @@ def checkExtension2(test=None):
 			if totaltabcount > totalpipecount:
 				tab_to_csv2(matched)
 	elif extension == '.csv':
-		with open(os.path.join(downloads, matched), 'r') as inFile, open(os.path.join(downloads, 'target.csv'), 'w', encoding='utf-8') as out:
-			reader = csv.reader(inFile)
-			writer = csv.writer(out, lineterminator='\n')
-			for row in reader:
-				writer.writerows(row)
+
+		raw = pd.read_csv(os.path.join(downloads, matched))
+		raw.to_csv(os.path.join(downloads, 'target.csv'), index=None, encoding='utf-8')
+		# with open(os.path.join(downloads, matched), 'r') as inFile, open(os.path.join(downloads, 'target.csv'), 'w', encoding='utf-8') as out:
+		# 	reader = csv.reader(inFile)
+		# 	writer = csv.writer(out, lineterminator='\n')
+		# 	for row in reader:
+		# 		writer.writerows(row)
 		# copyfile(os.path.join(downloads, matched), os.path.join(downloads, 'target.csv'))
 	else:
 		with open(os.path.join(downloads, 'target.csv'), 'w') as out:
@@ -497,7 +504,7 @@ def codeCountReader():
 		return 0
 
 
-def state_to_abbrev():
+def state_to_abbrev(myFile=None):
 	us_state_abbrev = {
 		'alabama': 'AL', 
 		'alaska': 'AK', 
@@ -700,6 +707,7 @@ def format_zips(myFile, keepOld=None, tnum=None, manu=None):
 			print(missingHyphens, 'Hyphens were added to 9 Digit Zipcodes')
 			print(not5Digits, 'Were corrected to 5 digit Zipcodes')
 			print('Zips Were Formated. . . Please Quickly Check All Were Converted!\n')
+			state_to_abbrev('{}_MW_FIXED.csv'.format(myFilePart))
 
 
 def main():
@@ -720,6 +728,7 @@ def main():
 	sqlSegments()
 	state_to_abbrev()
 	format_zips()
+
 
 
 if __name__ == "__main__":
