@@ -601,7 +601,7 @@ def state_to_abbrev():
 	if statesChanged == True:
 		print('State Names Were Converted to Abbrevations. . . Please Quickly Check All Were Converted!')
 
-def format_zips(myFile, keepOld=None):
+def format_zips(myFile, keepOld=None, tnum=None, manu=None):
 	zipsChanged = False
 	editsNeeded = False
 	myFilePart = myFile.split('.csv')[0]
@@ -681,10 +681,18 @@ def format_zips(myFile, keepOld=None):
 			os.rename('{}_ZIPS.csv'.format(myFilePart), '{}_MW_FIXED.csv'.format(myFilePart))
 
 	if zipsChanged == True:
-		print(leadingZeros, 'Leading 0\'s were added to zipcodes')
-		print(missingHyphens, 'Hyphens were added to 9 Digit Zipcodes')
-		print(not5Digits, 'Were corrected to 5 digit Zipcodes')
-		print('Zips Were Formated. . . Please Quickly Check All Were Converted!')
+		if tnum ==None and manu == None:
+			print(leadingZeros, 'Leading 0\'s were added to zipcodes')
+			print(missingHyphens, 'Hyphens were added to 9 Digit Zipcodes')
+			print(not5Digits, 'Were corrected to 5 digit Zipcodes')
+			print('Zips Were Formated. . . Please Quickly Check All Were Converted!')
+
+		else:
+			print(tnum, 'for', manu, 'needed the following updates')
+			print(leadingZeros, 'Leading 0\'s were added to zipcodes')
+			print(missingHyphens, 'Hyphens were added to 9 Digit Zipcodes')
+			print(not5Digits, 'Were corrected to 5 digit Zipcodes')
+			print('Zips Were Formated. . . Please Quickly Check All Were Converted!\n')
 
 
 def main():
