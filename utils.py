@@ -504,7 +504,7 @@ def codeCountReader():
 		return 0
 
 
-def state_to_abbrev(myFile=None):
+def state_to_abbrev(myFile, tnum=None, manu=None):
 	us_state_abbrev = {
 		'alabama': 'AL', 
 		'alaska': 'AK', 
@@ -565,26 +565,34 @@ def state_to_abbrev(myFile=None):
 		'wyoming': 'WY'}
 
 	statesChanged = False
+	myFilePart = myFile.split('.csv')[0]
+	keys = us_state_abbrev.keys()
+	stateEditsNeeded = False
 
-	with open(os.path.join(downloads, 'csvFile.csv'), 'r') as inFile, open(os.path.join(downloads, 'csvFile_STATES.csv'), 'w') as outFile:
+	with open(myFile, 'r') as inFile:#, open(os.path.join(downloads, 'csvFile_STATES.csv'), 'w') as outFile:
 		reader = csv.reader(inFile)
-		writer = csv.writer(outFile, lineterminator='\n')
 		found_state = False
 
 		headers = next(reader)
-		writer.writerow(headers)
 		for index, col in enumerate(headers):
 			cellVal = str(col).lower().replace('/', '_').replace('-', '_')
 			if re.search('^state.+', cellVal) or re.search('.+state.+', cellVal) or cellVal == 'state':
 				found_state = True
 				state_index = index
 				break
-				
-		# writer.writerow(headers)
-		#cool
-		keys = us_state_abbrev.keys()
 
 		if found_state == True:
+			for row in reader:
+				if row[state_index].lower() in keys:
+					stateEditsNeeded = True
+
+
+	if stateEditsNeeded == True:
+		with open(os.path.join(myFile), 'r') as inFile, open('{}_STATES.csv'.format(myFilePart), 'w') as outFile:
+			reader = csv.reader(inFile)
+			headers = next(reader)
+			writer = csv.writer(outFile, lineterminator='\n')
+			writer.writerow(headers)
 			for row in reader:
 				if row[state_index].lower() in keys:
 					statesChanged = True
@@ -594,19 +602,23 @@ def state_to_abbrev(myFile=None):
 					writer.writerow(row)
 
 
-			if found_state == False:
-				state_index = 'No'
-
-	if found_state == True:
-		os.chdir(downloads)
-		os.remove(os.path.join(downloads, 'csvFile.csv'))
-		os.rename(os.path.join(downloads, 'csvFile_STATES.csv'), os.path.join(downloads, 'csvFile.csv'))
 	else:
-		print('No State Column Found')
-		os.remove(os.path.join(downloads, 'csvFile_STATES.csv'))
+		if found_state == False:
+			print('No State Column Found\n')
+		else:
+			print('No Edits Needed to State Column\n')
+
+
+	if stateEditsNeeded == True:
+		os.remove(myFile)
+		os.rename('{}_STATES.csv'.format(myFilePart), myFile)
+
 
 	if statesChanged == True:
-		print('State Names Were Converted to Abbrevations. . . Please Quickly Check All Were Converted!')
+		if tnum != None and manu != None:
+			print(tnum, 'For', manu, '- State Names Were Converted to Abbrevations. . . Please Quickly Check All Were Converted!\n')
+		else:
+			print('State Names Were Converted to Abbrevations. . . Please Quickly Check All Were Converted!\n')
 
 def format_zips(myFile, keepOld=None, tnum=None, manu=None):
 	zipsChanged = False
@@ -699,7 +711,7 @@ def format_zips(myFile, keepOld=None, tnum=None, manu=None):
 			print(leadingZeros, 'Leading 0\'s were added to zipcodes')
 			print(missingHyphens, 'Hyphens were added to 9 Digit Zipcodes')
 			print(not5Digits, 'Were corrected to 5 digit Zipcodes')
-			print('Zips Were Formated. . . Please Quickly Check All Were Converted!')
+			print('Zips Were Formated. . . Please Quickly Check All Were Converted!\n')
 
 		else:
 			print(tnum, 'for', manu, 'needed the following updates')
@@ -707,7 +719,7 @@ def format_zips(myFile, keepOld=None, tnum=None, manu=None):
 			print(missingHyphens, 'Hyphens were added to 9 Digit Zipcodes')
 			print(not5Digits, 'Were corrected to 5 digit Zipcodes')
 			print('Zips Were Formated. . . Please Quickly Check All Were Converted!\n')
-			state_to_abbrev('{}_MW_FIXED.csv'.format(myFilePart))
+			state_to_abbrev('{}_MW_FIXED.csv'.format(myFilePart), tnum, manu)
 
 
 def main():

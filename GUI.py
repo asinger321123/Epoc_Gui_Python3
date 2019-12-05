@@ -1561,8 +1561,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.countSheets()
         print('Gui Started')
 
-        utils.state_to_abbrev()
         utils.format_zips(os.path.join(downloads2, 'csvFile.csv'))
+        utils.state_to_abbrev(os.path.join(downloads2, 'csvFile.csv'))
         self.highlightBadColumnNames()
 
     def resetConfigs(self):
