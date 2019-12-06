@@ -1,4 +1,4 @@
-{"Merck":"campaign_id, wave_id, tactic_id, product_id, customer_id",
+{"Merck":"campaign_id, wave_id, tactic_id, product_id, customer_id, execution_date, expiration_date",
 "azSegmentationIMSDR":"imsdr as imsdr, hcp_az_cust_id",
 "azSegmentationNPI":"REPLACE(npi, '.0', '') as imsdr, hcp_az_cust_id",
 "AstraZeneca":"imsdr, hcp_az_cust_id",
