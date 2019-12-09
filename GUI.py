@@ -349,6 +349,7 @@ class BDA_Widget(base_5, form_5):
         self.drugListAdd = self.findChild(QPlainTextEdit, 'drugList_text_edit2')
         self.bdaOnlyAdd = self.findChild(QCheckBox, 'bdaOnly_checkBox2')
         self.therapyClassBoxAdd = self.findChild(QCheckBox, 'therapyClass_checkBox2')
+        self.bdaTargetNum2 = self.findChild(QLineEdit, 'bdaTarget_lineEdit2')
 
 
         self.bdaOkButton.pressed.connect(self.writeBDAConfig)
@@ -380,6 +381,7 @@ class BDA_Widget(base_5, form_5):
         self.addBdaLookUpPeriod = 'additonalBdaLookUpPeriod'+'_'+str(window.bdainc)
         self.addTherapyChecked = 'additonalBdatherapyChecked'+'_'+str(window.bdainc)
         self.addDrugList = 'additonalBdaDrugList'+'_'+str(window.bdainc)
+        self.addTargNum = 'additionalBDATarget'+'_'+str(window.bdainc)
 
         self.bdaConfig['totalAdditionalBDAs'] = window.bdainc
         self.bdaConfig[self.addBdaOcc] = str(self.bdaOcc2)
@@ -399,6 +401,8 @@ class BDA_Widget(base_5, form_5):
             self.bdaConfig[self.addTherapyChecked] = str('No')
         if self.drugListAdd.toPlainText():
             self.bdaConfig[self.addDrugList] = str(self.createDrugListBDA())
+
+        self.bdaConfig[self.addTargNum] = str(self.bdaTargetNum2.text())
 
 
         #Load BDA Configs and append them to the master config
@@ -966,8 +970,8 @@ class NBE_Editor(base_7, form_7):
         window.highlightSourceSegs()
         window.detectMatchType()
         window.highlightBadColumnNames()
-        utils.state_to_abbrev()
         utils.format_zips(os.path.join(downloads2, 'csvFile.csv'))
+        utils.state_to_abbrev(os.path.join(downloads2, 'csvFile.csv'))
 
     def organicFileCheckboxesStandard(self):
         isStandardOrganicChecked = self.standardOrganicCheck.isChecked()
@@ -1148,8 +1152,8 @@ class FilePage(base_2, form_2):
         window.highlightSourceSegs()
         window.detectMatchType()
         window.highlightBadColumnNames()
-        utils.state_to_abbrev()
         utils.format_zips(os.path.join(downloads2, 'csvFile.csv'))
+        utils.state_to_abbrev(os.path.join(downloads2, 'csvFile.csv'))
 
 
 
@@ -1942,8 +1946,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.resetEditTab()
             self.highlightSourceSegs()
             self.detectMatchType()
-            utils.state_to_abbrev()
             utils.format_zips(os.path.join(downloads2, 'csvFile.csv'))
+            utils.state_to_abbrev(os.path.join(downloads2, 'csvFile.csv'))
 
 
     def showFrwon(self):
@@ -3133,9 +3137,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.detectMatchType()
         # self.playGoy()
         # self.refreshSuccessful()
-        self.highlightBadColumnNames()
-        utils.state_to_abbrev()
         utils.format_zips(os.path.join(downloads2, 'csvFile.csv'))
+        utils.state_to_abbrev(os.path.join(downloads2, 'csvFile.csv'))
         self.resetConfigs()
 
     def refreshSuccessful(self):
