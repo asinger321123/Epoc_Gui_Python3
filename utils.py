@@ -610,9 +610,19 @@ def state_to_abbrev(myFile, tnum=None, manu=None):
 
 
 	if stateEditsNeeded == True:
-		os.remove(myFile)
-		os.rename('{}_STATES.csv'.format(myFilePart), myFile)
+		if tnum == None and manu == None:
+			if os.path.exists('{}_STATES.csv'.format(myFilePart)):
+				os.remove(myFile)
+				os.rename('{}_STATES.csv'.format(myFilePart), myFile)
 
+		else:
+			#no zip fixes needed
+			if os.path.exists('{}_STATES.csv'.format(myFilePart)):
+				os.remove(myFile)
+				if myFilePart.endswith('FIXED'):		
+					os.rename('{}_STATES.csv'.format(myFilePart), '{}.csv'.format(myFilePart))
+				else:
+					os.rename('{}_STATES.csv'.format(myFilePart), '{}_MW_FIXED.csv'.format(myFilePart))
 
 	if statesChanged == True:
 		if tnum != None and manu != None:
@@ -623,6 +633,8 @@ def state_to_abbrev(myFile, tnum=None, manu=None):
 def format_zips(myFile, keepOld=None, tnum=None, manu=None):
 	zipsChanged = False
 	editsNeeded = False
+	alleditsNeeded = False
+	someEditsNeeded = False
 	myFilePart = myFile.split('.csv')[0]
 
 	with open(os.path.join(myFile), 'r') as inFile:
@@ -646,50 +658,87 @@ def format_zips(myFile, keepOld=None, tnum=None, manu=None):
 		if found_zip == True:
 			for row in reader:
 				if row[zip_index] != '':
-					if len(str(row[zip_index])) < 5 or (len(str(row[zip_index])) == 9 and not re.search('-', row[zip_index])) or (len(str(row[zip_index])) != 5 and (len(str(row[zip_index])) != 10 and not re.search('-', row[zip_index]))):
-						editsNeeded = True
-						break
+					if tnum == None and manu == None:
+						if len(str(row[zip_index])) < 5 or (len(str(row[zip_index])) == 9 and not re.search('-', row[zip_index])) or (len(str(row[zip_index])) != 5 and (len(str(row[zip_index])) != 10 and not re.search('-', row[zip_index]))):
+							alleditsNeeded = True
+							editsNeeded = True
+							break
+
+					else:
+						if len(str(row[zip_index])) == 9 and not re.search('-', row[zip_index]):
+							someEditsNeeded = True
+							editsNeeded = True
+							break
 
 	if editsNeeded == True:
-		with open(os.path.join(myFile), 'r') as inFile, open('{}_ZIPS.csv'.format(myFilePart), 'w') as outFile:
-			reader = csv.reader(inFile)
-			headers = next(reader)
-			writer = csv.writer(outFile, lineterminator='\n')
-			writer.writerow(headers)
-			for row in reader:
-				if row[zip_index] != '':
-					if len(str(row[zip_index])) < 5:
-						newzip = str(row[zip_index]).zfill(5)
-						row[zip_index] = str(row[zip_index]).zfill(5)
-						leadingZeros += 1
-						writer.writerow(row)
-						zipsChanged = True
-
-					elif len(str(row[zip_index])) < 10 and re.search('-', row[zip_index]):
-						row[zip_index] = str(row[zip_index]).zfill(10)
-						leadingZeros += 1
-						writer.writerow(row)
-						zipsChanged = True
-
-					elif len(str(row[zip_index])) == 9 and not re.search('-', row[zip_index]):
-						newzip = '-'.join([row[zip_index][:5], row[zip_index][5:9]])
-						row[zip_index] = '-'.join([row[zip_index][:5], row[zip_index][5:9]])
-						missingHyphens += 1
-						writer.writerow(row)
-						zipsChanged = True
-
-					elif len(str(row[zip_index])) == 5:
-						writer.writerow(row)
-
-					elif len(str(row[zip_index])) == 10 and re.search('-', row[zip_index]):
+		if alleditsNeeded == True:
+			with open(os.path.join(myFile), 'r') as inFile, open('{}_ZIPS.csv'.format(myFilePart), 'w') as outFile:
+				reader = csv.reader(inFile)
+				headers = next(reader)
+				writer = csv.writer(outFile, lineterminator='\n')
+				writer.writerow(headers)
+				for row in reader:
+					if row[zip_index] != '':
+						if len(str(row[zip_index])) < 5:
+							newzip = str(row[zip_index]).zfill(5)
+							row[zip_index] = str(row[zip_index]).zfill(5)
+							leadingZeros += 1
 							writer.writerow(row)
+							zipsChanged = True
+
+						elif len(str(row[zip_index])) < 10 and re.search('-', row[zip_index]):
+							row[zip_index] = str(row[zip_index]).zfill(10)
+							leadingZeros += 1
+							writer.writerow(row)
+							zipsChanged = True
+
+						elif len(str(row[zip_index])) == 9 and not re.search('-', row[zip_index]):
+							newzip = '-'.join([row[zip_index][:5], row[zip_index][5:9]])
+							row[zip_index] = '-'.join([row[zip_index][:5], row[zip_index][5:9]])
+							missingHyphens += 1
+							writer.writerow(row)
+							zipsChanged = True
+
+						elif len(str(row[zip_index])) == 5:
+							writer.writerow(row)
+
+						elif len(str(row[zip_index])) == 10 and re.search('-', row[zip_index]):
+								writer.writerow(row)
+						else:
+							row[zip_index] = row[zip_index][:5]
+							not5Digits += 1
+							writer.writerow(row)
+							zipsChanged = True
 					else:
-						row[zip_index] = row[zip_index][:5]
-						not5Digits += 1
 						writer.writerow(row)
-						zipsChanged = True
-				else:
-					writer.writerow(row)
+
+		elif someEditsNeeded == True:
+			with open(os.path.join(myFile), 'r') as inFile, open('{}_ZIPS.csv'.format(myFilePart), 'w') as outFile:
+				reader = csv.reader(inFile)
+				headers = next(reader)
+				writer = csv.writer(outFile, lineterminator='\n')
+				writer.writerow(headers)
+				for row in reader:
+					if row[zip_index] != '':
+						if len(str(row[zip_index])) == 9 and not re.search('-', row[zip_index]):
+							newzip = '-'.join([row[zip_index][:5], row[zip_index][5:9]])
+							row[zip_index] = '-'.join([row[zip_index][:5], row[zip_index][5:9]])
+							missingHyphens += 1
+							writer.writerow(row)
+							zipsChanged = True
+
+						elif len(str(row[zip_index])) == 5:
+							writer.writerow(row)
+
+						elif len(str(row[zip_index])) == 10 and re.search('-', row[zip_index]):
+								writer.writerow(row)
+						else:
+							row[zip_index] = row[zip_index][:5]
+							not5Digits += 1
+							writer.writerow(row)
+							zipsChanged = True
+					else:
+						writer.writerow(row)
 
 	else:
 		if found_zip == True:
@@ -720,6 +769,10 @@ def format_zips(myFile, keepOld=None, tnum=None, manu=None):
 			print(not5Digits, 'Were corrected to 5 digit Zipcodes')
 			print('Zips Were Formated. . . Please Quickly Check All Were Converted!\n')
 			state_to_abbrev('{}_MW_FIXED.csv'.format(myFilePart), tnum, manu)
+	else:
+		if tnum != None and manu != None:
+			# print('THis is the section that runs to trigger state abbrev fixes if no zip fixes were needed')
+			state_to_abbrev(myFile, tnum, manu)
 
 
 def main():
