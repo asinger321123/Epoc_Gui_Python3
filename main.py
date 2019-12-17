@@ -194,6 +194,8 @@ if len(args) > 0:
 			SE = str(config['SE'])
 			email = str(config['email'])
 			tableName = str(config['tableName'])
+
+		#TARGETING ARGUMENTS
 		elif caseType == 'Targeting':
 			randomSplit = str(config['randomSplit'])
 			openerIDs = str(config['openerScheduleIDS'])
@@ -1300,6 +1302,16 @@ def buildSDACodes():
 
 
 def buildBDAPreSalesMacro():
+	buildAddTargets = False
+	for key in config.keys():
+		if key.startswith('additionalBDATarget'):
+			if config['additionalBDATarget_1'] == "":
+				# print('This is a presales multi BDA')
+				pass
+			else:
+				# print('This should not be triggering WHY THE FUCK IS IT?')
+				buildAddTargets = True
+
 	totalIncludesBuilt = 1
 	totalAdditionalBDAs = int(config['totalAdditionalBDAs'])
 	bdaMacro = """%macro multipleBDAAdd_Ons;
@@ -1312,7 +1324,10 @@ def buildBDAPreSalesMacro():
 %multipleBDAAdd_Ons;"""
 	while totalIncludesBuilt <= totalAdditionalBDAs:
 		if bDa_only == 'N':
-			includePath = '		%include "&filepath.\PS_BDA_Mult_Lookup_plus_CL_Email_'+str(totalIncludesBuilt)+'.sas";'
+			if buildAddTargets == False:
+				includePath = '		%include "&filepath.\PS_BDA_Mult_Lookup_plus_CL_Email_'+str(totalIncludesBuilt)+'.sas";'
+			else:
+				includePath = '		%include "&filepath.\Targeting Automation Code_OFFICIAL_'+str(totalIncludesBuilt)+'.sas";'
 		else:
 			if str(config['matchedFile']) != '':
 				includePath = '		%include "{}\PS_BDA_Mult_Lookup_plus_CL_Email_'.format(str(config['matchedFile']))+str(totalIncludesBuilt)+'.sas";'
@@ -1327,7 +1342,11 @@ def buildBDAPreSalesMacro():
 	# print finalSDAMacro
 
 	if bDa_only == 'N':
-		newInput = os.path.join(outCode, 'Presales Automation_Email_Final.sas')
+		# print('buildAddTargets = ', buildAddTargets)
+		if buildAddTargets == False:
+			newInput = os.path.join(outCode, 'Presales Automation_Email_Final.sas')
+		else:
+			newInput = os.path.join(outCode3, 'Targeting Automation Code_OFFICIAL.sas')
 	else:
 		if str(config['matchedFile']) != '':
 			newInput = os.path.join(str(config['matchedFile']), 'PS_BDA_Mult_Lookup_plus_CL_Email.sas')
@@ -1342,27 +1361,45 @@ def buildBDAPreSalesMacro():
 		line_file = new_file
 
 def buildBDACodes():
-	print('Building Additional BDA Codes. . . ')
-	bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\CUSTOM\\Email Codes\\additionalBDA'
-	bdaCode = 'PS_BDA_Mult_Lookup_plus_CL_Email'
-	suppApplied = str(config['suppressionApplied'])
+	buildAddTargets = False
 	bDa_only = str(config['bdaOnly'])
-	if bDa_only == 'Y':
-		listMatchFolder = config['matchedFile']
-		if listMatchFolder != '':
-			onlyFiles = [f for f in listdir(listMatchFolder) if isfile(join(listMatchFolder, f))]
+	matchFilePath = ''
+	suppApplied = str(config['suppressionApplied'])
+	print('Building Additional BDA Codes. . . ')
 
-			for files in sorted(set(onlyFiles)):
-				file = files.split('.')[0]
-				if re.search('_matched_.+', file):
-					matchedFile = file
-			matchFilePath = os.path.join(listMatchFolder, matchedFile)
-		else:
-			matchFilePath = ''
+	for key in config.keys():
+		if key.startswith('additionalBDATarget'):
+			if config['additionalBDATarget_1'] == "":
+				print('This is a presales multi BDA')
+				pass
+			else:
+				print('This should not be triggering WHY THE FUCK IS IT?')
+				buildAddTargets = True
 
+	if buildAddTargets == True:
+		bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference'
+		bdaCode = 'Targeting Automation Code_OFFICIAL'
+		email = ''
 
 	else:
-		matchFilePath = ''
+		bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\CUSTOM\\Email Codes\\additionalBDA'
+		bdaCode = 'PS_BDA_Mult_Lookup_plus_CL_Email'
+		if bDa_only == 'Y':
+			listMatchFolder = config['matchedFile']
+			if listMatchFolder != '':
+				onlyFiles = [f for f in listdir(listMatchFolder) if isfile(join(listMatchFolder, f))]
+
+				for files in sorted(set(onlyFiles)):
+					file = files.split('.')[0]
+					if re.search('_matched_.+', file):
+						matchedFile = file
+				matchFilePath = os.path.join(listMatchFolder, matchedFile)
+			else:
+				matchFilePath = ''
+
+
+		else:
+			matchFilePath = ''
 
 	# print(listMatchFolder, matchedFile)
 
@@ -1392,6 +1429,7 @@ def buildBDACodes():
 		totalLookUps = str(config['additonalBdaLookUps_'+str(totalCodesBuilt)])
 		displayPeriod = str(int(lookUpPeriod)-1)
 		dedupe = str(config['additonalBdaDedup_'+str(totalCodesBuilt)])
+		targNum2 = str(config['additionalBDATarget_'+str(totalCodesBuilt)])
 
 		drugList = str(config['additonalBdaDrugList_'+str(totalCodesBuilt)])
 		drugsnocomma = str(config['additonalBdaDrugList_'+str(totalCodesBuilt)]).replace("\n", ", ").replace("'", '')
@@ -1416,12 +1454,16 @@ def buildBDACodes():
 		finalDrugs2 = []
 		unmatchedDrugs2 = []
 
-		# copiedBDAFile = os.path.join(outCode, bdaCode+'_'+str(totalCodesBuilt)+'.sas')
-		# copyfile(os.path.join(bdaCodeHousing, bdaCode+'.sas'), copiedBDAFile)
 
 		if bDa_only == 'N':
-			copiedBDAFile = os.path.join(outCode, bdaCode+'_'+str(totalCodesBuilt)+'.sas')
-			copyfile(os.path.join(bdaCodeHousing, bdaCode+'.sas'), copiedBDAFile)
+			if buildAddTargets == False:
+				copiedBDAFile = os.path.join(outCode, bdaCode+'_'+str(totalCodesBuilt)+'.sas')
+				copyfile(os.path.join(bdaCodeHousing, bdaCode+'.sas'), copiedBDAFile)
+
+			else:
+				copiedBDAFile = os.path.join(outCode3, bdaCode+'_'+str(totalCodesBuilt)+'.sas')
+				copyfile(os.path.join(bdaCodeHousing, bdaCode+'.sas'), copiedBDAFile)
+
 		if bDa_only == 'Y':
 			if listMatchFolder != '':
 				copiedBDAFile = os.path.join(listMatchFolder, bdaCode+'_'+str(totalCodesBuilt)+'.sas')
@@ -1451,7 +1493,7 @@ def buildBDACodes():
 			target_out = target_out.replace('/*dispPeriod*/', displayPeriod)
 			target_out = target_out.replace('/*drugList2*/', drugsnocomma)
 			target_out = target_out.replace('/*drugList*/', drugList)				
-			target_out = target_out.replace('/*username*/', email)
+			target_out = target_out.replace('/*username*/', str(config['email']))
 			target_out = target_out.replace('/*inc*/', '_'+str(totalCodesBuilt))
 			target_out = target_out.replace('/*Yes_OR_No*/', dedupe)
 			target_out = target_out.replace('/*list_match_type*/', listMatchType)
@@ -1497,7 +1539,7 @@ def deleteCodeCount():
 
 
 if (caseType == 'listMatch' or caseType == 'Targeting') and listMatchType != 'None':
-	get_cols_names()
+	# get_cols_names()
 	createFolders()
 	getMain()
 	if 'cmi_compass_client' in config:
@@ -1512,7 +1554,7 @@ if (caseType == 'listMatch' or caseType == 'Targeting') and listMatchType != 'No
 	checkDrugs()
 	fixSas()
 	copyTarget()
-	copyConfigs()
+	# copyConfigs()
 	removeFiles()
 	if int(config['totalAdditionalSDAs']) != 0:
 		buildSDACodes()
