@@ -1097,7 +1097,7 @@ def fixSas():
 			target_out = target_out.replace('/*run_30_60_90*/', run_30_60_90)
 			target_out = target_out.replace('/*statesToExclude*/', statesToExclude)
 			target_out = target_out.replace('/*activeUserDate*/', activeUserDate)
-			target_out = target_out.replace('/*codeTest*/', codeTest)
+			target_out = target_out.replace('/*codeTest*/', activeUserDate)
 			new_file.write(target_out)
 			line_file = new_file
 
@@ -1561,7 +1561,7 @@ if (caseType == 'listMatch' or caseType == 'Targeting') and listMatchType != 'No
 	checkDrugs()
 	fixSas()
 	copyTarget()
-	# copyConfigs()
+	copyConfigs()
 	removeFiles()
 	if int(config['totalAdditionalSDAs']) != 0:
 		buildSDACodes()
