@@ -1385,6 +1385,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.clearStateZipEditor = self.findChild(QAction, 'actionClear_State_Zip_Settings')
         self.nbeEditorTab = self.findChild(QAction, 'actionNBE_Editor')
         self.loadConfigAction = self.findChild(QAction, 'actionLoad_Config_File')
+        self.testMode = self.findChildren(QAction, 'actionTEST_MODE')
 
         #Targeting Objects
         self.targetManuName = self.findChild(QComboBox, 'targetManuName_comboBox')
@@ -3310,6 +3311,9 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         isTherapyChecked = self.therapyClassBox.isChecked()
         isSuppSdaChecked = self.suppSDAOnly.isChecked()
         isSuppBdaChecked = self.suppBDAOnly.isChecked()
+        # print(self.testMode)
+
+        isTestModeChecked  = self.testMode[0].isChecked()
 
         # if self.listMatchCase.isChecked():
         if self.tabWidget.currentIndex() == 0:
@@ -3568,6 +3572,11 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
         if self.stateZip.finalExcludeStates != "":
             self.config['excludeStates'] = self.stateZip.finalExcludeStates
+
+        if isTestModeChecked:
+            self.config['codeTest'] = 'Yes'
+        else:
+            self.config['codeTest'] = 'No'
 
         #write all the new setting first when the RUN BUTTON is clicked
         with open(desktop+'\\Ewok\\Configs\\'+'config.json', 'w') as outfile1:

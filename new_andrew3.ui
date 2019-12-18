@@ -2101,8 +2101,15 @@ border-right: 2px solid black;
     <addaction name="separator"/>
     <addaction name="actionNBE_Editor"/>
    </widget>
+   <widget class="QMenu" name="menuOptions">
+    <property name="title">
+     <string>Options</string>
+    </property>
+    <addaction name="actionTEST_MODE"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEditor"/>
+   <addaction name="menuOptions"/>
   </widget>
   <action name="actionChange_Log">
    <property name="text">
@@ -2151,6 +2158,14 @@ border-right: 2px solid black;
    </property>
    <property name="shortcut">
     <string>Ctrl+L</string>
+   </property>
+  </action>
+  <action name="actionTEST_MODE">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>TEST MODE</string>
    </property>
   </action>
  </widget>

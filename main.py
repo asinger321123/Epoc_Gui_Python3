@@ -1,6 +1,6 @@
 from openpyxl import Workbook, load_workbook
 import re
-import os
+import os 
 import sys
 import xlrd
 import csv
@@ -58,6 +58,7 @@ cmiList = ['npi', 'address1', 'campaign_type', 'city', 'cl_fname', 'cl_lname', '
 userhome = os.path.expanduser('~')
 desktop = userhome + '\\Desktop\\'
 downloads = userhome + '\\Downloads\\'
+
 
 zipsFile = os.path.join(downloads, 'zipsImport.csv')
 
@@ -128,6 +129,7 @@ if len(args) > 0:
 		bDa_only = str(config['bdaOnly'])
 		run_30_60_90 = str(config['seg_30_60_90'])
 		activeUserDate = str(config['activeUserDate'])
+		codeTest = str(config['codeTest'])
 		# finalSDATotal = int(config["totalAdditionalSDAs"]) + 1
 		createPivotTable = str(config['createPivotTable'])
 		if createPivotTable == 'Y':
@@ -421,14 +423,18 @@ if caseType == 'listMatch':
 segmentListSingle = []
 
 #Set Sas Code Variables
-targetAuto = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Targeting Automation Code_OFFICIAL.sas'
-targetAutoOrganic = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Targeting Automation Code_ORGANIC.sas'
-targetLillyHibbert = 'P:\Epocrates Analytics\Code_Library\Standard_Codes\Pre Sales\DocAlert_Python_Reference\Lilly Hibbert Targeting Code.sas'
-basicMatch = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\TGT_NPI_ME_3PT_20170515.sas'
-dataSharing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\TGT_NPI_ME_3PT_DataSharing_20170515.sas'
-autoCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Presales Automation.sas'
-emailCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Presales Automation_Email_Final.sas'
-supressionCode = "P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Code Housing\\for_email\\Supp_Auto_DONOTEDIT\\Presales Automation_Email_Final_Suppressed.sas"
+if codeTest == 'No':
+	targetAuto = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Git SAS Repo\\Targeting Automation Code_OFFICIAL.sas'
+	targetAutoOrganic = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Git SAS Repo\\Targeting Automation Code_ORGANIC.sas'
+	targetLillyHibbert = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Git SAS Repo\\Lilly Hibbert Targeting Code.sas'
+	autoCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Git SAS Repo\\Presales Automation.sas'
+	emailCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Git SAS Repo\\Presales Automation_Email_Final.sas'
+else:
+	targetAuto = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\SAS WORKING BRANCH\\Targeting Automation Code_OFFICIAL.sas'
+	targetAutoOrganic = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\SAS WORKING BRANCH\\Targeting Automation Code_ORGANIC.sas'
+	targetLillyHibbert = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\SAS WORKING BRANCH\\Lilly Hibbert Targeting Code.sas'
+	autoCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\SAS WORKING BRANCH\\Presales Automation.sas'
+	emailCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\SAS WORKING BRANCH\\Presales Automation_Email_Final.sas'
 
 def createFolders():
 	if caseType == 'listMatch':
@@ -1091,6 +1097,7 @@ def fixSas():
 			target_out = target_out.replace('/*run_30_60_90*/', run_30_60_90)
 			target_out = target_out.replace('/*statesToExclude*/', statesToExclude)
 			target_out = target_out.replace('/*activeUserDate*/', activeUserDate)
+			target_out = target_out.replace('/*codeTest*/', codeTest)
 			new_file.write(target_out)
 			line_file = new_file
 
@@ -1219,7 +1226,7 @@ def buildSDAPreSalesMacro():
 
 def buildSDACodes():
 	print('Building Additional SDA Codes. . . ')
-	sdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\CUSTOM\\Email Codes\\additionalSDA'
+	sdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Git SAS Repo\\Code Housing\\additionalSDA'
 	sdaCode = 'PS_SDA_plus_CL_Email'
 	suppApplied = str(config['suppressionApplied'])
 	sDa_only = str(config['sdaOnly'])
@@ -1370,19 +1377,19 @@ def buildBDACodes():
 	for key in config.keys():
 		if key.startswith('additionalBDATarget'):
 			if config['additionalBDATarget_1'] == "":
-				print('This is a presales multi BDA')
+				# print('This is a presales multi BDA')
 				pass
 			else:
-				print('This should not be triggering WHY THE FUCK IS IT?')
+				# print('This should not be triggering WHY THE FUCK IS IT?')
 				buildAddTargets = True
 
 	if buildAddTargets == True:
-		bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference'
+		bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Git SAS Repo'
 		bdaCode = 'Targeting Automation Code_OFFICIAL'
 		email = ''
 
 	else:
-		bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\CUSTOM\\Email Codes\\additionalBDA'
+		bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Git SAS Repo\\Code Housing\\additionalBDA'
 		bdaCode = 'PS_BDA_Mult_Lookup_plus_CL_Email'
 		if bDa_only == 'Y':
 			listMatchFolder = config['matchedFile']
