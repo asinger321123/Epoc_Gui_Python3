@@ -1097,7 +1097,7 @@ def fixSas():
 			target_out = target_out.replace('/*run_30_60_90*/', run_30_60_90)
 			target_out = target_out.replace('/*statesToExclude*/', statesToExclude)
 			target_out = target_out.replace('/*activeUserDate*/', activeUserDate)
-			target_out = target_out.replace('/*codeTest*/', activeUserDate)
+			target_out = target_out.replace('/*codeTest*/', codeTest)
 			new_file.write(target_out)
 			line_file = new_file
 
@@ -1226,7 +1226,10 @@ def buildSDAPreSalesMacro():
 
 def buildSDACodes():
 	print('Building Additional SDA Codes. . . ')
-	sdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Git SAS Repo\\Code Housing\\additionalSDA'
+	if codeTest == 'No':
+		sdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Git SAS Repo\\Code Housing\\additionalSDA'
+	else:
+		sdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\SAS WORKING BRANCH\\Code Housing\\additionalSDA'
 	sdaCode = 'PS_SDA_plus_CL_Email'
 	suppApplied = str(config['suppressionApplied'])
 	sDa_only = str(config['sdaOnly'])
@@ -1389,7 +1392,10 @@ def buildBDACodes():
 		email = ''
 
 	else:
-		bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Git SAS Repo\\Code Housing\\additionalBDA'
+		if codeTest == 'No':
+			bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Git SAS Repo\\Code Housing\\additionalBDA'
+		else:
+			bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\SAS WORKING BRANCH\\Code Housing\\additionalBDA'
 		bdaCode = 'PS_BDA_Mult_Lookup_plus_CL_Email'
 		if bDa_only == 'Y':
 			listMatchFolder = config['matchedFile']

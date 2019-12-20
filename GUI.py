@@ -1555,6 +1555,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.nbeCheckBox.toggled.connect(self.nbeEditor)
         self.nbeEditorTab.triggered.connect(self.nbeEditorMenu)
         self.loadConfigAction.triggered.connect(self.loadConfig)
+        self.testMode[0].toggled.connect(self.toggleTestMode)
         # self.activeUserDate.mouseReleaseEvent = self.showCalWidActiveUsers
         clickable(self.activeUserDate).connect(self.showCalWidActiveUsers)
         clickable(self.calendarLine).connect(self.showCalWid)
@@ -1569,6 +1570,13 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         utils.format_zips(os.path.join(downloads2, 'csvFile.csv'))
         utils.state_to_abbrev(os.path.join(downloads2, 'csvFile.csv'))
         self.highlightBadColumnNames()
+
+
+    def toggleTestMode(self):
+        if self.testMode[0].isChecked():
+            window.setStyleSheet("""QMenuBar::item {background-color: red; color: white;}""")
+        else:
+            window.setStyleSheet("""QMenuBar::item ;""")
 
     def resetConfigs(self):
         self.sdainc = 1
