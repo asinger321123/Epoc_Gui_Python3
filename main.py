@@ -8,9 +8,7 @@ import ctypes
 from shutil import copyfile
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
-# import psycopg2
 import unicodecsv
-# import pprint
 from collections import Counter
 import datetime
 import json
@@ -129,6 +127,7 @@ if len(args) > 0:
 		bDa_only = str(config['bdaOnly'])
 		run_30_60_90 = str(config['seg_30_60_90'])
 		activeUserDate = str(config['activeUserDate'])
+		# nbeTarget = str(config['nbeTarget'])
 		codeTest = str(config['codeTest'])
 		# finalSDATotal = int(config["totalAdditionalSDAs"]) + 1
 		createPivotTable = str(config['createPivotTable'])
@@ -378,16 +377,17 @@ if len(args) > 0:
 				occupation2 = ''
 				drugsnocomma = ''
 			if nbeTarget == 'Yes':
-				manu = str(config['Manu'])
-				date = str(config['date'])
-				brand = str(config['Brand'])
-				# if os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
-				if utils.codeCountReader() > 1:
-					print('Im on the second File and going to do black magic here :')
-					listMatchType = str(config['organicMatchType'])
-					targetNum = str(config['organicTargetNumber'])
-					splitList = utils.prepSqlSegments(str(config['organicMatchType']))
-					segmentList = utils.prepSasSegments(str(config['organicMatchType']))
+				if str(config['organicFileName']) != "":
+					manu = str(config['Manu'])
+					date = str(config['date'])
+					brand = str(config['Brand'])
+					# if os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
+					if utils.codeCountReader() > 1:
+						print('Im on the second File and going to do black magic here :')
+						listMatchType = str(config['organicMatchType'])
+						targetNum = str(config['organicTargetNumber'])
+						splitList = utils.prepSqlSegments(str(config['organicMatchType']))
+						segmentList = utils.prepSasSegments(str(config['organicMatchType']))
 
 			tableName = str(config['tableName'])
 
@@ -455,12 +455,13 @@ def createFolders():
 			os.mkdir(targetFolder)
 
 		if nbeTarget == 'Yes':
-			if os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
-				if os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\Organic'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
-					print(colored('TARGETS Folder '+ manu + ' ' + brand + ' ORGANIC Already Exists . . . Skipping Creation', 'yellow'))
-				if not os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\Organic'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
-					os.chdir("""P:\\Epocrates Analytics\\TARGETS\\{date}\\{targetFolder}\\""".format(date = date, slashes = "\\", targetFolder=targetFolder))
-					os.mkdir('Organic')
+			if str(config['organicFileName']) != "":
+				if os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
+					if os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\Organic'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
+						print(colored('TARGETS Folder '+ manu + ' ' + brand + ' ORGANIC Already Exists . . . Skipping Creation', 'yellow'))
+					if not os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\Organic'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
+						os.chdir("""P:\\Epocrates Analytics\\TARGETS\\{date}\\{targetFolder}\\""".format(date = date, slashes = "\\", targetFolder=targetFolder))
+						os.mkdir('Organic')
 
 def checkDrugs():
 	listOfDrug = drugList.split('\n')
@@ -1117,11 +1118,18 @@ def fixSas():
 				newInput = os.path.join(outCode2, 'Targeting Automation Code_OFFICIAL.sas')
 			else:
 				copyfile(targetLillyHibbert, os.path.join(outCode2, 'Lilly Hibbert Targeting Code.sas'))
-				newInput = os.path.join(outCode2, 'Lilly Hibbert Targeting Code.sas')				
-		if nbeTarget == 'Yes' and utils.codeCountReader() > 1: 
-			copyfile(targetAutoOrganic, os.path.join(outCode2, 'Organic', 'Targeting Automation Code_ORGANIC.sas'))
-			newInput = os.path.join(outCode2, 'Organic', 'Targeting Automation Code_ORGANIC.sas')
+				newInput = os.path.join(outCode2, 'Lilly Hibbert Targeting Code.sas')
 
+		# print(nbeTarget)						
+		if str(config['nbeTarget']) == 'Yes' and utils.codeCountReader() > 1: 
+			if str(config['organicFileName']) != "":
+				copyfile(targetAutoOrganic, os.path.join(outCode2, 'Organic', 'Targeting Automation Code_ORGANIC.sas'))
+				newInput = os.path.join(outCode2, 'Organic', 'Targeting Automation Code_ORGANIC.sas')
+
+			else:
+				nbeTarget = 'No'
+				copyfile(targetAuto, os.path.join(outCode2, 'Targeting Automation Code_OFFICIAL.sas'))
+				newInput = os.path.join(outCode2, 'Targeting Automation Code_OFFICIAL.sas')
 
 		line_file = open(os.path.join(newInput),'r').readlines()
 		new_file = open(os.path.join(newInput),'w')
@@ -1171,7 +1179,7 @@ def fixSas():
 			target_out = target_out.replace('/*applyToClientList*/', applyToClientList)
 			target_out = target_out.replace('/*applyToSda*/', applyToSda)
 			target_out = target_out.replace('/*applytoBda*/', applyToBda)
-			target_out = target_out.replace('/*nbeTarget*/', nbeTarget)
+			target_out = target_out.replace('/*nbeTarget*/', str(config['nbeTarget']))
 			target_out = target_out.replace('/*openerScheduleIDs*/', openerIDs)
 			target_out = target_out.replace('/*statesToExclude*/', statesToExclude)
 			target_out = target_out.replace('/*sdaCap*/', sdaCap)
@@ -1609,16 +1617,20 @@ if (caseType == 'listMatch' or caseType == 'Targeting') and listMatchType == 'No
 
 
 if nbeTarget == 'Yes' and not os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\Organic'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
-	utils.checkExtension2(str(config['organicFileName']))
-	utils.removeChar()
-	utils.incDupColumns()
-	subprocess.call(['python.exe', os.path.join(desktop, 'Ewok','main.py'), 'config.json'])
+	if str(config['organicFileName']) != "":
+		utils.checkExtension2(str(config['organicFileName']))
+		utils.removeChar()
+		utils.incDupColumns()
+		subprocess.call(['python.exe', os.path.join(desktop, 'Ewok','main.py'), 'config.json'])
 
-	nbeFile = str(config['organicFileName'])
-	copyfile(os.path.join(downloads, nbeFile), os.path.join(outCode3, 'Organic', nbeFile))
+		nbeFile = str(config['organicFileName'])
+		copyfile(os.path.join(downloads, nbeFile), os.path.join(outCode3, 'Organic', nbeFile))
 
-	print('')
-	print(colored('P', 'cyan')+colored('R', 'red')+colored('O', 'green')+colored('G', 'yellow')+colored('R', 'blue')+colored('A', 'magenta')+colored('M', 'cyan')+' '+colored('C', 'magenta')+colored('O', 'red')+colored('M', 'green')+colored('P', 'blue')+colored('L', 'red')+colored('E', 'cyan')+colored('T', 'yellow')+colored('E', 'white'))
+		print('')
+		print(colored('P', 'cyan')+colored('R', 'red')+colored('O', 'green')+colored('G', 'yellow')+colored('R', 'blue')+colored('A', 'magenta')+colored('M', 'cyan')+' '+colored('C', 'magenta')+colored('O', 'red')+colored('M', 'green')+colored('P', 'blue')+colored('L', 'red')+colored('E', 'cyan')+colored('T', 'yellow')+colored('E', 'white'))
+	else:
+		print('')
+		print(colored('P', 'cyan')+colored('R', 'red')+colored('O', 'green')+colored('G', 'yellow')+colored('R', 'blue')+colored('A', 'magenta')+colored('M', 'cyan')+' '+colored('C', 'magenta')+colored('O', 'red')+colored('M', 'green')+colored('P', 'blue')+colored('L', 'red')+colored('E', 'cyan')+colored('T', 'yellow')+colored('E', 'white'))
 
 if caseType == 'Presales' or nbeTarget == 'No':
 	print('')
