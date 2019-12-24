@@ -213,6 +213,7 @@ if len(args) > 0:
 			brand = str(config['Brand'])
 			sDa_only = str(config['sdaOnly'])
 			bDa_only = str(config['bdaOnly'])
+			totalSegValues = str(config['totalSegVals'])
 
 			outFileFinal2 = """P:\\Epocrates Analytics\\TARGETS\\{date}\\{manu} {brand}\\target.txt""".format(date = date, manu = manu, brand = brand)
 			outCode3 = """P:\\Epocrates Analytics\\TARGETS\\{date}\\{manu} {brand}""".format(date = date, slashes = "\\", manu = manu, brand = brand)
@@ -1102,7 +1103,7 @@ def fixSas():
 			new_file.write(target_out)
 			line_file = new_file
 
-	elif caseType == 'Targeting': 
+	elif caseType == 'Targeting':
 		targetOut = """P:\\Epocrates Analytics\\TARGETS\\{date}\\{manu} {brand}""".format(date = date, manu = manu, brand = brand)
 		outCode2 = """P:\\Epocrates Analytics\\TARGETS\\{date}\\{manu} {brand}{slashes}""".format(date = date, slashes = "\\", manu = manu, brand = brand)
 		# if dSharing == 'Y' and (listMatchType == 'Standard' or listMatchType == 'Standard_Seg' or listMatchType == 'Exact' or listMatchType == 'Exact_Seg'):
@@ -1185,6 +1186,7 @@ def fixSas():
 			target_out = target_out.replace('/*sdaCap*/', sdaCap)
 			target_out = target_out.replace('/*bdaCap*/', bdaCap)
 			target_out = target_out.replace('/*activeUserDate*/', activeUserDate)
+			target_out = target_out.replace('/*totalSegValues*/', totalSegValues)
 
 			new_file.write(target_out)
 			line_file = new_file

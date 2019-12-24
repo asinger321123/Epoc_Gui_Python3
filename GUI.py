@@ -1921,7 +1921,14 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.segVariable.setText(str(self.sourceSegs.item(i).text()))
 
         valueString = ", ".join(segValueList)
-        self.segValues.setText(valueString.replace(', ', ' '))
+        self.segValues.setText(valueString.replace(', ', '|'))
+
+    def totalSegmentValues(self):
+        segText = str(self.segValues.text())
+        myList = segText.split('|')
+        totalSegVals = len(myList)
+
+        return str(totalSegVals)
 
 
     def highlightSourceSegs(self):
@@ -3314,6 +3321,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 self.config['segmentListChecked'] = 'n'
                 self.config['segVariable'] = ''
                 self.config['varValues'] = ''
+                self.config['totalSegVals'] = '0'
                 if self.standardMatch.isChecked():
                     if self.sdaOnly.isChecked() or self.bdaOnly.isChecked():
                         self.config['listMatchType'] = 'None'
@@ -3327,6 +3335,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 self.config['segmentListChecked'] = 'y'
                 self.config['segVariable'] = str(self.segVariable.text())
                 self.config['varValues'] = str(self.segValues.text())
+                self.config['totalSegVals'] = self.totalSegmentValues()
                 self.segsList = str(self.segValues.text()).split(' ')
                 self.neededSegs = ", ".join('"{0}"'.format(w) for w in self.segsList[0:-1])
                 self.backFillSeg = '"'+self.segsList[-1]+'"'
