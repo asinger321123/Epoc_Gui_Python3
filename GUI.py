@@ -3336,7 +3336,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 self.config['segVariable'] = str(self.segVariable.text())
                 self.config['varValues'] = str(self.segValues.text())
                 self.config['totalSegVals'] = self.totalSegmentValues()
-                self.segsList = str(self.segValues.text()).split(' ')
+                self.segsList = str(self.segValues.text()).split('|')
                 self.neededSegs = ", ".join('"{0}"'.format(w) for w in self.segsList[0:-1])
                 self.backFillSeg = '"'+self.segsList[-1]+'"'
                 self.config['neededSegs'] = str(self.neededSegs)
