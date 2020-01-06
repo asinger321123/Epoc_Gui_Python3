@@ -814,7 +814,7 @@ class NBE_Editor(base_7, form_7):
 
 
     def crossCheckMapping(self):
-        mappingValuesList = self.segValuesFromNBE.split(' ')
+        mappingValuesList = self.segValuesFromNBE.split('|')
         unmatchedTactics = []
         allFound = True
         with open(os.path.join(downloads2, self.selectNBEFile)) as inFile:
@@ -855,10 +855,10 @@ class NBE_Editor(base_7, form_7):
 
                 self.nbeMappingDict[targetNum] = tacticID
  
-                self.segValuesFromNBE += "{} ".format(tacticID)
+                self.segValuesFromNBE += "{}|".format(tacticID)
                 self.targetNumberFromNBE += "{} ".format(targetNum)
 
-        self.segValuesFromNBE = self.segValuesFromNBE.strip()
+        self.segValuesFromNBE = self.segValuesFromNBE.strip('|')
         self.targetNumberFromNBE = self.targetNumberFromNBE.strip()
 
 
