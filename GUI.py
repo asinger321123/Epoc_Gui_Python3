@@ -840,6 +840,13 @@ class NBE_Editor(base_7, form_7):
                     unmatchedTactics.append(item)
                     allFound = False
 
+        for item in finalSourceNBEs:
+            if item not in sourceTacticList:
+                unmatchedTactics.append(item)
+                allFound = False
+
+        unmatchedTactics = set(unmatchedTactics)
+
         if allFound == True:
             print('All Tactics were Found between Mapping and Client List. . . YAY')
 
