@@ -27,6 +27,7 @@ import sqlite3
 from termcolor import *
 from colorama import init, Fore, Back, Style
 import pandas as pd
+import codecs
 
 init(autoreset=True)
 optionalArgs = sys.argv[1:]
@@ -817,9 +818,7 @@ class NBE_Editor(base_7, form_7):
         mappingValuesList = self.segValuesFromNBE.split('|')
         unmatchedTactics = []
         allFound = True
-        with open(os.path.join(downloads2, self.selectNBEFile)) as inFile:
-            reader = csv.DictReader(inFile)
-            sourceTacticList = set([row['Tactic ID'] for row in reader])
+        sourceTacticList = set(tac for tac in self.nbeMappingDict.values())
 
         for item in mappingValuesList:
             if item not in sourceTacticList:
