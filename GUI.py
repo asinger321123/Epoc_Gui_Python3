@@ -793,7 +793,7 @@ class NBE_Editor(base_7, form_7):
         self.openerScheduleIDLine = self.findChild(QLineEdit, 'openerScheduleID_lineEdit')
         self.organicTarget = self.findChild(QLineEdit, 'organicTargetNumber_lineEdit')
         self.openNBEMerger = self.findChild(QPushButton, 'openNBEMerger_pushButton')
-        self.nbeFileSelection = self.findChild(QListWidget, 'nbeMappingFile_listWidget')
+        self.nbeMappingFileSelection = self.findChild(QListWidget, 'nbeMappingFile_listWidget')
 
         for i in downloadFilesDirectory:
             self.downloadFiles.addItem(i)
@@ -817,13 +817,28 @@ class NBE_Editor(base_7, form_7):
     def crossCheckMapping(self):
         mappingValuesList = self.segValuesFromNBE.split('|')
         unmatchedTactics = []
+        sourceNBEIDs = []
         allFound = True
+        for i in range(self.listMatchFile.count()):
+            self.actualNBEFile = str(self.listMatchFile.item(i).text())
+
+        with open(os.path.join(downloads2, 'csvFile.csv'), 'r') as nbeDataFile:
+            reader = csv.DictReader(nbeDataFile)
+            for row in reader:
+                if row['Tactic_ID']:
+                    daTactid = row['Tactic_ID']
+                    sourceNBEIDs.append(daTactid)
+
+        finalSourceNBEs = set(sourceNBEIDs)
+
+        # print(finalSourceNBEs)
         sourceTacticList = set(tac for tac in self.nbeMappingDict.values())
 
-        for item in mappingValuesList:
-            if item not in sourceTacticList:
-                unmatchedTactics.append(item)
-                allFound = False
+        for item in sourceTacticList:
+            if len(finalSourceNBEs) != len(sourceTacticList):
+                if item not in finalSourceNBEs:
+                    unmatchedTactics.append(item)
+                    allFound = False
 
         if allFound == True:
             print('All Tactics were Found between Mapping and Client List. . . YAY')
@@ -841,8 +856,8 @@ class NBE_Editor(base_7, form_7):
         self.segValuesFromNBE = ""
         self.targetNumberFromNBE = ""
 
-        for i in range(self.nbeFileSelection.count()):
-            self.mappingFileText = str(self.nbeFileSelection.item(i).text())
+        for i in range(self.nbeMappingFileSelection.count()):
+            self.mappingFileText = str(self.nbeMappingFileSelection.item(i).text())
         self.mappingFile = os.path.join(downloads2, self.mappingFileText)
 
         with open(self.mappingFile, 'r') as inFile:
