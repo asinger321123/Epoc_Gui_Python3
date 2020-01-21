@@ -2069,7 +2069,6 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.highlightCMI()
         self.detectMatchType()
 
-
     def getUniqueSegmentValues(self):
         self.uniqueValuesList.clear()
         uniqueList2 = []
@@ -2538,10 +2537,10 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 self.finalSegs.clear()
             merckList = utils.fetchColumns()
             for i in merckList:
-                if i not in ['Customer_ID', 'Campaign_ID', 'Tactic_ID', 'Wave_ID', 'Product_ID']:
-                    self.sourceSegs.addItem(i)
-                else:
-                    self.finalSegs.addItem(i)
+                # if i not in ['Customer_ID', 'Campaign_ID', 'Tactic_ID', 'Wave_ID', 'Product_ID']:
+                self.sourceSegs.addItem(i)
+                # else:
+                #     self.finalSegs.addItem(i)
         if str(self.targetManuName.currentText()) == 'Boehringer':
 
             self.segBox.setChecked(True)

@@ -287,7 +287,11 @@ def prepSasSegments(lmType):
 		elif lmType == 'Standard_Seg' or lmType == 'Exact_Seg':
 			if config3['cmi_compass_client'] == 'N':
 				if manu == 'Merck':
-					sasSegments = specialDataSharingDict[manu] + ', ' + segVariable
+					segList = specialDataSharingDict[manu].split(', ')
+					if segVariable in segList:
+						sasSegments = ', '.join(segList)
+					else:
+						sasSegments = specialDataSharingDict[manu] + ', ' + segVariable
 				if manu == 'AstraZeneca':
 					sasSegments = specialDataSharingDict[manu] + ', ' + segVariable
 				if manu == 'Novartis':
@@ -393,7 +397,11 @@ def prepSqlSegments(lmType):
 		elif lmType == 'Standard_Seg' or lmType == 'Exact_Seg':
 			if config3['cmi_compass_client'] == 'N':
 				if manu == 'Merck':
-					sqlSegments = specialDataSharingDict[manu] + ', ' + segVariable
+					segList = specialDataSharingDict[manu].split(', ')
+					if segVariable in segList:
+						sqlSegments = ', '.join(segList)
+					else:
+						sqlSegments = specialDataSharingDict[manu] + ', ' + segVariable
 				if manu == 'AstraZeneca':
 					sqlSegments = specialDataSharingDict['azSegmentation'] + ', ' + segVariable
 				if manu == 'Novartis':

@@ -285,9 +285,10 @@ if len(args) > 0:
 						print(segmentList)
 						print(splitList)
 				else:
-					print('IM USING THE NEW FUNCTION TO MAKE DA SQL AND SEGMETNS')
+					print('IM USING THE NEW FUNCTION TO MAKE DA SQL AND SEGMENTS')
 					splitList = utils.prepSqlSegments(listMatchType)
 					segmentList = utils.prepSasSegments(listMatchType)
+					# print(splitList, '\n', segmentList)
 					
 			if dSharing == 'Y' and config['cmi_compass_client'] == 'Y':
 				if manu not in ['Merck', 'AstraZeneca', 'Novartis', 'GSK', 'Boehringer', 'Amgen', 'Biogen', 'Sanofi-Aventis', 'AbbVie']:
