@@ -551,10 +551,10 @@ def getMain():
 					if cellVal == 'client_id_1' or cellVal == 'hcp_az_cust_id' or cellVal == 'az_id':
 						print(cellVal, ': ', colored('I Found a HCP_AZ_CUST_ID', 'green'))
 						headers[index] = 'hcp_az_cust_id'
-				# elif manu == 'Boehringer':
-				# 	if cellVal == 'client_id_1':
-				# 		print(cellVal, ': ', colored('I Found a Veeva_ID', 'green'))
-				# 		headers[index] = 'veeva_id'
+				elif manu == 'Boehringer':
+					if cellVal == 'client_id_1' or cellVal == 'client_id':
+						print(cellVal, ': ', colored('I Found a Veeva_ID', 'green'))
+						headers[index] = 'veeva_id'
 				elif manu == 'GSK':
 					if cellVal == 'gskmetadatatag' or cellVal == 'metadata_code':
 						print(cellVal, ': ', colored('I Found a GSK Metadata Tag', 'green'))
@@ -1115,6 +1115,7 @@ def fixSas():
 
 		# if not os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
 		if utils.codeCountReader() <= 1:
+			# buildNBEQueries()
 			if not re.search('Hibbert', brand):
 				copyfile(targetAuto, os.path.join(outCode2, 'Targeting Automation Code_OFFICIAL.sas'))
 				newInput = os.path.join(outCode2, 'Targeting Automation Code_OFFICIAL.sas')
@@ -1124,6 +1125,8 @@ def fixSas():
 
 		# print(nbeTarget)						
 		if str(config['nbeTarget']) == 'Yes' and utils.codeCountReader() > 1: 
+
+			# buildNBEQueries()
 			if str(config['organicFileName']) != "":
 				copyfile(targetAutoOrganic, os.path.join(outCode2, 'Organic', 'Targeting Automation Code_ORGANIC.sas'))
 				newInput = os.path.join(outCode2, 'Organic', 'Targeting Automation Code_ORGANIC.sas')
@@ -1191,6 +1194,56 @@ def fixSas():
 
 			new_file.write(target_out)
 			line_file = new_file
+
+def buildNBEQueries():
+	macros = ""
+	macroStart = '%dedupe_schedule_ids_nbes(scheduleIDs='
+	macroEnd = ');'
+	organicIDVariable = ', organicID='
+	tableNameVariable = ', tableName='
+
+	dataStep = ""
+	allOrgIDs = []
+	tableStart = "deduped_scheduleids_"
+
+	scheduleIdDict = config['scheduleIdDict']
+
+	for key, val in scheduleIdDict.items():
+		orgId = key
+		tableName = key.replace('-', '_')
+		schedIDs = val
+		fullMacro = macroStart+schedIDs+tableNameVariable+tableName+organicIDVariable+orgId+macroEnd+'\n'
+
+		macros += fullMacro
+
+	for key, val in scheduleIdDict.items():
+		setData = tableStart + key.replace('-', '_') + ' '
+		dataStep += setData
+		allOrgIDs.append(key)
+
+
+
+	formattedSchedules = ", ".join('"{0}"'.format(w) for w in allOrgIDs)
+
+	dataStep.rstrip()
+	finalSetData = 'set '+ dataStep + ';'
+
+	totalQuery = """{macros}
+data merged_organics;
+{finalSetData}
+run;
+
+
+proc sql;
+create table 
+select * from final
+where tactic_segment not in ({formattedSchedules})
+union all 
+select * from merged_organics
+;quit;
+""".format(macros=macros, finalSetData=finalSetData, formattedSchedules=formattedSchedules)
+
+	print(totalQuery)
 
 def buildSDAPreSalesMacro():
 	totalIncludesBuilt = 1
@@ -1453,7 +1506,7 @@ def buildBDACodes():
 		totalLookUps = str(config['additonalBdaLookUps_'+str(totalCodesBuilt)])
 		displayPeriod = str(int(lookUpPeriod)-1)
 		dedupe = str(config['additonalBdaDedup_'+str(totalCodesBuilt)])
-		targNum2 = str(config['additionalBDATarget_'+str(totalCodesBuilt)])
+		# targNum2 = str(config['additionalBDATarget_'+str(totalCodesBuilt)])
 
 		drugList = str(config['additonalBdaDrugList_'+str(totalCodesBuilt)])
 		drugsnocomma = str(config['additonalBdaDrugList_'+str(totalCodesBuilt)]).replace("\n", ", ").replace("'", '')
