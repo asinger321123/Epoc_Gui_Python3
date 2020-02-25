@@ -515,7 +515,7 @@ def getMain():
 				# print(colored('Test', 'green'))
 				headers[index] = 'npi'
 				foundMain.append('npi')
-			elif cellVal == 'me' or cellVal == 'me_id' or cellVal == 'me_' or cellVal == 'meded' or cellVal == 'menum' or re.search('.+ me .+', cellVal) or  re.search('.+_me_.+', cellVal) or re.search('^me .+', cellVal) or re.search('.+ me', cellVal) or re.search('.+ me', cellVal) or re.search('^me_.+', cellVal):
+			elif cellVal == 'me' or cellVal == 'me_id' or cellVal == 'menumber' or cellVal == 'me_' or cellVal == 'meded' or cellVal == 'menum' or re.search('.+ me .+', cellVal) or  re.search('.+_me_.+', cellVal) or re.search('^me .+', cellVal) or re.search('.+ me', cellVal) or re.search('.+ me', cellVal) or re.search('^me_.+', cellVal):
 				print(cellVal, ': ', colored('I found a ME Number', 'green'))
 				headers[index] = 'me'
 				foundMain.append('me')
