@@ -893,10 +893,6 @@ class NBE_Editor(base_7, form_7):
         # print(self.targetNumberFromNBE)
         # print(self.segValuesFromNBE)
 
-
-
-
-
     def open_NBE_Merger(self):
         self.nbeMergerWindow = NBE_Merger_Widget()
         self.nbeMergerWindow.show()
@@ -1013,6 +1009,316 @@ class NBE_Editor(base_7, form_7):
         elif not isExactOrganicChecked:
             self.standardOrganicCheck.setChecked(True)
             self.exactOrganicCheck.setStyleSheet("color: black")
+
+
+
+#--------------------------------------------------------------------------------
+
+# class NBE_Editor(base_7, form_7):
+#     def __init__(self):
+#         super(base_7, self).__init__()
+#         self.setupUi(self)
+#         # downloadFilesDirectory = [f for f in listdir(downloads) if isfile(join(downloads, f))]
+#         # downloadFilesDirectory.sort(key=lambda x: os.stat(os.path.join(downloads, x)).st_mtime, reverse=True)
+
+#         self.selectNBEFile = ""
+#         self.selectOrganicFile = ""
+#         self.organicMatchType = ""
+#         # self.organicSasFileInput = ""
+#         self.openerScheduleIDS = ""
+#         self.organicTargetNumber = ""
+#         # self.fileDict = defaultdict(list)
+#         self.nbeMappingDict = {}
+
+#         self.downloadFiles = self.findChild(QListWidget, 'files_listWidget')
+#         self.listMatchFile = self.findChild(QListWidget, 'listMatchFile_listWidget')
+#         self.organicMatchFile = self.findChild(QListWidget, 'organicFile_listWidget')
+#         self.setFilesButton = self.findChild(QPushButton, 'setFIles_pushButton')
+#         self.standardOrganicCheck = self.findChild(QCheckBox, 'organicStandardCheck_checkBox')
+#         self.exactOrganicCheck = self.findChild(QCheckBox, 'organicExactCheck_checkBox')
+#         self.organicModel = self.downloadFiles.model()
+#         self.organicSheetCountLabel = self.findChild(QLabel, 'organicSheetCount_Label')
+#         self.refreshDownloads = self.findChild(QPushButton, 'refreshFiles_pushButton')
+#         self.openerScheduleIDLine = self.findChild(QLineEdit, 'openerScheduleID_lineEdit')
+#         self.organicTarget = self.findChild(QLineEdit, 'organicTargetNumber_lineEdit')
+#         self.openNBEMerger = self.findChild(QPushButton, 'openNBEMerger_pushButton')
+#         self.nbeMappingFileSelection = self.findChild(QListWidget, 'nbeMappingFile_listWidget')
+
+#         for i in downloadFilesDirectory:
+#             self.downloadFiles.addItem(i)
+
+
+#         self.setFilesButton.pressed.connect(self.setNBEFile)
+#         self.setFilesButton.pressed.connect(self.setOrganicFile)
+#         # self.setFilesButton.pressed.connect(self.refreshFrom2Files)
+#         self.setFilesButton.pressed.connect(self.setScheduleIDS)
+#         self.setFilesButton.pressed.connect(self.setOrganicTargetNumber)
+#         self.setFilesButton.pressed.connect(self.populateNBEMapping)
+#         self.setFilesButton.released.connect(self.close)
+#         self.standardOrganicCheck.toggled.connect(self.organicFileCheckboxesStandard)
+#         self.exactOrganicCheck.toggled.connect(self.organicFileCheckboxesExact)
+#         self.organicModel.rowsRemoved.connect(self.organicSheetCount)
+#         self.refreshDownloads.pressed.connect(self.refreshDownloadFiles)
+#         self.openNBEMerger.released.connect(self.open_NBE_Merger)
+
+
+
+#     def crossCheckMapping(self):
+#         mappingValuesList = self.segValuesFromNBE.split('|')
+#         unmatchedTactics = []
+#         sourceNBEIDs = []
+#         allFound = True
+#         for i in range(self.listMatchFile.count()):
+#             self.actualNBEFile = str(self.listMatchFile.item(i).text())
+
+#         with open(os.path.join(downloads2, 'csvFile.csv'), 'r') as nbeDataFile:
+#             reader = csv.DictReader(nbeDataFile)
+#             for row in reader:
+#                 if row['tactic_segment']:
+#                     daTactid = row['tactic_segment']
+#                     sourceNBEIDs.append(daTactid)
+
+#         finalSourceNBEs = set(sourceNBEIDs)
+
+#         # print(finalSourceNBEs)
+#         sourceTacticList = set(tac for tac in self.nbeMappingDict.values())
+
+#         for item in sourceTacticList:
+#             if len(finalSourceNBEs) != len(sourceTacticList):
+#                 if item not in finalSourceNBEs:
+#                     unmatchedTactics.append(item)
+#                     allFound = False
+
+#         for item in finalSourceNBEs:
+#             if item not in sourceTacticList:
+#                 unmatchedTactics.append(item)
+#                 allFound = False
+
+#         unmatchedTactics = set(unmatchedTactics)
+
+#         if allFound == True:
+#             print('All Tactics were Found between Mapping and Client List. . . YAY')
+
+#         else:
+#             print('These Tactics are from the SalesForce Mapping File and dont match anything in the NBE File\n', unmatchedTactics)
+
+
+#     def populateNBEMapping(self):
+
+#         # new section for making segmetn column of master organic file
+#         for i in range(self.listMatchFile.count()):
+#             self.actualNBEFile = str(self.listMatchFile.item(i).text())
+
+#         self.filenamePart = self.actualNBEFile.split('.csv')[0]
+
+#         pd.set_option('mode.chained_assignment', None)
+#         df = pd.read_csv(os.path.join(downloads2, self.actualNBEFile), header=0, dtype=str)
+
+#         allNbes = pd.notnull(df['Execution Date'])
+#         allOrganics = pd.isnull(df['Execution Date'])
+
+#         nbeOnly = df[allNbes]
+#         onlyOrganic = df[allOrganics]
+
+#         nbeOnly['tactic_segment'] = df['Tactic ID'] + '_NBE'
+#         onlyOrganic['tactic_segment'] = df['Tactic ID'] + '_Org'
+
+#         nbeOnly = nbeOnly.append(onlyOrganic)
+#         nbeOnly.to_csv(os.path.join(downloads2, '{}_master.csv'.format(self.filenamePart)), index=False)
+
+
+#         ## window.segVariable = "Tactic_ID"
+#         ## window.segValues = ""
+#         ## window.targetNumber = ""
+
+#         self.segVariableFromNBE = "Tactic_ID"
+#         self.segValuesFromNBE = ""
+#         self.targetNumberFromNBE = ""
+
+#         for i in range(self.nbeMappingFileSelection.count()):
+#             self.mappingFileText = str(self.nbeMappingFileSelection.item(i).text())
+#         self.mappingFile = os.path.join(downloads2, self.mappingFileText)
+
+#         with open(self.mappingFile, 'r') as inFile, open(self.mappingFile+'temp', 'w') as outFile:
+#             reader = csv.DictReader(inFile)
+#             headers = reader.fieldnames
+#             for i, col in enumerate(headers):
+#                 if col == '':
+#                     headers[i] = 'ScheduleID'
+
+#             headers = headers + ['nbe_tactic']
+#             writer = csv.DictWriter(outFile, lineterminator='\n', fieldnames=headers)
+#             writer.writeheader()
+
+#             for row in reader:
+#                 targetNum = row['Pulse Target: Pulse Target ID']
+#                 tacticID = row['Content Label: Client Job Code']
+#                 targetName = row['Target Name']
+#                 # nbe_tactic = row['nbe_tactic']
+
+#                 if re.search('.+organic+.+',targetName.lower()):
+#                     row['nbe_tactic'] = tacticID+'_Org'
+#                     # nbe_tactic = tacticID+'_org'
+#                     writer.writerow(row)
+#                 else:
+#                     row['nbe_tactic'] = tacticID+'_NBE'
+#                     writer.writerow(row)
+
+#         os.remove(self.mappingFile)
+#         os.rename(self.mappingFile+'temp', self.mappingFile)
+
+#         with open(self.mappingFile, 'r') as inFile:
+#             reader = csv.DictReader(inFile)
+#             # headers = next(reader)
+#             for row in reader:
+#                 targetNum = row['Pulse Target: Pulse Target ID']
+#                 tacticID = row['Content Label: Client Job Code']
+#                 targetName = row['Target Name']
+#                 nbe_tactic = row['nbe_tactic']
+#                 scheduleID = row['ScheduleID']
+#                 if scheduleID:
+#                     window.scheduleDict[nbe_tactic] = scheduleID
+
+#                 self.nbeMappingDict[targetNum] = nbe_tactic
+#                 self.segValuesFromNBE += "{}|".format(nbe_tactic)
+#                 self.targetNumberFromNBE += "{} ".format(targetNum)
+
+#         self.segValuesFromNBE = self.segValuesFromNBE.strip('|')
+#         self.targetNumberFromNBE = self.targetNumberFromNBE.strip()
+
+
+#         window.segValues.setText(self.segValuesFromNBE)
+#         window.targetNumber.setText(self.targetNumberFromNBE)
+#         window.segVariable.setText("tactic_segment")
+#         window.keepSeg.setChecked(True)
+#         window.segmentList.setChecked(True)
+
+#         self.refreshFrom2Files()
+
+#         self.crossCheckMapping()
+#         # print(self.targetNumberFromNBE)
+#         # print(self.segValuesFromNBE)
+
+#     def createScheduleDict(self, tactic, schedules):
+#         scheduleDict = {}
+#         scheduleDict[tactic] = schedules
+
+#     def open_NBE_Merger(self):
+#         self.nbeMergerWindow = NBE_Merger_Widget()
+#         self.nbeMergerWindow.show()
+
+#     def setScheduleIDS(self):
+#         if str(self.openerScheduleIDLine.text()) != "":
+#             self.openerScheduleIDS = str(self.openerScheduleIDLine.text())
+#             print(colored('Code will Dedupe Openers from Schedules: ', 'yellow'), colored(self.openerScheduleIDS, 'green'))
+#         else:
+#             self.openerScheduleIDS = ""
+#             print(colored('No Openers Will Be Deduped', 'yellow'))
+
+#     def refreshDownloadFiles(self):
+#         downloadFilesDirectory = [f for f in listdir(downloads) if isfile(join(downloads, f))]
+#         downloadFilesDirectory.sort(key=lambda x: os.stat(os.path.join(downloads, x)).st_mtime, reverse=True)
+
+#         self.downloadFiles.clear()
+#         for i in downloadFilesDirectory:
+#             self.downloadFiles.addItem(i)
+
+
+#     def organicSheetCount(self):
+#         for i in range(self.organicMatchFile.count()):
+#             self.selectOrganicFile = str(self.organicMatchFile.item(i).text())
+#         sheetFile = self.selectOrganicFile
+#         filename, extension = os.path.splitext(os.path.join(downloads, sheetFile))
+#         if extension == '.xlsx':
+#             w = xlrd.open_workbook(downloads + sheetFile, on_demand=True)
+#             totalSheets = len(w.sheet_names())
+#             self.organicSheetCountLabel.setText('Sheet Count: '+str(totalSheets))
+#             if totalSheets == 1:
+#                 self.organicSheetCountLabel.setStyleSheet('color: green')
+#             else:
+#                 self.organicSheetCountLabel.setStyleSheet('color: red')
+#         else:
+#             self.organicSheetCountLabel.setText('Sheet Count: N/A')
+#             self.organicSheetCountLabel.setStyleSheet('color: black') 
+
+#     def setOrganicTargetNumber(self):
+#         self.organicTargetNumber = str(self.organicTarget.text())
+
+
+
+#     def setNBEFile(self):
+#         self.selectNBEFile = ""
+#         for i in range(self.listMatchFile.count()):
+#             self.selectNBEFile = str(self.listMatchFile.item(i).text())
+#             print(colored('Your Match File is: ', 'yellow'), self.selectNBEFile)
+#             window.setWindowTitle("File Loaded: "+self.selectNBEFile)
+#             window.loadedFile = self.selectNBEFile
+#             window.countSheets()
+#             # return self.selectMatchFile
+#             # self.fileDict['matchFile'].append(self.selectMatchFile)
+
+#     def setOrganicFile(self):
+#         for i in range(self.organicMatchFile.count()):
+#             self.selectSuppFile = str(self.organicMatchFile.item(i).text())
+#             print(colored('Your Organic File is: ', 'yellow'), self.selectOrganicFile)
+#         # if not self.selectOrganicFile:
+#         #     self.organicSasFileInput = str(self.organicSasFile.text())
+#         #     print(colored('Your using a _supp_####: ', 'yellow'), self.organicSasFileInput)
+#         if self.standardOrganicCheck.isChecked():
+#             self.organicMatchType = "Standard"
+#         else:
+#             self.organicMatchType = "Exact"
+#         # return self.selectSuppFile
+#             # self.fileDict['suppFile'].append(self.selectSuppFile)
+
+#     def refreshFrom2Files(self):
+#         #remove files and clear current column names
+#         if os.path.exists(os.path.join(downloads, 'csvFile.csv')):
+#             os.remove(os.path.join(downloads, 'csvFile.csv'))
+#         if os.path.exists(os.path.join(downloads, 'target.csv')):
+#             os.remove(os.path.join(downloads, 'target.csv'))
+#         if os.path.exists(os.path.join(downloads, 'target_mod.csv')):
+#             os.remove(os.path.join(downloads, 'target_mod.csv'))
+#         if window.sourceSegs:
+#             window.sourceSegs.clear()
+#             window.finalSegs.clear()
+#         utils.checkExtension2('{}_master.csv'.format(self.filenamePart))
+#         utils.removeChar()
+#         utils.incDupColumns()
+#         # utils.state_to_abbrev()
+
+#         #populates the listWidget
+#         colList = utils.fetchColumns()
+#         for i in colList:
+#             window.sourceSegs.addItem(i)
+#         window.returnUserTable() 
+#         window.countFullFile()
+#         window.resetEditTab()
+#         window.highlightSourceSegs()
+#         window.detectMatchType()
+#         window.highlightBadColumnNames()
+#         utils.format_zips(os.path.join(downloads2, 'csvFile.csv'))
+#         utils.state_to_abbrev(os.path.join(downloads2, 'csvFile.csv'))
+
+#     def organicFileCheckboxesStandard(self):
+#         isStandardOrganicChecked = self.standardOrganicCheck.isChecked()
+
+#         if isStandardOrganicChecked:
+#             self.standardOrganicCheck.setStyleSheet("color: green; font-weight: bold")
+#             self.exactOrganicCheck.setChecked(False)
+#         elif not isStandardOrganicChecked:
+#             self.exactOrganicCheck.setChecked(True)
+#             self.standardOrganicCheck.setStyleSheet("color: black")
+
+#     def organicFileCheckboxesExact(self):
+#         isExactOrganicChecked = self.exactOrganicCheck.isChecked()
+
+#         if isExactOrganicChecked:
+#             self.exactOrganicCheck.setStyleSheet("color: green; font-weight: bold")
+#             self.standardOrganicCheck.setChecked(False)
+#         elif not isExactOrganicChecked:
+#             self.standardOrganicCheck.setChecked(True)
+#             self.exactOrganicCheck.setStyleSheet("color: black")
 
 
 class PivotPage(base_3, form_3):
@@ -1236,10 +1542,12 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.setWindowTitle("File Loaded: "+newest)
         self.resetConfigs()
 
-        with open('G:\\Communicator Ops\\Epocrates\\Python Files\\GUI Manufacturers\\Manufacturers.txt', 'r') as manuFile:
-            f = manuFile.read()
-            manuList2 = f.replace('[', '').replace(']', '').replace("'", '')
-            manuList = manuList2.split(', ')
+
+        with open('G:\\Communicator Ops\\Epocrates\\Python Files\\GUI Manufacturers\\Manufacturers.json', 'r') as infile:
+            manuData = json.loads(infile.read())
+            manuList = manuData['manus']
+
+        self.scheduleDict = {}
 
 
         # self.dateButton = self.findChild(QToolButton, 'dateButton')
@@ -3510,6 +3818,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.config['activeUserDate'] = '"{}"'.format(str(self.activeUserDate.text()))
         else:
             self.config['activeUserDate'] = '""'
+
+        self.config['scheduleIdDict'] = self.scheduleDict
 
 
         if self.stateZip.applyToClientList != '' or self.stateZip.applyToSda != '' or self.stateZip.applyToBda != '':
