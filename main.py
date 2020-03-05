@@ -1116,6 +1116,7 @@ def fixSas():
 		# if not os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
 		if utils.codeCountReader() <= 1:
 			# buildNBEQueries()
+			#test
 			if not re.search('Hibbert', brand):
 				copyfile(targetAuto, os.path.join(outCode2, 'Targeting Automation Code_OFFICIAL.sas'))
 				newInput = os.path.join(outCode2, 'Targeting Automation Code_OFFICIAL.sas')

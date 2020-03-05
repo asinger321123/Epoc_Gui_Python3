@@ -1809,6 +1809,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         clickable(self.calendarLine).connect(self.showCalWid)
         self.sdaOnly.toggled.connect(self.sdaBdaDatacheck)
         self.bdaOnly.toggled.connect(self.sdaBdaDatacheck)
+        #test
 
         # self.stateZip = State_Zip()
         # if stateZip.statesString == ""
