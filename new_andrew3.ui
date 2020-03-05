@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>681</width>
-    <height>847</height>
+    <height>900</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,470 +37,6 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="2">
-     <widget class="QGroupBox" name="addOnGroupBox">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QGroupBox {
-font-weight: bold;
-border: 1.4px solid rgb(110, 110, 110, 200);
-border-radius: 6px;
-background: rgb(248, 248, 255, 70);
-margin-top: 0.5em;
-}
-
-
-
-QGroupBox::title {
-top: -5px;
-left: 15px
-}
-
-QLabel {
-font-weight: bold
-background: rgb(248, 248, 255, 0);
-}
-
-
-QCheckBox {
-font-weight: bold
-background: rgb(248, 248, 255, 0);
-}</string>
-      </property>
-      <property name="title">
-       <string>BDA Add On Options</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_3">
-       <item row="2" column="0">
-        <widget class="QLineEdit" name="bdaOcc_line_edit">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>134</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="14" column="1">
-        <widget class="QLineEdit" name="bdaCap_lineEdit"/>
-       </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="label_26">
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>BDA Lookup Period</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="0">
-        <widget class="QLineEdit" name="bdaLookUps_line_edit">
-         <property name="maximumSize">
-          <size>
-           <width>45</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="12" column="0">
-        <widget class="QCheckBox" name="bdaOnly_checkBox">
-         <property name="text">
-          <string>BDA Only</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label_21">
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>BDA Specialty(s)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLineEdit" name="bdaSpec_line_edit">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>134</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0">
-        <widget class="QLabel" name="label_25">
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>BDA Number of Lookups</string>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="0">
-        <widget class="QCheckBox" name="deDup_check_box">
-         <property name="text">
-          <string>DeDup From SDA</string>
-         </property>
-        </widget>
-       </item>
-       <item row="15" column="0">
-        <widget class="QLabel" name="addBDA_Label">
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Additional BDA's: 0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="0">
-        <widget class="QLineEdit" name="bdaNumLookUps_line_edit">
-         <property name="maximumSize">
-          <size>
-           <width>45</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="15" column="1">
-        <widget class="QCheckBox" name="therapyClass_checkBox">
-         <property name="text">
-          <string>Use Therapy Class</string>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="0">
-        <widget class="QLineEdit" name="bdaTarget_lineEdit">
-         <property name="maximumSize">
-          <size>
-           <width>100</width>
-           <height>100</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1" rowspan="11">
-        <widget class="QPlainTextEdit" name="drugList_text_edit">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>150</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QPlainTextEdit {
-background-image: url(:/img/Resources/epoclogo (002).png);
-background-position: absolute;
-border: 2px solid rgb(110, 110, 110, 200);
-border-radius: 6px;
-font-weight: bold;
-color: rgb(242, 101, 34);
-
-
-
-
-
-	
-	
-	
-    
-}</string>
-         </property>
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
-         </property>
-         <property name="plainText">
-          <string/>
-         </property>
-         <property name="backgroundVisible">
-          <bool>false</bool>
-         </property>
-         <property name="centerOnScroll">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLabel" name="label_22">
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Drug List</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_23">
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>BDA Occupations</string>
-         </property>
-        </widget>
-       </item>
-       <item row="16" column="0">
-        <widget class="QPushButton" name="AdditionalBDA_pushButton">
-         <property name="maximumSize">
-          <size>
-           <width>50</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>+</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="0">
-        <widget class="QLabel" name="label_5">
-         <property name="text">
-          <string>BDA Target #</string>
-         </property>
-        </widget>
-       </item>
-       <item row="13" column="1">
-        <widget class="QLabel" name="label_29">
-         <property name="text">
-          <string>BDA Cap</string>
-         </property>
-        </widget>
-       </item>
-       <item row="16" column="1">
-        <widget class="QCheckBox" name="supressBDA_checkBox">
-         <property name="text">
-          <string>Suppress BDA Only</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QCheckBox" name="bdaAddOn_check_box">
-         <property name="text">
-          <string>BDA Add On</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="0" column="0">
-     <widget class="QGroupBox" name="caseOptionGroupBox">
-      <property name="font">
-       <font>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="mouseTracking">
-       <bool>true</bool>
-      </property>
-      <property name="acceptDrops">
-       <bool>false</bool>
-      </property>
-      <property name="autoFillBackground">
-       <bool>false</bool>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QGroupBox {
-border: 1.40px solid rgb(110, 110, 110, 200);
-border-radius: 6px;
-background: rgb(248, 248, 255,70);
-margin-top: 0.5em;
-}
-
-QGroupBox::title {
-top: -5px;
-left: 15px
-}
-
-QCheckBox {
-color: black;
-background: rgb(248, 248, 255, 0);
-}
-</string>
-      </property>
-      <property name="title">
-       <string>Case Options</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_7">
-       <item row="1" column="1">
-        <widget class="Line" name="line_9">
-         <property name="styleSheet">
-          <string notr="true">font-weight: bold;</string>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="13" column="1">
-        <widget class="QCheckBox" name="segBox_check_box">
-         <property name="text">
-          <string>Segment/DataSharing</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QCheckBox" name="previousSettings_check_box">
-         <property name="text">
-          <string>Use Previous Settings</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QCheckBox" name="suppression_checkBox">
-         <property name="text">
-          <string>Supression Applied</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <widget class="QCheckBox" name="epocQuiz_check_box">
-         <property name="text">
-          <string>Epoc Quiz</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="1">
-        <widget class="QCheckBox" name="exactMatch_check_box">
-         <property name="text">
-          <string>Exact Match</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1">
-        <widget class="QCheckBox" name="triggeredAlert_checkBox">
-         <property name="text">
-          <string>Triggered Alert</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="1">
-        <widget class="QCheckBox" name="standardMatch_check_box">
-         <property name="text">
-          <string>Standard Match</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1">
-        <widget class="Line" name="line_8">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="1">
-        <widget class="Line" name="line_11">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="1">
-        <widget class="QCheckBox" name="fuzzy_checkBox">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>Fuzzy 3PT Match</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QCheckBox" name="docAlert_check_box">
-         <property name="text">
-          <string>DocAlert</string>
-         </property>
-        </widget>
-       </item>
-       <item row="14" column="1">
-        <widget class="Line" name="line_10">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="Line" name="line_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="17" column="1">
-        <widget class="QLineEdit" name="activeUserDate_lineEdit"/>
-       </item>
-       <item row="15" column="1">
-        <widget class="QLabel" name="label_39">
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>10</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>ActiveUser Start Date</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
     <item row="0" column="1">
      <widget class="QGroupBox" name="sdaAddON">
       <property name="sizePolicy">
@@ -991,6 +527,470 @@ DatasharingList:</string>
       <zorder>seg_30_60_90_checkBox</zorder>
      </widget>
     </item>
+    <item row="0" column="0">
+     <widget class="QGroupBox" name="caseOptionGroupBox">
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="mouseTracking">
+       <bool>true</bool>
+      </property>
+      <property name="acceptDrops">
+       <bool>false</bool>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QGroupBox {
+border: 1.40px solid rgb(110, 110, 110, 200);
+border-radius: 6px;
+background: rgb(248, 248, 255,70);
+margin-top: 0.5em;
+}
+
+QGroupBox::title {
+top: -5px;
+left: 15px
+}
+
+QCheckBox {
+color: black;
+background: rgb(248, 248, 255, 0);
+}
+</string>
+      </property>
+      <property name="title">
+       <string>Case Options</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_7">
+       <item row="1" column="1">
+        <widget class="Line" name="line_9">
+         <property name="styleSheet">
+          <string notr="true">font-weight: bold;</string>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="1">
+        <widget class="QCheckBox" name="segBox_check_box">
+         <property name="text">
+          <string>Segment/DataSharing</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QCheckBox" name="previousSettings_check_box">
+         <property name="text">
+          <string>Use Previous Settings</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QCheckBox" name="suppression_checkBox">
+         <property name="text">
+          <string>Supression Applied</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QCheckBox" name="epocQuiz_check_box">
+         <property name="text">
+          <string>Epoc Quiz</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="QCheckBox" name="exactMatch_check_box">
+         <property name="text">
+          <string>Exact Match</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QCheckBox" name="triggeredAlert_checkBox">
+         <property name="text">
+          <string>Triggered Alert</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="QCheckBox" name="standardMatch_check_box">
+         <property name="text">
+          <string>Standard Match</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="Line" name="line_8">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="1">
+        <widget class="Line" name="line_11">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="1">
+        <widget class="QCheckBox" name="fuzzy_checkBox">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>Fuzzy 3PT Match</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QCheckBox" name="docAlert_check_box">
+         <property name="text">
+          <string>DocAlert</string>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="1">
+        <widget class="Line" name="line_10">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="Line" name="line_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="17" column="1">
+        <widget class="QLineEdit" name="activeUserDate_lineEdit"/>
+       </item>
+       <item row="15" column="1">
+        <widget class="QLabel" name="label_39">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>10</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>ActiveUser Start Date</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="0" column="2">
+     <widget class="QGroupBox" name="addOnGroupBox">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QGroupBox {
+font-weight: bold;
+border: 1.4px solid rgb(110, 110, 110, 200);
+border-radius: 6px;
+background: rgb(248, 248, 255, 70);
+margin-top: 0.5em;
+}
+
+
+
+QGroupBox::title {
+top: -5px;
+left: 15px
+}
+
+QLabel {
+font-weight: bold
+background: rgb(248, 248, 255, 0);
+}
+
+
+QCheckBox {
+font-weight: bold
+background: rgb(248, 248, 255, 0);
+}</string>
+      </property>
+      <property name="title">
+       <string>BDA Add On Options</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="2" column="0">
+        <widget class="QLineEdit" name="bdaOcc_line_edit">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>134</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="1">
+        <widget class="QLineEdit" name="bdaCap_lineEdit"/>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="label_26">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>BDA Lookup Period</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLineEdit" name="bdaLookUps_line_edit">
+         <property name="maximumSize">
+          <size>
+           <width>45</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="0">
+        <widget class="QCheckBox" name="bdaOnly_checkBox">
+         <property name="text">
+          <string>BDA Only</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_21">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>BDA Specialty(s)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLineEdit" name="bdaSpec_line_edit">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>134</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <widget class="QLabel" name="label_25">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>BDA Number of Lookups</string>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="0">
+        <widget class="QCheckBox" name="deDup_check_box">
+         <property name="text">
+          <string>DeDup From SDA</string>
+         </property>
+        </widget>
+       </item>
+       <item row="15" column="0">
+        <widget class="QLabel" name="addBDA_Label">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Additional BDA's: 0</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0">
+        <widget class="QLineEdit" name="bdaNumLookUps_line_edit">
+         <property name="maximumSize">
+          <size>
+           <width>45</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="15" column="1">
+        <widget class="QCheckBox" name="therapyClass_checkBox">
+         <property name="text">
+          <string>Use Therapy Class</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="0">
+        <widget class="QLineEdit" name="bdaTarget_lineEdit">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>100</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1" rowspan="11">
+        <widget class="QPlainTextEdit" name="drugList_text_edit">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>150</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPlainTextEdit {
+background-image: url(:/img/Resources/epoclogo (002).png);
+background-position: absolute;
+border: 2px solid rgb(110, 110, 110, 200);
+border-radius: 6px;
+font-weight: bold;
+color: rgb(242, 101, 34);
+
+
+
+
+
+	
+	
+	
+    
+}</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="plainText">
+          <string/>
+         </property>
+         <property name="backgroundVisible">
+          <bool>false</bool>
+         </property>
+         <property name="centerOnScroll">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="label_22">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Drug List</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_23">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>BDA Occupations</string>
+         </property>
+        </widget>
+       </item>
+       <item row="16" column="0">
+        <widget class="QPushButton" name="AdditionalBDA_pushButton">
+         <property name="maximumSize">
+          <size>
+           <width>50</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>+</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="0">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>BDA Target #</string>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="1">
+        <widget class="QLabel" name="label_29">
+         <property name="text">
+          <string>BDA Cap</string>
+         </property>
+        </widget>
+       </item>
+       <item row="16" column="1">
+        <widget class="QCheckBox" name="supressBDA_checkBox">
+         <property name="text">
+          <string>Suppress BDA Only</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="bdaAddOn_check_box">
+         <property name="text">
+          <string>BDA Add On</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
     <item row="1" column="0" colspan="2">
      <widget class="QTabWidget" name="tabWidget">
       <property name="autoFillBackground">
@@ -1096,18 +1096,6 @@ background: rgb(248, 248, 255, 0);
              </property>
             </widget>
            </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="label_32">
-             <property name="font">
-              <font>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>SQL Table Name</string>
-             </property>
-            </widget>
-           </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_34">
              <property name="font">
@@ -1120,6 +1108,18 @@ background: rgb(248, 248, 255, 0);
              </property>
             </widget>
            </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_32">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>SQL Table Name</string>
+             </property>
+            </widget>
+           </item>
            <item row="5" column="0">
             <widget class="QLineEdit" name="postgresTable_line_edit">
              <property name="text">
@@ -1129,13 +1129,6 @@ background: rgb(248, 248, 255, 0);
            </item>
            <item row="10" column="0">
             <widget class="QLineEdit" name="emailTo_line_edit">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLineEdit" name="saleExecutive_line_edit">
              <property name="text">
               <string/>
              </property>
@@ -1185,40 +1178,10 @@ background: rgb(248, 248, 255, 0);
              </item>
             </widget>
            </item>
-           <item row="11" column="0">
-            <spacer name="verticalSpacer_4">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="7" column="0">
-            <widget class="QLabel" name="Labelfdfd_2">
-             <property name="font">
-              <font>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
+           <item row="3" column="0">
+            <widget class="QLineEdit" name="saleExecutive_line_edit">
              <property name="text">
-              <string>Match Type</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_33">
-             <property name="font">
-              <font>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Case Number</string>
+              <string/>
              </property>
             </widget>
            </item>
@@ -1234,12 +1197,49 @@ background: rgb(248, 248, 255, 0);
              </property>
             </widget>
            </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_33">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Case Number</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="Labelfdfd_2">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Match Type</string>
+             </property>
+            </widget>
+           </item>
            <item row="6" column="0">
             <widget class="QLabel" name="tableLabel">
              <property name="text">
               <string/>
              </property>
             </widget>
+           </item>
+           <item row="11" column="0">
+            <spacer name="verticalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </widget>
@@ -1285,18 +1285,6 @@ background: rgb(248, 248, 255, 0);
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_14">
-             <property name="font">
-              <font>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Brand Name</string>
-             </property>
-            </widget>
-           </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_20">
              <property name="font">
@@ -1309,18 +1297,17 @@ background: rgb(248, 248, 255, 0);
              </property>
             </widget>
            </item>
-           <item row="10" column="0">
-            <spacer name="verticalSpacer_5">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_14">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
              </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
+             <property name="text">
+              <string>Brand Name</string>
              </property>
-            </spacer>
+            </widget>
            </item>
            <item row="4" column="0">
             <widget class="QLabel" name="label_17">
@@ -1359,6 +1346,13 @@ background: rgb(248, 248, 255, 0);
              </property>
             </widget>
            </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="label_12">
+             <property name="text">
+              <string>Matched File</string>
+             </property>
+            </widget>
+           </item>
            <item row="1" column="0">
             <widget class="QLineEdit" name="brandName_line_edit">
              <property name="text">
@@ -1376,12 +1370,18 @@ background: rgb(248, 248, 255, 0);
            <item row="9" column="0">
             <widget class="QLineEdit" name="suppFilePath_lineEdit"/>
            </item>
-           <item row="8" column="0">
-            <widget class="QLabel" name="label_12">
-             <property name="text">
-              <string>Matched File</string>
+           <item row="10" column="0">
+            <spacer name="verticalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
              </property>
-            </widget>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </widget>
@@ -1424,8 +1424,68 @@ background: rgb(248, 248, 255, 0);
            <string>Targeting Details</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_2">
-           <item row="6" column="0">
-            <widget class="QLineEdit" name="segVariable_lineEdit"/>
+           <item row="12" column="0" colspan="3">
+            <widget class="QGroupBox" name="groupBox_6">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="title">
+              <string>GroupBox</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_6">
+              <item row="0" column="0">
+               <widget class="QCheckBox" name="backFill_checkBox">
+                <property name="text">
+                 <string>BackFill Last Segment</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QCheckBox" name="randomSplit_checkBox">
+                <property name="text">
+                 <string>Randomize Split</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QCheckBox" name="gskEpsilon_checkBox">
+                <property name="text">
+                 <string>GSK Epsilon</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QCheckBox" name="cmi_compass_checkBox">
+                <property name="text">
+                 <string>CMI/Compas</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QCheckBox" name="nbe_checkBox">
+                <property name="text">
+                 <string>NBE</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="9" column="2">
+            <widget class="QLabel" name="targetTableName">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>20</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
            </item>
            <item row="1" column="0">
             <widget class="QLabel" name="label_37">
@@ -1439,26 +1499,8 @@ background: rgb(248, 248, 255, 0);
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QCheckBox" name="keepSeg_checkBox">
-             <property name="text">
-              <string>Keep Segment Variable</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QLineEdit" name="brandName_line_edit_2">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="8" column="1">
-            <widget class="QLineEdit" name="postgresTable_line_edit_2">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
+           <item row="6" column="0">
+            <widget class="QLineEdit" name="segVariable_lineEdit"/>
            </item>
            <item row="4" column="0">
             <widget class="QLineEdit" name="targetNumber_line_edit">
@@ -1467,14 +1509,28 @@ background: rgb(248, 248, 255, 0);
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QCheckBox" name="segmentList_checkBox">
+           <item row="0" column="2">
+            <widget class="QCheckBox" name="keepSeg_checkBox">
              <property name="text">
-              <string>Segmented List</string>
+              <string>Keep Segment Variable</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="1">
+           <item row="8" column="2">
+            <widget class="QLineEdit" name="postgresTable_line_edit_2">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLineEdit" name="brandName_line_edit_2">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
             <widget class="QLabel" name="label_15">
              <property name="font">
               <font>
@@ -1486,15 +1542,15 @@ background: rgb(248, 248, 255, 0);
              </property>
             </widget>
            </item>
-           <item row="8" column="0">
-            <widget class="QLineEdit" name="segValues_lineEdit"/>
-           </item>
-           <item row="2" column="0">
-            <widget class="QComboBox" name="targetManuName_comboBox">
-             <property name="frame">
-              <bool>true</bool>
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="segmentList_checkBox">
+             <property name="text">
+              <string>Segmented List</string>
              </property>
             </widget>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLineEdit" name="segValues_lineEdit"/>
            </item>
            <item row="7" column="0">
             <widget class="QLabel" name="label_19">
@@ -1520,24 +1576,17 @@ background: rgb(248, 248, 255, 0);
              </property>
             </widget>
            </item>
-           <item row="5" column="1">
-            <widget class="QLabel" name="label">
-             <property name="text">
-              <string>TARGETS Date Folder</string>
+           <item row="2" column="0">
+            <widget class="QComboBox" name="targetManuName_comboBox">
+             <property name="frame">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="10" column="1">
-            <widget class="QLabel" name="targetTableName">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
+           <item row="4" column="2">
             <widget class="QLineEdit" name="dataCap_lineEdit"/>
            </item>
-           <item row="7" column="1">
+           <item row="7" column="2">
             <widget class="QLabel" name="label_36">
              <property name="font">
               <font>
@@ -1549,27 +1598,20 @@ background: rgb(248, 248, 255, 0);
              </property>
             </widget>
            </item>
-           <item row="3" column="1">
+           <item row="5" column="2">
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>TARGETS Date Folder</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="2">
+            <widget class="QLineEdit" name="date_lineEdit"/>
+           </item>
+           <item row="3" column="2">
             <widget class="QLabel" name="label_28">
              <property name="text">
               <string>Data Cap</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="1">
-            <widget class="QLineEdit" name="date_lineEdit"/>
-           </item>
-           <item row="10" column="0">
-            <widget class="QCheckBox" name="backFill_checkBox">
-             <property name="text">
-              <string>BackFill Last Segment</string>
-             </property>
-            </widget>
-           </item>
-           <item row="21" column="0">
-            <widget class="QCheckBox" name="randomSplit_checkBox">
-             <property name="text">
-              <string>Randomize Split</string>
              </property>
             </widget>
            </item>
@@ -1585,43 +1627,41 @@ background: rgb(248, 248, 255, 0);
              </property>
             </widget>
            </item>
-           <item row="21" column="1">
-            <widget class="QLabel" name="label_18">
-             <property name="font">
-              <font>
-               <pointsize>10</pointsize>
-              </font>
+           <item row="9" column="0">
+            <widget class="QFrame" name="frame">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
              </property>
-             <property name="text">
-              <string>Your Initials</string>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
              </property>
-            </widget>
-           </item>
-           <item row="23" column="0">
-            <widget class="QCheckBox" name="nbe_checkBox">
-             <property name="text">
-              <string>NBE</string>
-             </property>
-            </widget>
-           </item>
-           <item row="22" column="1">
-            <widget class="QLineEdit" name="myInit_line_edit_2">
-             <property name="maximumSize">
-              <size>
-               <width>45</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="22" column="0">
-            <widget class="QCheckBox" name="cmi_compass_checkBox">
-             <property name="text">
-              <string>CMI/Compas</string>
-             </property>
+             <layout class="QGridLayout" name="gridLayout_12">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_18">
+                <property name="font">
+                 <font>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Your Initials</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="myInit_line_edit_2">
+                <property name="maximumSize">
+                 <size>
+                  <width>45</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
           </layout>

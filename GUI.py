@@ -1805,6 +1805,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         # self.activeUserDate.mouseReleaseEvent = self.showCalWidActiveUsers
         clickable(self.activeUserDate).connect(self.showCalWidActiveUsers)
         clickable(self.calendarLine).connect(self.showCalWid)
+        self.sdaOnly.toggled.connect(self.sdaBdaDatacheck)
+        self.bdaOnly.toggled.connect(self.sdaBdaDatacheck)
 
         # self.stateZip = State_Zip()
         # if stateZip.statesString == ""
@@ -2880,7 +2882,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         if str(self.targetManuName.currentText()) == 'AstraZeneca':
 
             self.segBox.setChecked(True)
-            self.segBox.setEnabled(False)
+            self.sdaBdaDatacheck()
             self.addSegButton.setEnabled(False)
             self.removeSegButton.setEnabled(False)
             self.sourceSegs.setEnabled(True)
@@ -2993,6 +2995,13 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.segmentCallBack()
             self.sdaOnlyCallback()
             # self.refreshFile()
+
+    def sdaBdaDatacheck(self):
+        if self.sdaOnly.isChecked() or self.bdaOnly.isChecked():
+            self.segBox.setEnabled(True)
+        if not self.sdaOnly.isChecked() and not self.bdaOnly.isChecked():
+            self.segBox.setEnabled(False)
+
 
     def showCalWid(self):
         self.calendar = QtGui.QCalendarWidget()
