@@ -1652,6 +1652,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.splitBox = self.findChild(QCheckBox, 'randomSplit_checkBox')
         self.sdaCap = self.findChild(QLineEdit, 'sdaCap_lineEdit')
         self.bdaCap = self.findChild(QLineEdit, 'bdaCap_lineEdit')
+        self.gskEpsilonCheckbox = self.findChild(QCheckBox, 'gskEpsilon_checkBox')
 
         self.targetManuName.addItems(manuList)
 
@@ -1750,7 +1751,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.renameButton.clicked.connect(self.bajabThread)
         self.renameColumnButton.clicked.connect(self.renameColumn)
         self.cmiCompass.toggled.connect(self.dataSharingClients)
-        self.cmiCompass.toggled.connect(self.cmiCompasCallback)
+        self.cmiCompass.toggled.connect(self.setDatasharingCallback)
+        self.gskEpsilonCheckbox.toggled.connect(self.setDatasharingCallback)
         self.postgresTable.textChanged.connect(self.returnUserTable)
         self.postgresTargetTable.textChanged.connect(self.returnUserTable)
         self.createFilter.clicked.connect(self.filterList)
@@ -2472,6 +2474,10 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                                 break
 
                     else:
+                        writer = csv.writer(yup, lineterminator='\n')
+                        writer.writerow(first_row)
+                        for row in reader:
+                            writer.writerow(row)
                         print('No GSK Metadatatag Found')
                         pass
             os.remove(downloads + 'csvFile.csv')
@@ -3576,6 +3582,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         isSegListChecked = self.segmentList.isChecked()
         isKeepSegChecked = self.keepSeg.isChecked()
         isCmiCompassChecked = self.cmiCompass.isChecked()
+        isGSKEpsilonChecked = self.gskEpsilonCheckbox.isChecked()
         isFuzzyBoxChecked = self.fuzzyBox.isChecked()
         isTherapyChecked = self.therapyClassBox.isChecked()
         isSuppSdaChecked = self.suppSDAOnly.isChecked()
@@ -3698,6 +3705,10 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 self.config['cmi_compass_client'] = 'Y'
             if not isCmiCompassChecked:
                 self.config['cmi_compass_client'] = 'N'
+            if isGSKEpsilonChecked:
+                self.config['gskEpsilonClient'] = 'Y'
+            if not isGSKEpsilonChecked:
+                self.config['gskEpsilonClient'] = 'N'
 # targeting add on capping conditional
             if str(self.sdaCap.text()) != '':
                 self.config['sdaCap'] = str(self.sdaCap.text())
@@ -4233,11 +4244,14 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.epocQuiz.setStyleSheet("color: black")
             self.triggeredAlert.setStyleSheet("color: black")
 
-    def cmiCompasCallback(self):
+    def setDatasharingCallback(self):
         isCMIChecked = self.cmiCompass.isChecked()
+        isGSKEpsilonChecked = self.gskEpsilonCheckbox.isChecked()
         if isCMIChecked:
             self.segBox.setChecked(True)
-        else:
+        if isGSKEpsilonChecked:
+            self.segBox.setChecked(True)
+        if not isCMIChecked and not isGSKEpsilonChecked:
             self.segBox.setChecked(False)
 
     def editListCallback(self):
