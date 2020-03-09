@@ -562,6 +562,18 @@ def getMain():
 					elif cellVal == 'dimcidvalue' or cellVal == 'cid' or cellVal == 'clientid' or cellVal == 'client_id':
 						print(cellVal, ': ', colored('I Found a ClientID', 'green'))
 						headers[index] = 'clientid'
+					elif cellVal == 'brandnm':
+						print(cellVal, ': ', colored('I Found a BrandNm', 'green'))
+						headers[index] = 'brandnm'
+					elif cellVal == 'fulfillmentid':
+						print(cellVal, ': ', colored('I Found a FulfillmentId', 'green'))
+						headers[index] = 'fulfillmentid'
+					elif cellVal == 'gskmcmid':
+						print(cellVal, ': ', colored('I Found a GSKMCMID', 'green'))
+						headers[index] = 'gskmcmid'
+					elif cellVal == 'tacticcode':
+						print(cellVal, ': ', colored('I Found a TacticCode', 'green'))
+						headers[index] = 'tacticcode'
 				elif manu == 'Biogen':
 					if cellVal == 'vnid' or cellVal == 'veeva_network_id':
 						print(cellVal, ': ', colored('I Found a veeva_network_id', 'green'))
@@ -665,7 +677,8 @@ def postgresConn():
 	myHeaders = list(df)
 
 	if caseType == 'Targeting' and manu in ['Merck', 'AstraZeneca', 'Novartis', 'GSK', 'Boehringer', 'Amgen', 'Biogen', 'Sanofi-Aventis']:
-		neededColumns = ['me', 'npi', 'fname', 'lname', 'zip'] + utils.prepSasSegments(listMatchType).split(',')
+		# print(utils.prepSasSegments(listMatchType).split(','))
+		neededColumns = ['me', 'npi', 'fname', 'lname', 'zip'] + utils.prepSasSegments(listMatchType).split(', ')
 	else:
 		neededColumns = ['me', 'npi', 'fname', 'lname', 'zip']
 
@@ -696,6 +709,7 @@ def postgresConn():
 	else:
 		df.to_sql('{}'.format(tableName), conn, if_exists='replace', index=False)
 
+	# print(neededColumns)
 	for col in neededColumns:
 		if col not in myHeaders:
 			try:
@@ -761,6 +775,7 @@ def postgresConn():
 
 				elif listMatchType =='Exact':
 					export = """{select}, {seg} from {tableName};""".format(select=selectMain2, tableName=tableName, seg=splitList)
+					# print(export)
 					pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
 
 				elif listMatchType =='Standard_Seg':

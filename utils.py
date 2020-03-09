@@ -39,6 +39,7 @@ def checkExtension():
 	newest = max(os.listdir(downloads), key=lambda f: os.path.getmtime("{}/{}".format(downloads, f)))
 	filename, extension = os.path.splitext(os.path.join(downloads, newest))
 	# print extension
+	extension = extension.lower()
 	if extension == '.xlsx':
 		csv_from_excel()
 
@@ -120,6 +121,7 @@ def checkExtension2(test=None):
 	matched = test
 	filename, extension = os.path.splitext(os.path.join(downloads, matched))
 	# print extension
+	extension = extension.lower()
 	if extension == '.xlsx':
 		csv_from_excel2(matched)
 	elif extension == '.txt':
@@ -240,7 +242,7 @@ def importDrugs():
 
 def prepSasSegments(lmType):
 	cmiCompasSegmentation = "npi, address1, campaign_type, city, cl_fname, cl_lname, cl_me, cl_zip, clientid, compasid, middle_name, segment1, specialty, state_code, tier, segment2, segment3"
-	gskEpsilonSegments = "brandnm, fulfillmentid, gskmcmid, menumber, npinumber, tacticcode"
+
 
 	with open(os.path.join(desktop,'Ewok\\Datasharing', 'dataSharing.json'), 'r') as infile:
 		config = json.loads(infile.read(), encoding='utf8')
@@ -261,10 +263,10 @@ def prepSasSegments(lmType):
 				if manu == 'Boehringer':
 					sasSegments = specialDataSharingDict[manu]
 				if manu == 'GSK':
-					if config3['gskEpsilonClient'] == 'N':
-						sasSegments = specialDataSharingDict[manu]
-					else:
-						sasSegments = gskEpsilonSegments
+					# if config3['gskEpsilonClient'] == 'N':
+					sasSegments = specialDataSharingDict[manu]
+					# else:
+					# 	sasSegments = gskEpsilonSegments
 				if manu == 'Amgen':
 					sasSegments = specialDataSharingDict[manu]
 				if manu == 'Sanofi-Aventis':
@@ -286,7 +288,8 @@ def prepSasSegments(lmType):
 				if manu == 'GSK':
 					breakUP = specialDataSharingDict[manu].split(', ')
 					breakUP.remove('clientid')
-					sasSegments = cmiCompasSegmentation + ', ' + ''.join(breakUP)
+					sasSegments = cmiCompasSegmentation + ', ' + ', '.join(breakUP)
+					print(sasSegments)
 
 		elif lmType == 'Standard_Seg' or lmType == 'Exact_Seg':
 			if config3['cmi_compass_client'] == 'N':
@@ -303,10 +306,10 @@ def prepSasSegments(lmType):
 				if manu == 'Boehringer':
 					sasSegments = specialDataSharingDict[manu] + ', ' + segVariable
 				if manu == 'GSK':
-					if config3['gskEpsilonClient'] == 'N':
-						sasSegments = specialDataSharingDict[manu] + ', ' + segVariable
-					else:
-						sasSegments = gskEpsilonSegments + ', {}'.format(segVariable)
+					# if config3['gskEpsilonClient'] == 'N':
+					sasSegments = specialDataSharingDict[manu] + ', ' + segVariable
+					# else:
+					# 	sasSegments = gskEpsilonSegments + ', {}'.format(segVariable)
 
 				if manu == 'Amgen':
 					sasSegments = segVariable + ', ' + specialDataSharingDict[manu]
@@ -335,6 +338,7 @@ def prepSasSegments(lmType):
 					breakUP = specialDataSharingDict[manu].split(', ')
 					breakUP.remove('clientid')					
 					breakUP = cmiCompasSegmentation.split(', ') + breakUP
+					print(breakUP)
 					# breakUP = breakUP.split(', ')
 					if segVariable in breakUP:
 						sasSegments = ', '.join(breakUP)
@@ -374,10 +378,10 @@ def prepSqlSegments(lmType):
 				if manu == 'Boehringer':
 					sqlSegments = specialDataSharingDict[manu]
 				if manu == 'GSK':
-					if config3['gskEpsilonClient'] == 'N':
-						sqlSegments = specialDataSharingDict[manu]
-					else:
-						sqlSegments = specialDataSharingDict['gskEpsilon']
+					# if config3['gskEpsilonClient'] == 'N':
+					sqlSegments = specialDataSharingDict['GSKSegmentation']
+					# else:
+						# sqlSegments = specialDataSharingDict['gskEpsilon']
 				if manu == 'Amgen':
 					sqlSegments = specialDataSharingDict['amgenSegmentation']
 				if manu == 'Sanofi-Aventis':
@@ -397,7 +401,7 @@ def prepSqlSegments(lmType):
 				if manu == 'Boehringer':
 					sqlSegments = specialDataSharingDict['boehringerCompassSegmentation']
 				if manu == 'GSK':
-					sqlSegments = specialDataSharingDict['gskCompassSegmentation']
+					sqlSegments = specialDataSharingDict['gskCompassSegmentation'] + ', ' + specialDataSharingDict['GSKSegmentation'].replace('clientid, ', '')
 				if manu == 'Amgen':
 					sqlSegments = specialDataSharingDict['amgenSegmentation']
 				if manu == 'Sanofi-Aventis':
@@ -420,10 +424,10 @@ def prepSqlSegments(lmType):
 				if manu == 'Boehringer':
 					sqlSegments = specialDataSharingDict[manu] + ', ' + segVariable
 				if manu == 'GSK':
-					if config3['gskEpsilonClient'] == 'N':
-						sqlSegments = specialDataSharingDict[manu] + ', ' + segVariable
-					else:
-						sqlSegments = specialDataSharingDict['gskEpsilon'] + ', ' + segVariable
+					# if config3['gskEpsilonClient'] == 'N':
+					sqlSegments = specialDataSharingDict['GSKSegmentation'] + ', ' + segVariable
+					# else:
+					# 	sqlSegments = specialDataSharingDict['gskEpsilon'] + ', ' + segVariable
 				if manu == 'Amgen':
 					sqlSegments = segVariable + ', ' + specialDataSharingDict['amgenSegmentation']
 				if manu == 'Sanofi-Aventis':

@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>681</width>
-    <height>900</height>
+    <height>871</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1051,7 +1051,7 @@ border-radius: 6px;
 </string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="listMatchTab">
        <attribute name="title">
@@ -1451,20 +1451,13 @@ background: rgb(248, 248, 255, 0);
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QCheckBox" name="gskEpsilon_checkBox">
-                <property name="text">
-                 <string>GSK Epsilon</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
                <widget class="QCheckBox" name="cmi_compass_checkBox">
                 <property name="text">
                  <string>CMI/Compas</string>
                 </property>
                </widget>
               </item>
-              <item row="2" column="1">
+              <item row="1" column="1">
                <widget class="QCheckBox" name="nbe_checkBox">
                 <property name="text">
                  <string>NBE</string>

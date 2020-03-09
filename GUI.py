@@ -1752,7 +1752,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.renameColumnButton.clicked.connect(self.renameColumn)
         self.cmiCompass.toggled.connect(self.dataSharingClients)
         self.cmiCompass.toggled.connect(self.setDatasharingCallback)
-        self.gskEpsilonCheckbox.toggled.connect(self.setDatasharingCallback)
+        # self.gskEpsilonCheckbox.toggled.connect(self.setDatasharingCallback)
         self.postgresTable.textChanged.connect(self.returnUserTable)
         self.postgresTargetTable.textChanged.connect(self.returnUserTable)
         self.createFilter.clicked.connect(self.filterList)
@@ -2729,7 +2729,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                     foundCMIColumns.append('tier')
                     self.columnIndex.append(i)
                     col.setBackground(QColor(213, 233, 221,255))
-                elif checkCol == 'client_id' or checkCol == 'client_id_1' or checkCol == 'clientid':
+                elif checkCol == 'client_id' or checkCol == 'client_id_1' or checkCol == 'clientid' or checkCol == 'cid':
                     foundCMIColumns.append('clientid')
                     self.columnIndex.append(i)
                     col.setBackground(QColor(213, 233, 221,255))
@@ -3583,7 +3583,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         isSegListChecked = self.segmentList.isChecked()
         isKeepSegChecked = self.keepSeg.isChecked()
         isCmiCompassChecked = self.cmiCompass.isChecked()
-        isGSKEpsilonChecked = self.gskEpsilonCheckbox.isChecked()
+        # isGSKEpsilonChecked = self.gskEpsilonCheckbox.isChecked()
         isFuzzyBoxChecked = self.fuzzyBox.isChecked()
         isTherapyChecked = self.therapyClassBox.isChecked()
         isSuppSdaChecked = self.suppSDAOnly.isChecked()
@@ -3706,10 +3706,10 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 self.config['cmi_compass_client'] = 'Y'
             if not isCmiCompassChecked:
                 self.config['cmi_compass_client'] = 'N'
-            if isGSKEpsilonChecked:
-                self.config['gskEpsilonClient'] = 'Y'
-            if not isGSKEpsilonChecked:
-                self.config['gskEpsilonClient'] = 'N'
+            # if isGSKEpsilonChecked:
+            #     self.config['gskEpsilonClient'] = 'Y'
+            # if not isGSKEpsilonChecked:
+            #     self.config['gskEpsilonClient'] = 'N'
 # targeting add on capping conditional
             if str(self.sdaCap.text()) != '':
                 self.config['sdaCap'] = str(self.sdaCap.text())
@@ -4247,13 +4247,13 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
     def setDatasharingCallback(self):
         isCMIChecked = self.cmiCompass.isChecked()
-        isGSKEpsilonChecked = self.gskEpsilonCheckbox.isChecked()
+        # isGSKEpsilonChecked = self.gskEpsilonCheckbox.isChecked()
         if isCMIChecked:
             self.segBox.setChecked(True)
-        if isGSKEpsilonChecked:
-            self.segBox.setChecked(True)
-        if not isCMIChecked and not isGSKEpsilonChecked:
-            self.segBox.setChecked(False)
+        # if isGSKEpsilonChecked:
+        #     self.segBox.setChecked(True)
+        # if not isCMIChecked and not isGSKEpsilonChecked:
+        #     self.segBox.setChecked(False)
 
     def editListCallback(self):
         isSegmentChecked = self.segBox.isChecked()
