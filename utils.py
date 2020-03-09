@@ -459,7 +459,7 @@ def prepSqlSegments(lmType):
 					else:
 						sqlSegments = ', '.join(breakUP) + ', ' + segVariable
 				if manu == 'GSK':
-					breakUP = specialDataSharingDict['gskCompassSegmentation'].split(', ') + ', ' + specialDataSharingDict['GSKSegmentation'].replace('clientid, ', '')
+					breakUP = specialDataSharingDict['gskCompassSegmentation'].split(', ') + str(specialDataSharingDict['GSKSegmentation'].replace('clientid, ', '')).split(', ')
 					if segVariable in breakUP:
 						sqlSegments = ', '.join(breakUP)
 					else:
