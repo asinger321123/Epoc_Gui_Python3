@@ -790,6 +790,7 @@ def postgresConn():
 
 				elif listMatchType =='Exact_Seg':
 					export = """{select}, {seg} from {tableName};""".format(select=selectMain2, tableName=tableName, seg=splitList)
+					print(export)
 					pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
 
 

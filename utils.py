@@ -289,7 +289,7 @@ def prepSasSegments(lmType):
 					breakUP = specialDataSharingDict[manu].split(', ')
 					breakUP.remove('clientid')
 					sasSegments = cmiCompasSegmentation + ', ' + ', '.join(breakUP)
-					print(sasSegments)
+					# print(sasSegments)
 
 		elif lmType == 'Standard_Seg' or lmType == 'Exact_Seg':
 			if config3['cmi_compass_client'] == 'N':
@@ -338,7 +338,7 @@ def prepSasSegments(lmType):
 					breakUP = specialDataSharingDict[manu].split(', ')
 					breakUP.remove('clientid')					
 					breakUP = cmiCompasSegmentation.split(', ') + breakUP
-					print(breakUP)
+					# print(breakUP)
 					# breakUP = breakUP.split(', ')
 					if segVariable in breakUP:
 						sasSegments = ', '.join(breakUP)
@@ -459,7 +459,7 @@ def prepSqlSegments(lmType):
 					else:
 						sqlSegments = ', '.join(breakUP) + ', ' + segVariable
 				if manu == 'GSK':
-					breakUP = specialDataSharingDict['gskCompassSegmentation'].split(', ')
+					breakUP = specialDataSharingDict['gskCompassSegmentation'].split(', ') + ', ' + specialDataSharingDict['GSKSegmentation'].replace('clientid, ', '')
 					if segVariable in breakUP:
 						sqlSegments = ', '.join(breakUP)
 					else:
