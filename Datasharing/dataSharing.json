@@ -7,7 +7,7 @@
 "Novartis":"mdm_id, nov_id, vendor_contact_event_id, fulfillment_kit_code, cl_me, cl_npi",
 "novartisCompassSegmentation":"address1, campaign_type, city, fname as cl_fname, lname as cl_lname, me as cl_me, zip as cl_zip, clientid, compasid, middle_name, segment1, specialty, state_code, tier, segment2, segment3, mdm_id, nov_id, vendor_contact_event_id, fulfillment_kit_code, REPLACE(me, '.0', '') as cl_me, REPLACE(npi, '.0', '') as cl_npi",
 "Boehringer":"veeva_id",
-"boehringerCompassSegmentation":"address1, campaign_type, city, fname as cl_fname, lname as cl_lname, REPLACE(me, '.0', '') as cl_me, zip as cl_zip, clientid, compasid, middle_name, segment1, specialty, state_code, tier, segment2, segment3, clientid as veeva_id",
+"boehringerCompassSegmentation":"address1, campaign_type, city, fname as cl_fname, lname as cl_lname, REPLACE(me, '.0', '') as cl_me, zip as cl_zip, veeva_id as clientid, compasid, middle_name, segment1, specialty, state_code, tier, segment2, segment3, veeva_id",
 "GSK":"brandnm, clientid, fulfillmentid, gskmcmid, menumber, npinumber, tacticcode",
 "GSKSegmentation":"brandnm, clientid, fulfillmentid, gskmcmid, REPLACE(me, '.0', '') as menumber, REPLACE(npi, '.0', '') as npinumber, tacticcode",
 "gskCompassSegmentation":"address1, campaign_type, city, fname as cl_fname, lname as cl_lname, me as cl_me, zip as cl_zip, clientid, compasid, middle_name, segment1, specialty, state_code, tier, segment2, segment3",

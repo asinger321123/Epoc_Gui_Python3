@@ -602,15 +602,24 @@ def state_to_abbrev(myFile, tnum=None, manu=None):
 		headers = next(reader)
 		for index, col in enumerate(headers):
 			cellVal = str(col).lower().replace('/', '_').replace('-', '_')
-			if re.search('^state.+', cellVal) or re.search('.+state.+', cellVal) or cellVal == 'state':
+			if cellVal == 'state':
 				found_state = True
 				state_index = index
 				break
+		if found_state == False:
+			for index, col in enumerate(headers):
+				cellVal = str(col).lower().replace('/', '_').replace('-', '_')
+				if re.search('^state.+', cellVal) or re.search('.+state.+', cellVal):
+					found_state = True
+					state_index = index
+					break
+		# print('Found State Column')
 
 		if found_state == True:
 			for row in reader:
 				if row[state_index].lower() in keys:
 					stateEditsNeeded = True
+					# print('i found', row[state_index].lower())
 
 
 	if stateEditsNeeded == True:
