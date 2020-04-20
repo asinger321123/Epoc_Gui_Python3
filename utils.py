@@ -418,7 +418,11 @@ def prepSqlSegments(lmType):
 					else:
 						sqlSegments = specialDataSharingDict[manu] + ', ' + segVariable
 				if manu == 'AstraZeneca':
-					sqlSegments = specialDataSharingDict['azSegmentation'] + ', ' + segVariable
+					print('Found IMSDR: ', foundIMSDR)
+					if foundIMSDR == 'Yes':
+						sqlSegments = specialDataSharingDict['azSegmentationIMSDR'] + ', ' + segVariable
+					if foundIMSDR == 'No':
+						sqlSegments = specialDataSharingDict['azSegmentationNPI'] + ', ' + segVariable
 				if manu == 'Novartis':
 					sqlSegments = specialDataSharingDict['novartisSegmentation'] + ', ' + segVariable
 				if manu == 'Boehringer':
