@@ -357,6 +357,9 @@ if len(args) > 0:
 			if htdTargeting == 'Yes':
 				htdOccs = str(config['SDA_Occ'])
 				htdSpecs = str(config['SDA_Spec'])
+			else:
+				htdOccs = ""
+				htdSpecs = ""
 			bDa = str(config['bDa'])
 			if (bDa == 'y' and sDa == 'n') or (bDa == 'y' and sDa == 'y'):
 				bDa_only = bDa_only
