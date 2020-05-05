@@ -37,226 +37,6 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="1">
-     <widget class="QGroupBox" name="sdaAddON">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QGroupBox {
-font-weight: bold;
-border: 1.4px solid rgb(110, 110, 110, 200);
-border-radius: 6px;
-background: rgb(248, 248, 255, 70);
-margin-top: 0.5em;
-}
-
-QGroupBox::title {
-top: -5px;
-left: 15px
-}
-
-QLabel {
-
-background: rgb(248, 248, 255, 0);
-}
-
-QCheckBox {
-
-color: black;
-background: rgb(248, 248, 255, 0);
-}</string>
-      </property>
-      <property name="title">
-       <string>SDA Add On Options</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QCheckBox" name="sdaAddOn_check_box">
-         <property name="text">
-          <string>SDA Add On</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_24">
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>SDA Occupations</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="sdaOcc_line_edit">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>160</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>50</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="mouseTracking">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_13">
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>SDA Specialty(s)</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="sdaSpec_line_edit">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>160</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>50</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="mouseTracking">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_4">
-         <property name="text">
-          <string>SDA Target #</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="sdaTarget_lineEdit">
-         <property name="maximumSize">
-          <size>
-           <width>100</width>
-           <height>16777215</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="sdaOnly_checkBox">
-         <property name="text">
-          <string>SDA Only</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="supressSDA_checkBox">
-         <property name="text">
-          <string>Suppress SDA Only</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_30">
-         <property name="text">
-          <string>SDA Cap</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="sdaCap_lineEdit">
-         <property name="minimumSize">
-          <size>
-           <width>160</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>50</width>
-           <height>16777215</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QLabel" name="addSDA_Label">
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Additional SDA's: 0</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="AdditionalSDA_pushButton">
-         <property name="maximumSize">
-          <size>
-           <width>50</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>+</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
     <item row="1" column="2">
      <widget class="QGroupBox" name="segmentGroupBox">
       <property name="sizePolicy">
@@ -527,6 +307,226 @@ DatasharingList:</string>
       <zorder>seg_30_60_90_checkBox</zorder>
      </widget>
     </item>
+    <item row="0" column="1">
+     <widget class="QGroupBox" name="sdaAddON">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QGroupBox {
+font-weight: bold;
+border: 1.4px solid rgb(110, 110, 110, 200);
+border-radius: 6px;
+background: rgb(248, 248, 255, 70);
+margin-top: 0.5em;
+}
+
+QGroupBox::title {
+top: -5px;
+left: 15px
+}
+
+QLabel {
+
+background: rgb(248, 248, 255, 0);
+}
+
+QCheckBox {
+
+color: black;
+background: rgb(248, 248, 255, 0);
+}</string>
+      </property>
+      <property name="title">
+       <string>SDA Add On Options</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QCheckBox" name="sdaAddOn_check_box">
+         <property name="text">
+          <string>SDA Add On</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_24">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>SDA Occupations</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="sdaOcc_line_edit">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>160</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>50</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="mouseTracking">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_13">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>SDA Specialty(s)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="sdaSpec_line_edit">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>160</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>50</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="mouseTracking">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>SDA Target #</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="sdaTarget_lineEdit">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="sdaOnly_checkBox">
+         <property name="text">
+          <string>SDA Only</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="supressSDA_checkBox">
+         <property name="text">
+          <string>Suppress SDA Only</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_30">
+         <property name="text">
+          <string>SDA Cap</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="sdaCap_lineEdit">
+         <property name="minimumSize">
+          <size>
+           <width>160</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>50</width>
+           <height>16777215</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="addSDA_Label">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Additional SDA's: 0</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="AdditionalSDA_pushButton">
+         <property name="maximumSize">
+          <size>
+           <width>50</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>+</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
     <item row="0" column="0">
      <widget class="QGroupBox" name="caseOptionGroupBox">
       <property name="font">
@@ -567,17 +567,7 @@ background: rgb(248, 248, 255, 0);
        <string>Case Options</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_7">
-       <item row="1" column="1">
-        <widget class="Line" name="line_9">
-         <property name="styleSheet">
-          <string notr="true">font-weight: bold;</string>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="13" column="1">
+       <item row="14" column="1">
         <widget class="QCheckBox" name="segBox_check_box">
          <property name="text">
           <string>Segment/DataSharing</string>
@@ -591,10 +581,13 @@ background: rgb(248, 248, 255, 0);
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
-        <widget class="QCheckBox" name="suppression_checkBox">
-         <property name="text">
-          <string>Supression Applied</string>
+       <item row="1" column="1">
+        <widget class="Line" name="line_9">
+         <property name="styleSheet">
+          <string notr="true">font-weight: bold;</string>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
         </widget>
        </item>
@@ -605,13 +598,6 @@ background: rgb(248, 248, 255, 0);
          </property>
         </widget>
        </item>
-       <item row="9" column="1">
-        <widget class="QCheckBox" name="exactMatch_check_box">
-         <property name="text">
-          <string>Exact Match</string>
-         </property>
-        </widget>
-       </item>
        <item row="6" column="1">
         <widget class="QCheckBox" name="triggeredAlert_checkBox">
          <property name="text">
@@ -619,28 +605,28 @@ background: rgb(248, 248, 255, 0);
          </property>
         </widget>
        </item>
-       <item row="8" column="1">
-        <widget class="QCheckBox" name="standardMatch_check_box">
+       <item row="10" column="1">
+        <widget class="QCheckBox" name="exactMatch_check_box">
          <property name="text">
-          <string>Standard Match</string>
+          <string>Exact Match</string>
          </property>
         </widget>
        </item>
-       <item row="7" column="1">
-        <widget class="Line" name="line_8">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+       <item row="2" column="1">
+        <widget class="QCheckBox" name="suppression_checkBox">
+         <property name="text">
+          <string>Supression Applied</string>
          </property>
         </widget>
        </item>
-       <item row="11" column="1">
+       <item row="12" column="1">
         <widget class="Line" name="line_11">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
         </widget>
        </item>
-       <item row="10" column="1">
+       <item row="11" column="1">
         <widget class="QCheckBox" name="fuzzy_checkBox">
          <property name="enabled">
           <bool>true</bool>
@@ -650,6 +636,23 @@ background: rgb(248, 248, 255, 0);
          </property>
         </widget>
        </item>
+       <item row="9" column="1">
+        <widget class="QCheckBox" name="standardMatch_check_box">
+         <property name="text">
+          <string>Standard Match</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="Line" name="line_8">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="18" column="1">
+        <widget class="QLineEdit" name="activeUserDate_lineEdit"/>
+       </item>
        <item row="4" column="1">
         <widget class="QCheckBox" name="docAlert_check_box">
          <property name="text">
@@ -657,7 +660,7 @@ background: rgb(248, 248, 255, 0);
          </property>
         </widget>
        </item>
-       <item row="14" column="1">
+       <item row="15" column="1">
         <widget class="Line" name="line_10">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -671,10 +674,7 @@ background: rgb(248, 248, 255, 0);
          </property>
         </widget>
        </item>
-       <item row="17" column="1">
-        <widget class="QLineEdit" name="activeUserDate_lineEdit"/>
-       </item>
-       <item row="15" column="1">
+       <item row="16" column="1">
         <widget class="QLabel" name="label_39">
          <property name="maximumSize">
           <size>
@@ -684,6 +684,13 @@ background: rgb(248, 248, 255, 0);
          </property>
          <property name="text">
           <string>ActiveUser Start Date</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="QCheckBox" name="htdTarget_checkBox">
+         <property name="text">
+          <string>HTD Target</string>
          </property>
         </widget>
        </item>
@@ -1424,6 +1431,43 @@ background: rgb(248, 248, 255, 0);
            <string>Targeting Details</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_2">
+           <item row="9" column="0">
+            <widget class="QFrame" name="frame">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_12">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_18">
+                <property name="font">
+                 <font>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Your Initials</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="myInit_line_edit_2">
+                <property name="maximumSize">
+                 <size>
+                  <width>45</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
            <item row="12" column="0" colspan="3">
             <widget class="QGroupBox" name="groupBox_6">
              <property name="minimumSize">
@@ -1467,6 +1511,18 @@ background: rgb(248, 248, 255, 0);
              </layout>
             </widget>
            </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_37">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Manufacturer</string>
+             </property>
+            </widget>
+           </item>
            <item row="9" column="2">
             <widget class="QLabel" name="targetTableName">
              <property name="maximumSize">
@@ -1480,20 +1536,22 @@ background: rgb(248, 248, 255, 0);
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_37">
-             <property name="font">
-              <font>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
+           <item row="0" column="2">
+            <widget class="QCheckBox" name="keepSeg_checkBox">
              <property name="text">
-              <string>Manufacturer</string>
+              <string>Keep Segment Variable</string>
              </property>
             </widget>
            </item>
            <item row="6" column="0">
             <widget class="QLineEdit" name="segVariable_lineEdit"/>
+           </item>
+           <item row="8" column="2">
+            <widget class="QLineEdit" name="postgresTable_line_edit_2">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
            </item>
            <item row="4" column="0">
             <widget class="QLineEdit" name="targetNumber_line_edit">
@@ -1502,17 +1560,10 @@ background: rgb(248, 248, 255, 0);
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
-            <widget class="QCheckBox" name="keepSeg_checkBox">
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="segmentList_checkBox">
              <property name="text">
-              <string>Keep Segment Variable</string>
-             </property>
-            </widget>
-           </item>
-           <item row="8" column="2">
-            <widget class="QLineEdit" name="postgresTable_line_edit_2">
-             <property name="text">
-              <string/>
+              <string>Segmented List</string>
              </property>
             </widget>
            </item>
@@ -1535,15 +1586,15 @@ background: rgb(248, 248, 255, 0);
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QCheckBox" name="segmentList_checkBox">
-             <property name="text">
-              <string>Segmented List</string>
-             </property>
-            </widget>
-           </item>
            <item row="8" column="0">
             <widget class="QLineEdit" name="segValues_lineEdit"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QComboBox" name="targetManuName_comboBox">
+             <property name="frame">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
            <item row="7" column="0">
             <widget class="QLabel" name="label_19">
@@ -1569,15 +1620,18 @@ background: rgb(248, 248, 255, 0);
              </property>
             </widget>
            </item>
-           <item row="2" column="0">
-            <widget class="QComboBox" name="targetManuName_comboBox">
-             <property name="frame">
-              <bool>true</bool>
+           <item row="5" column="2">
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>TARGETS Date Folder</string>
              </property>
             </widget>
            </item>
            <item row="4" column="2">
             <widget class="QLineEdit" name="dataCap_lineEdit"/>
+           </item>
+           <item row="6" column="2">
+            <widget class="QLineEdit" name="date_lineEdit"/>
            </item>
            <item row="7" column="2">
             <widget class="QLabel" name="label_36">
@@ -1588,23 +1642,6 @@ background: rgb(248, 248, 255, 0);
              </property>
              <property name="text">
               <string>SQL Table Name</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="2">
-            <widget class="QLabel" name="label">
-             <property name="text">
-              <string>TARGETS Date Folder</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="2">
-            <widget class="QLineEdit" name="date_lineEdit"/>
-           </item>
-           <item row="3" column="2">
-            <widget class="QLabel" name="label_28">
-             <property name="text">
-              <string>Data Cap</string>
              </property>
             </widget>
            </item>
@@ -1620,41 +1657,11 @@ background: rgb(248, 248, 255, 0);
              </property>
             </widget>
            </item>
-           <item row="9" column="0">
-            <widget class="QFrame" name="frame">
-             <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
+           <item row="3" column="2">
+            <widget class="QLabel" name="label_28">
+             <property name="text">
+              <string>Data Cap</string>
              </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_12">
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_18">
-                <property name="font">
-                 <font>
-                  <pointsize>10</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Your Initials</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QLineEdit" name="myInit_line_edit_2">
-                <property name="maximumSize">
-                 <size>
-                  <width>45</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-             </layout>
             </widget>
            </item>
           </layout>
@@ -2060,48 +2067,6 @@ width:12px;
        <zorder>groupBox_5</zorder>
        <zorder>groupBox_4</zorder>
        <zorder>groupBox_3</zorder>
-      </widget>
-      <widget class="QWidget" name="tab_2">
-       <attribute name="title">
-        <string>OBIEE LookUp</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_5">
-        <item row="0" column="0">
-         <widget class="QTableView" name="target_tableView">
-          <property name="styleSheet">
-           <string notr="true">QHeaderView::section {
-background: purple;
-font-weight: bold;
-}
-
-QHeaderView::section:horizontal
-{
-border-style: none;    
-border-top: 1px solid #fffff8;
-}
-
-QHeaderView::section:vertical
-{
-border-style: none;    
-border-left: 1px solid #fffff8;
-}
-
-QTableView::item {
-border-style: none;
-border-left: 2px solid black; 
-border-top: 2px solid black; 
-} 
-QTableView{
-border-style: none;
-border-bottom: 2px solid black; 
-border-right: 2px solid black; 
-}
-
-</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
       </widget>
      </widget>
     </item>

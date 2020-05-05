@@ -198,6 +198,7 @@ if len(args) > 0:
 
 		#TARGETING ARGUMENTS
 		elif caseType == 'Targeting':
+			htdTargeting = str(config['htdTargeting'])
 			randomSplit = str(config['randomSplit'])
 			openerIDs = str(config['openerScheduleIDS'])
 			nbeTarget = str(config['nbeTarget'])
@@ -352,6 +353,10 @@ if len(args) > 0:
 				SDA_Spec = '""'
 				SDA_Occ2 = ''
 				SDA_Target = ''
+
+			if htdTargeting == 'Yes':
+				htdOccs = str(config['SDA_Occ'])
+				htdSpecs = str(config['SDA_Spec'])
 			bDa = str(config['bDa'])
 			if (bDa == 'y' and sDa == 'n') or (bDa == 'y' and sDa == 'y'):
 				bDa_only = bDa_only
@@ -1125,9 +1130,17 @@ def fixSas():
 		outCode2 = """P:\\Epocrates Analytics\\TARGETS\\{date}\\{manu} {brand}{slashes}""".format(date = date, slashes = "\\", manu = manu, brand = brand)
 		# if dSharing == 'Y' and (listMatchType == 'Standard' or listMatchType == 'Standard_Seg' or listMatchType == 'Exact' or listMatchType == 'Exact_Seg'):
 		if manu not in ['Merck', 'AstraZeneca', 'Novartis', 'GSK', 'Boehringer', 'Amgen', 'Biogen', 'Sanofi-Aventis', 'AbbVie']:
-			segList = ', '.join(segmentList)
+			if htdTargeting == 'No':
+				segList = ', '.join(segmentList)
+			else:
+				segList = ''
+
 		else:
-			segList = segmentList
+			if htdTargeting == 'No':
+				segList = segmentList
+			else:
+				segList = ''
+
 
 		# if not os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
 		if utils.codeCountReader() <= 1:
@@ -1208,6 +1221,9 @@ def fixSas():
 			target_out = target_out.replace('/*bdaCap*/', bdaCap)
 			target_out = target_out.replace('/*activeUserDate*/', activeUserDate)
 			target_out = target_out.replace('/*totalSegValues*/', totalSegValues)
+			target_out = target_out.replace('/*htdTarget*/', htdTargeting)
+			target_out = target_out.replace('/*htdOccs*/', htdOccs)
+			target_out = target_out.replace('/*htdSpecs*/', htdSpecs)
 
 			new_file.write(target_out)
 			line_file = new_file

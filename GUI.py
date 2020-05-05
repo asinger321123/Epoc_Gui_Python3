@@ -1653,6 +1653,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.sdaCap = self.findChild(QLineEdit, 'sdaCap_lineEdit')
         self.bdaCap = self.findChild(QLineEdit, 'bdaCap_lineEdit')
         self.gskEpsilonCheckbox = self.findChild(QCheckBox, 'gskEpsilon_checkBox')
+        self.htdTargetBox = self.findChild(QCheckBox, 'htdTarget_checkBox')
 
         self.targetManuName.addItems(manuList)
 
@@ -1682,13 +1683,13 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.consoleOutput = self.findChild(QTextEdit, 'console_textEdit')
 
 
-        self.dataSharingDetails = self.findChild(QTableView, 'target_tableView')
-        self.model = QtGui.QStandardItemModel(self)
-        self.model.setHorizontalHeaderLabels(self.getHeaders())
+        # self.dataSharingDetails = self.findChild(QTableView, 'target_tableView')
+        # self.model = QtGui.QStandardItemModel(self)
+        # self.model.setHorizontalHeaderLabels(self.getHeaders())
 
-        # self.dataSharingDetails = QtWidgets.QTableView(self)
-        self.dataSharingDetails.setModel(self.model)
-        self.dataSharingDetails.horizontalHeader().setStretchLastSection(True)
+        # # self.dataSharingDetails = QtWidgets.QTableView(self)
+        # self.dataSharingDetails.setModel(self.model)
+        # self.dataSharingDetails.horizontalHeader().setStretchLastSection(True)
 
         # self.dataSharingDetails.setSpan(0, 0, 1, 17)
         # self.dataSharingDetails.show()
@@ -1726,6 +1727,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.docAlert.toggled.connect(self.docalertCallback)
         self.epocQuiz.toggled.connect(self.epocquizCallback)
         self.triggeredAlert.toggled.connect(self.triggeredAlertCallback)
+        self.htdTargetBox.toggled.connect(self.htdAlertCallback)
         self.segBox.toggled.connect(self.segmentCallBack)
         self.standardMatch.toggled.connect(self.standardCallback)
         self.exactMatch.toggled.connect(self.exactCallback)
@@ -1761,7 +1763,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.tabWidget.currentChanged.connect(self.editListCallback)
         self.cmiCompass.toggled.connect(self.highlightCMI)
         # self.suppCheck.toggled.connect(self.suppressionCallback)
-        self.tabWidget.currentChanged.connect(self.showFrwon)
+        # self.tabWidget.currentChanged.connect(self.showFrwon)
         self.clearSelections.clicked.connect(self.resetEditTab)
         self.concatButton.clicked.connect(self.concatColumns)
         self.sourceSegs.itemClicked.connect(self.previewConcat)
@@ -1809,6 +1811,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         clickable(self.calendarLine).connect(self.showCalWid)
         self.sdaOnly.toggled.connect(self.sdaBdaDatacheck)
         self.bdaOnly.toggled.connect(self.sdaBdaDatacheck)
+        self.brandTargetName.textEdited.connect(self.htdFolderAppend)
         #test
 
         # self.stateZip = State_Zip()
@@ -3440,6 +3443,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         if os.path.exists(os.path.join(desktop, 'Ewok', 'codeCount.csv')):
             os.remove(os.path.join(desktop, 'Ewok', 'codeCount.csv'))
 
+        
+
     def runProgram(self):
         isSdaChecked = self.sdaOnly.isChecked()
         isBdaChecked = self.bdaOnly.isChecked()
@@ -3653,12 +3658,15 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.config['date'] = str(self.calendarLine.text())
             if isSegmentChecked:
                 self.config['dSharing'] ='Y'
-                self.config['finalSegs'] = list()
-                if not self.cmiCompass.isChecked():
-                    for i in range(self.finalSegs.count()):
-                        self.config['finalSegs'].append(str(self.finalSegs.item(i).text()))
+                if not self.htdTargetBox.isChecked():
+                    self.config['finalSegs'] = list()
+                    if not self.cmiCompass.isChecked():
+                        for i in range(self.finalSegs.count()):
+                            self.config['finalSegs'].append(str(self.finalSegs.item(i).text()))
+                    else:
+                        self.config['finalSegs'] = []
                 else:
-                    self.config['finalSegs'] = []
+                    self.config['dSharing'] ='N'
             if not isSegmentChecked:
                 self.config['dSharing'] ='N'
                 self.config['finalSegs'] = []
@@ -3767,7 +3775,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 self.config['listMatchType'] = 'None'
         if isFuzzyBoxChecked:
             self.config['listMatchType'] = 'Fuzzy'
-        if self.sdaAddOn.isChecked():
+        if self.sdaAddOn.isChecked() or self.htdTargetBox.isChecked():
             self.occList = str(self.sdaOcc.text()).split(", ")
             self.specList = str(self.sdaSpec.text()).split(", ")
             self.sdaOcc2 = ", ".join('"{0}"'.format(w) for w in self.occList)
@@ -3863,6 +3871,12 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         else:
             self.config['codeTest'] = 'No'
 
+        if self.htdTargetBox.isChecked():
+            self.config['htdTargeting'] = 'Yes'
+            self.config['listProduct'] = 'DocAlert'
+        else:
+            self.config['htdTargeting'] = 'No'
+
         #write all the new setting first when the RUN BUTTON is clicked
         with open(desktop+'\\Ewok\\Configs\\'+'config.json', 'w') as outfile1:
             json.dump(self.config, outfile1, indent=2, sort_keys=True)
@@ -3953,6 +3967,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.segBox.setChecked(False)
         if not isSdaChecked:
             self.sdaAddOn.setStyleSheet("color: black")
+            self.sdaAddOn.setEnabled(True)
             self.sdaOcc.clear()
             self.sdaSpec.clear()
             self.sdaOnly.setChecked(False)
@@ -4204,46 +4219,141 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         isDocChecked = self.docAlert.isChecked()
         isEpocChecked = self.epocQuiz.isChecked()
         isTriggeredChecked = self.triggeredAlert.isChecked()
+        isHTDChecked = self.htdTargetBox.isChecked()
         if isDocChecked:
             self.docAlert.setStyleSheet("color: green; font-weight: bold")
             self.epocQuiz.setChecked(False)
             self.epocQuiz.setStyleSheet("color: black")
             self.triggeredAlert.setChecked(False)
             self.triggeredAlert.setStyleSheet("color: black")
-        elif not isTriggeredChecked and not isEpocChecked and not isDocChecked:
-            self.epocQuiz.setChecked(True)
-            self.docAlert.setStyleSheet("color: black")
+            self.htdTargetBox.setChecked(False)
+            self.htdTargetBox.setStyleSheet("color: black")
+        elif not isHTDChecked and not isEpocChecked and not isDocChecked and not isTriggeredChecked:
+            self.docAlert.setChecked(True)
+            self.epocQuiz.setStyleSheet("color: black")
             self.triggeredAlert.setStyleSheet("color: black")
+            self.htdTargetBox.setStyleSheet("color: black")
 
     def epocquizCallback(self):
         isDocChecked = self.docAlert.isChecked()
         isEpocChecked = self.epocQuiz.isChecked()
         isTriggeredChecked = self.triggeredAlert.isChecked()
+        isHTDChecked = self.htdTargetBox.isChecked()
         if isEpocChecked:
             self.epocQuiz.setStyleSheet("color: green; font-weight: bold")
             self.docAlert.setChecked(False)
             self.docAlert.setStyleSheet("color: black")
             self.triggeredAlert.setChecked(False)
             self.triggeredAlert.setStyleSheet("color: black")
-        elif not isTriggeredChecked and not isEpocChecked and not isDocChecked:
+            self.htdTargetBox.setChecked(False)
+            self.htdTargetBox.setStyleSheet("color: black")
+        elif not isHTDChecked and not isEpocChecked and not isDocChecked and not isTriggeredChecked:
             self.docAlert.setChecked(True)
             self.epocQuiz.setStyleSheet("color: black")
             self.triggeredAlert.setStyleSheet("color: black")
+            self.htdTargetBox.setStyleSheet("color: black")
 
     def triggeredAlertCallback(self):
         isDocChecked = self.docAlert.isChecked()
         isEpocChecked = self.epocQuiz.isChecked()
         isTriggeredChecked = self.triggeredAlert.isChecked()
+        isHTDChecked = self.htdTargetBox.isChecked()
         if isTriggeredChecked:
             self.triggeredAlert.setStyleSheet("color: green; font-weight: bold")
             self.docAlert.setChecked(False)
             self.docAlert.setStyleSheet("color: black")
             self.epocQuiz.setChecked(False)
             self.epocQuiz.setStyleSheet("color: black")
-        elif not isTriggeredChecked and not isEpocChecked and not isDocChecked:
+            self.htdTargetBox.setChecked(False)
+            self.htdTargetBox.setStyleSheet("color: black")
+        elif not isHTDChecked and not isEpocChecked and not isDocChecked and not isTriggeredChecked:
             self.docAlert.setChecked(True)
             self.epocQuiz.setStyleSheet("color: black")
             self.triggeredAlert.setStyleSheet("color: black")
+            self.htdTargetBox.setStyleSheet("color: black")
+
+    def htdAlertCallback(self):
+        isDocChecked = self.docAlert.isChecked()
+        isEpocChecked = self.epocQuiz.isChecked()
+        isTriggeredChecked = self.triggeredAlert.isChecked()
+        isHTDChecked = self.htdTargetBox.isChecked()
+        if isHTDChecked:
+            self.htdTargetBox.setStyleSheet("color: green; font-weight: bold")
+            self.docAlert.setChecked(False)
+            self.docAlert.setStyleSheet("color: black")
+            self.epocQuiz.setChecked(False)
+            self.epocQuiz.setStyleSheet("color: black")
+            self.triggeredAlert.setChecked(False)
+            self.triggeredAlert.setStyleSheet("color: black")
+
+            self.setNonHTDObjects()
+            self.htdFolderAppend()
+
+        elif not isHTDChecked and not isEpocChecked and not isDocChecked and not isTriggeredChecked:
+            self.docAlert.setChecked(True)
+            self.epocQuiz.setStyleSheet("color: black")
+            self.triggeredAlert.setStyleSheet("color: black")
+            self.htdTargetBox.setStyleSheet("color: black")
+            self.sdaCallback()
+            self.brandTargetName.setText(str(self.brandTargetName.text()).replace(' HTD', '').replace(' H', '').replace(' HT', ''))
+
+
+    def setNonHTDObjects(self):
+        #disbale these since they are true Add On Objects
+        self.sdaTargetNum.clear()
+        self.sdaTargetNum.setEnabled(False)
+
+        self.sdaAddOn.setChecked(False)
+        self.sdaAddOn.setEnabled(False)
+
+        self.sdaOnly.setChecked(False)
+        self.sdaOnly.setEnabled(False)
+
+        self.suppSDAOnly.setChecked(False)
+        self.suppSDAOnly.setEnabled(False)
+
+        self.sdaCap.clear()
+        self.sdaCap.setEnabled(False)
+
+        #manually enable sda OCc and SPecs since we are recycling these to use in the HTD target inputs
+        self.sdaOcc.setEnabled(True)
+        self.sdaOcc.setText('MD, DO, NP, PA')
+        self.sdaSpec.setEnabled(True)
+
+    def htdFolderAppend(self):
+        #check if HTD Targeting Option is Toggled ON
+        if self.htdTargetBox.isChecked():
+            #get the current text of the Brand Name
+            currentBrandText = str(self.brandTargetName.text())
+            appendedText = ' HTD'
+
+            #Check if the curent brand text already contains 'SPACEHTD'
+            if not currentBrandText.endswith(' HTD'):
+                # if it doesn't contain that text. CLEAR it and rebuild the current state of the text + the appendedText Variable
+                self.brandTargetName.clear()
+                self.brandTargetName.setText(currentBrandText.replace('HTD', '')+appendedText)
+                
+                # store the newly set text
+                brandPart = currentBrandText.replace('HTD', '')+appendedText
+
+                #split into a list based on total 'SPACES' so we know how many parts it is
+                brandPartList = brandPart.split(' ')
+                # take all items in the list besides the last because we know it end in ' HTD' already
+                fullBrandPart = brandPartList[:-1]
+                #Get the length of those items so we can subtract 1 to know how many space characters to account for in our cursor index
+                brandPartListLength = len(fullBrandPart)
+
+                # set position to 0 and loop the brandPart list and count how many characters we have
+                pos = 0
+                for item in fullBrandPart:
+                    pos += len(item)
+
+                # FINALLY swet the cursor position with lenth of characters in items plus the spaces between items - 1 and call this on textEdited Singnal
+                self.brandTargetName.setCursorPosition(pos + (brandPartListLength-1))
+
+            else:
+                pass
+
 
     def setDatasharingCallback(self):
         isCMIChecked = self.cmiCompass.isChecked()
