@@ -1812,6 +1812,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.sdaOnly.toggled.connect(self.sdaBdaDatacheck)
         self.bdaOnly.toggled.connect(self.sdaBdaDatacheck)
         self.brandTargetName.textEdited.connect(self.htdFolderAppend)
+        clickable(self.brandTargetName).connect(self.setHtdCursor)
         #test
 
         # self.stateZip = State_Zip()
@@ -4319,6 +4320,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.sdaOcc.setEnabled(True)
         self.sdaOcc.setText('MD, DO, NP, PA')
         self.sdaSpec.setEnabled(True)
+        self.sdaSpec.setText('Family Practice, Internal Medicine, General')
 
     def htdFolderAppend(self):
         #check if HTD Targeting Option is Toggled ON
@@ -4353,6 +4355,21 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
             else:
                 pass
+
+
+    def setHtdCursor(self):
+        if self.htdTargetBox.isChecked():
+            currentBrandText = str(self.brandTargetName.text())
+            if currentBrandText.endswith(' HTD'):
+                brandPartList = currentBrandText.split(' ')
+                fullBrandPart = brandPartList[:-1]
+                brandPartListLength = len(fullBrandPart)
+                pos = 0
+                for item in fullBrandPart:
+                    pos += len(item)
+
+                self.brandTargetName.setCursorPosition(pos + (brandPartListLength-1))
+
 
 
     def setDatasharingCallback(self):
