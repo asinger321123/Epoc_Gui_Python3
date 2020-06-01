@@ -77,10 +77,10 @@ with open('G:\\Communicator Ops\\Epocrates\\Python Files\\Import Phrases\\import
 
 # randomList = ['Indubitably', 'The first thing you gotta do is say . . . WOULD YOU LOOK AT THAT?', 'Tootles', 'This burrito is sooooo Filling', 'Have you seen Broke Back Rhonda? It Rhond-tastic!', 'How much wood would a woodchuck chuck if a woodchuck could chuck wood?']
 
-with open(os.path.join(desktop, 'TheEagleHasLanded.csv'), 'r') as passFile:
-	reader = csv.DictReader(passFile)
-	for item in reader:
-		password = item['password']
+# with open(os.path.join(desktop, 'TheEagleHasLanded.csv'), 'r') as passFile:
+# 	reader = csv.DictReader(passFile)
+# 	for item in reader:
+# 		password = item['password']
 
 utils.codeCounter()
 
