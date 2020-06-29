@@ -434,17 +434,17 @@ segmentListSingle = []
 
 #Set Sas Code Variables
 if codeTest == 'No':
-	targetAuto = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Git SAS Repo\\Targeting Automation Code_OFFICIAL.sas'
-	targetAutoOrganic = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Git SAS Repo\\Targeting Automation Code_ORGANIC.sas'
-	targetLillyHibbert = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Git SAS Repo\\Lilly Hibbert Targeting Code.sas'
-	autoCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Git SAS Repo\\Presales Automation.sas'
-	emailCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Git SAS Repo\\Presales Automation_Email_Final.sas'
+	targetAuto = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\master\\Targeting Automation Code_OFFICIAL.sas'
+	targetAutoOrganic = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\master\\Targeting Automation Code_ORGANIC.sas'
+	targetLillyHibbert = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\master\\Lilly Hibbert Targeting Code.sas'
+	autoCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\master\\Presales Automation.sas'
+	emailCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\master\\Presales Automation_Email_Final.sas'
 else:
-	targetAuto = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\SAS WORKING BRANCH\\Targeting Automation Code_OFFICIAL.sas'
-	targetAutoOrganic = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\SAS WORKING BRANCH\\Targeting Automation Code_ORGANIC.sas'
-	targetLillyHibbert = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\SAS WORKING BRANCH\\Lilly Hibbert Targeting Code.sas'
-	autoCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\SAS WORKING BRANCH\\Presales Automation.sas'
-	emailCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\SAS WORKING BRANCH\\Presales Automation_Email_Final.sas'
+	targetAuto = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\develop\\Targeting Automation Code_OFFICIAL.sas'
+	targetAutoOrganic = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\develop\\Targeting Automation Code_ORGANIC.sas'
+	targetLillyHibbert = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\develop\\Lilly Hibbert Targeting Code.sas'
+	autoCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\develop\\Presales Automation.sas'
+	emailCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\develop\\Presales Automation_Email_Final.sas'
 
 def createFolders():
 	if caseType == 'listMatch':
@@ -1327,9 +1327,9 @@ def buildSDAPreSalesMacro():
 def buildSDACodes():
 	print('Building Additional SDA Codes. . . ')
 	if codeTest == 'No':
-		sdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Git SAS Repo\\Code Housing\\additionalSDA'
+		sdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\master\\Code Housing\\additionalSDA'
 	else:
-		sdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\SAS WORKING BRANCH\\Code Housing\\additionalSDA'
+		sdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\develop\\Code Housing\\additionalSDA'
 	sdaCode = 'PS_SDA_plus_CL_Email'
 	suppApplied = str(config['suppressionApplied'])
 	sDa_only = str(config['sdaOnly'])
@@ -1487,15 +1487,15 @@ def buildBDACodes():
 				buildAddTargets = True
 
 	if buildAddTargets == True:
-		bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Git SAS Repo'
+		bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\master'
 		bdaCode = 'Targeting Automation Code_OFFICIAL'
 		email = ''
 
 	else:
 		if codeTest == 'No':
-			bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\Git SAS Repo\\Code Housing\\additionalBDA'
+			bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\master\\Code Housing\\additionalBDA'
 		else:
-			bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\SAS WORKING BRANCH\\Code Housing\\additionalBDA'
+			bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\develop\\Code Housing\\additionalBDA'
 		bdaCode = 'PS_BDA_Mult_Lookup_plus_CL_Email'
 		if bDa_only == 'Y':
 			listMatchFolder = config['matchedFile']
