@@ -1632,6 +1632,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.nbeEditorTab = self.findChild(QAction, 'actionNBE_Editor')
         self.loadConfigAction = self.findChild(QAction, 'actionLoad_Config_File')
         self.testMode = self.findChildren(QAction, 'actionTEST_MODE')
+        self.repoMenu = self.findChild(QMenu, 'menuRepository')
 
         #Targeting Objects
         self.targetManuName = self.findChild(QComboBox, 'targetManuName_comboBox')
@@ -1813,10 +1814,27 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.bdaOnly.toggled.connect(self.sdaBdaDatacheck)
         self.brandTargetName.textEdited.connect(self.htdFolderAppend)
         clickable(self.brandTargetName).connect(self.setHtdCursor)
-        #test
 
-        # self.stateZip = State_Zip()
-        # if stateZip.statesString == ""
+        #callbacks for handling Repo Selection
+        for self.repoAction in self.populateRepos():
+            self.repoMenu.addAction(self.repoAction)
+
+        self.repoHistoryList = []
+        for self.menuAction in self.repoMenu.actions():
+            self.menuAction.setCheckable(True)
+            self.menuAction.toggled.connect(self.setRepo)
+
+        totalClickable = len(self.repoMenu.actions())
+        count = 0
+        for item in self.repoMenu.actions():
+            if not item.isChecked():
+                count += 1
+
+        if count == totalClickable:
+            for item in self.repoMenu.actions():
+                if item.text() == 'master':
+                    item.setChecked(True)
+
 
         self.loadedFile = newest
         self.countSheets()
@@ -1827,11 +1845,62 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.highlightBadColumnNames()
 
 
+    def setRepo(self):
+        for self.menuAction in self.repoMenu.actions():
+            if self.menuAction.isChecked():
+                if self.menuAction in self.repoHistoryList:
+                    self.repoHistoryList.remove(self.menuAction)
+
+                    self.menuAction.blockSignals(True)
+                    self.menuAction.setChecked(False)
+                    self.menuAction.blockSignals(False)
+
+                else:
+                    self.repoHistoryList.append(self.menuAction)
+
+                    self.menuAction.blockSignals(True)
+                    self.menuAction.setChecked(True)
+                    self.menuAction.blockSignals(False)
+
+
+        for self.menuAction in self.repoMenu.actions():
+            if self.menuAction.isChecked():
+                self.userRepo = self.menuAction.text()
+
+        print('User Selected Repo is:', self.userRepo)
+
+
+
+
+    def clearPreviousRepo(self, qActionList):
+        # self.repoHistoryList.append(qAction)
+        if len(qActionList) > 1:
+            # clears previous checked item
+            qActionList[0].setChecked(False)
+            qActionList.remove(qActionList[0])
+
+            # list is adjusted and now first item in list was the newlyselect item and now set true
+            newActionList = qActionList
+            # print(newActionList)
+            newActionList[0].setChecked(True)
+            # print(newActionList[0].text())
+
+        else:
+            qActionList[0].setChecked(True)
+            print(qActionList[0].text())
+
+
+
     def toggleTestMode(self):
         if self.testMode[0].isChecked():
             window.setStyleSheet("""QMenuBar::item {background-color: red; color: white;}""")
         else:
             window.setStyleSheet("""QMenuBar::item ;""")
+
+    def populateRepos(self):
+        repoPath = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\code_repos'
+        repoList = os.listdir(repoPath)
+        return repoList
 
     def resetConfigs(self):
         self.sdainc = 1
@@ -3021,8 +3090,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.calendar.setGridVisible(True)
         self.calendar.clicked.connect(self.updateDate)
         self.calendar.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        self.calendar.setStyleSheet('background: white; color: black')
-        self.calendar.setGridVisible(True)
+        self.calendar.setStyleSheet('background: blue; color: white')
         pos = QtGui.QCursor.pos()
         self.calendar.setGeometry(pos.x(), pos.y(),300, 200)
         self.calendar.show()
@@ -3035,10 +3103,14 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.calendar.clicked.connect(self.updateDateActive)
         self.calendar.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.calendar.setStyleSheet('background: white; color: black')
-        self.calendar.setGridVisible(True)
         pos = QtGui.QCursor.pos()
         self.calendar.setGeometry(pos.x(), pos.y(),300, 200)
         self.calendar.show()
+
+    def updateDateActive(self,*args):
+        getDate = self.calendar.selectedDate().toString('MM/dd/yyyy')
+        self.activeUserDate.setText(getDate)
+        self.calendar.deleteLater()
 
     def showFileSelection(self):
         isSuppChecked = self.suppCheck.isChecked()
@@ -3055,10 +3127,6 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.calendarLine.setText(getDate)
         self.calendar.deleteLater()
 
-    def updateDateActive(self,*args):
-        getDate = self.calendar.selectedDate().toString('MM/dd/yyyy')
-        self.activeUserDate.setText(getDate)
-        self.calendar.deleteLater()
 
     def formatTableName(self):
         s = ""
@@ -3877,6 +3945,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.config['listProduct'] = 'DocAlert'
         else:
             self.config['htdTargeting'] = 'No'
+
+        self.config['userRepo'] = str(self.userRepo)
 
         #write all the new setting first when the RUN BUTTON is clicked
         with open(desktop+'\\Ewok\\Configs\\'+'config.json', 'w') as outfile1:
