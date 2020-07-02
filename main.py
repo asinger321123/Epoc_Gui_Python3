@@ -435,17 +435,17 @@ segmentListSingle = []
 
 #Set Sas Code Variables
 if codeTest == 'No':
-	targetAuto = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\{}\\Targeting Automation Code_OFFICIAL.sas'.format(userRepo)
-	targetAutoOrganic = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\{}\\Targeting Automation Code_ORGANIC.sas'.format(userRepo)
-	targetLillyHibbert = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\{}\\Lilly Hibbert Targeting Code.sas'.format(userRepo)
-	autoCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\{}\\Presales Automation.sas'.format(userRepo)
-	emailCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\{}\\Presales Automation_Email_Final.sas'.format(userRepo)
+	targetAuto = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\code_repos\\{}\\Targeting Automation Code_OFFICIAL.sas'.format(userRepo)
+	targetAutoOrganic = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\code_repos\\{}\\Targeting Automation Code_ORGANIC.sas'.format(userRepo)
+	targetLillyHibbert = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\code_repos\\{}\\Lilly Hibbert Targeting Code.sas'.format(userRepo)
+	autoCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\code_repos\\{}\\Presales Automation.sas'.format(userRepo)
+	emailCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\code_repos\\{}\\Presales Automation_Email_Final.sas'.format(userRepo)
 else:
-	targetAuto = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\{}\\Targeting Automation Code_OFFICIAL.sas'.format(userRepo)
-	targetAutoOrganic = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\{}\\Targeting Automation Code_ORGANIC.sas'.format(userRepo)
-	targetLillyHibbert = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\{}\\Lilly Hibbert Targeting Code.sas'.format(userRepo)
-	autoCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\{}\\Presales Automation.sas'.format(userRepo)
-	emailCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\{}\\Presales Automation_Email_Final.sas'.format(userRepo)
+	targetAuto = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\code_repos\\{}\\Targeting Automation Code_OFFICIAL.sas'.format(userRepo)
+	targetAutoOrganic = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\code_repos\\{}\\Targeting Automation Code_ORGANIC.sas'.format(userRepo)
+	targetLillyHibbert = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\code_repos\\{}\\Lilly Hibbert Targeting Code.sas'.format(userRepo)
+	autoCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\code_repos\\{}\\Presales Automation.sas'.format(userRepo)
+	emailCode = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\code_repos\\{}\\Presales Automation_Email_Final.sas'.format(userRepo)
 
 def createFolders():
 	if caseType == 'listMatch':
@@ -1330,9 +1330,9 @@ def buildSDAPreSalesMacro():
 def buildSDACodes():
 	print('Building Additional SDA Codes. . . ')
 	if codeTest == 'No':
-		sdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\{}\\Code Housing\\additionalSDA'.format(userRepo)
+		sdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\code_repos\\{}\\Code Housing\\additionalSDA'.format(userRepo)
 	else:
-		sdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\{}\\Code Housing\\additionalSDA'.format(userRepo)
+		sdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\code_repos\\{}\\Code Housing\\additionalSDA'.format(userRepo)
 	sdaCode = 'PS_SDA_plus_CL_Email'
 	suppApplied = str(config['suppressionApplied'])
 	sDa_only = str(config['sdaOnly'])
@@ -1490,15 +1490,15 @@ def buildBDACodes():
 				buildAddTargets = True
 
 	if buildAddTargets == True:
-		bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\{}'.format(userRepo)
+		bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\code_repos\\{}'.format(userRepo)
 		bdaCode = 'Targeting Automation Code_OFFICIAL'
 		email = ''
 
 	else:
 		if codeTest == 'No':
-			bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\{}\\Code Housing\\additionalBDA'.format(userRepo)
+			bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\code_repos\\{}\\Code Housing\\additionalBDA'.format(userRepo)
 		else:
-			bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\{}\\Code Housing\\additionalBDA'.format(userRepo)
+			bdaCodeHousing = 'P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\code_repos\\{}\\Code Housing\\additionalBDA'.format(userRepo)
 		bdaCode = 'PS_BDA_Mult_Lookup_plus_CL_Email'
 		if bDa_only == 'Y':
 			listMatchFolder = config['matchedFile']
