@@ -15,6 +15,11 @@ import pprint
 from collections import Counter
 import datetime
 import json
+from termcolor import *
+from colorama import init, Fore, Back, Style
+import sqlite3
+
+init(autoreset=True)
 
 listText = 'supp.txt'
 colList = []
@@ -172,81 +177,141 @@ def getMain():
 			w.writerow(row)
 
 def postgresConn():
-	conn_string = "host='localhost' dbname='postgres' port='5432' user='postgres' password='{password}'".format(password=password)
-	conn = psycopg2.connect(conn_string)
-	cursor = conn.cursor()
-	print("connected!\n")
-	print("Checking if {} table exists. If soo ill drop dat jawn . . . ".format(tableName))
+	df = pandas.read_csv('{downloads}{csvFile}'.format(downloads=downloads, csvFile=csvFileMod), encoding='ISO-8859-1', dtype=str)
+	myHeaders = list(df)
 
-	sqlDrop = """DROP TABLE IF EXISTS {};
-			     DROP TABLE IF EXISTS temp_table;""".format(tableName)
-	cursor.execute(sqlDrop)
+
+	selectMain5 = "select REPLACE(npi, '.0', '') as npi, REPLACE(me, '.0', '') as me, fname, lname, REPLACE(zip, '.0', '') as zip"
+	selectMain2 = "select REPLACE(npi, '.0', '') as npi, REPLACE(me, '.0', '') as me"
+	selectFullName = """SELECT [REPLACE](npi, '.0', '') AS npi,
+		[REPLACE](me, '.0', '') AS me,
+		[replace](full_name, ltrim(full_name, [replace](full_name, ' ', '') ), '') AS fname,
+		[replace](full_name, rtrim(full_name, [replace](full_name, ' ', '') ), '') AS lname,
+		[REPLACE](zip, '.0', '') AS zip"""
+
+	selectFuzzy = "Select fname, lname, [REPLACE](zip, '.0', '') AS zip"
+
+	conn = sqlite3.connect(os.path.join(desktop,'Ewok', 'epocrates_tables.db'))
+	conn.text_factory = str
+	cur = conn.cursor()
+
+
+	print(colored("Connected to SQL LITE!\n", 'green'))
+	print(colored('Checking if Table "{}" Exists. If so, were gonna drop dat table like 5th Period Chemistry. . .\n'.format(tableName), 'yellow'))
+
+	dropTable = """DROP TABLE IF EXISTS {}""".format(tableName)
+
+	cur.execute(dropTable)
 	conn.commit()
 
-	sql = "select load_csv_file('{tableName}', '{downloads}{csvFile}', {get_Cols});".format(tableName=tableName, downloads=downloads, csvFile=csvFileMod, get_Cols = get_Cols())
-	cursor.execute(sql)
-	conn.commit()
+	df.to_sql('{}'.format(tableName), conn, if_exists='replace', index=False)
 
-	addMissing = """DO $$
-				    BEGIN
-				  		BEGIN
-				  			ALTER Table {tableName} ADD COLUMN me text;
-			  			Exception
-			  				WHEN duplicate_column THEN RAISE NOTICE 'Column already exists';
-		  				END;
-		  				BEGIN
-				  			ALTER Table {tableName} ADD COLUMN npi text;
-			  			Exception
-			  				WHEN duplicate_column THEN RAISE NOTICE 'Column already exists';
-		  				END;
-		  				BEGIN
-				  			ALTER Table {tableName} ADD COLUMN fname text;
-			  			Exception
-			  				WHEN duplicate_column THEN RAISE NOTICE 'Column already exists';
-		  				END;
-		  				BEGIN
-				  			ALTER Table {tableName} ADD COLUMN lname text;
-			  			Exception
-			  				WHEN duplicate_column THEN RAISE NOTICE 'Column already exists';
-		  				END;
-		  				BEGIN
-				  			ALTER Table {tableName} ADD COLUMN zip text;
-			  			Exception
-			  				WHEN duplicate_column THEN RAISE NOTICE 'Column already exists';
-		  				END;
-	  				END;
-  				$$""".format(tableName=tableName)
-	cursor.execute(addMissing)
-	conn.commit()
+	neededColumns = ['me', 'npi', 'fname', 'lname', 'zip']
+	for col in neededColumns:
+		if col not in myHeaders:
+			try:
+				cur.executescript('ALTER TABLE {} ADD COLUMN {} text;'.format(tableName, col))
+			except:
+				print(col, 'Already Exists . . .', colored('Skipping', 'red'))
+				continue 
 
-	strip = """UPDATE {tableName}
-				SET zip = REPLACE("zip", '.0', '');
-
-				UPDATE {tableName}
-				SET npi = REPLACE("npi", '.0', '');
-
-				UPDATE {tableName}
-				SET me = REPLACE("me", '.0', '');""".format(tableName=tableName)
-
-
-	cursor.execute(strip)
 	conn.commit()
 
 	if listMatchType =='Standard':
-		exportSeg = """COPY (
-							SELECT me, npi, fname, lname, zip FROM {tableName}
-						 )
-					 TO '{downloads}supp.txt' DELIMITER '	'  CSV HEADER;""".format(tableName=tableName, downloads=downloads)
-		cursor.execute(exportSeg)
-		conn.commit()
+		# if foundFullName == 'n':
+		export = """{} from {};""".format(selectMain5, tableName)
+		pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'supp.txt'), index=False, sep='\t')
+
+		# if foundFullName == 'y':
+		# 	export = """{select} from {tableName};""".format(select=selectFullName, tableName=tableName)
+		# 	pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'supp.txt'), index=False, sep='\t')
 
 	elif listMatchType =='Exact':
-		exportSeg = """COPY (
-							SELECT me, npi FROM {tableName}
-						 )
-					 TO '{downloads}supp.txt' DELIMITER '	'  CSV HEADER;""".format(tableName=tableName, downloads=downloads)
-		cursor.execute(exportSeg)
-		conn.commit()
+		export = """{select} from {tableName};""".format(select=selectMain2, tableName=tableName)
+		pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'supp.txt'), index=False, sep='\t')
+
+	elif listMatchType =='Fuzzy':
+		export = """{} from {};""".format(selectFuzzy, tableName)
+		pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'supp.txt'), index=False, sep='\t')
+
+	print('')
+	print('SQL Export Complete\n')
+
+	# conn_string = "host='localhost' dbname='postgres' port='5432' user='postgres' password='{password}'".format(password=password)
+	# conn = psycopg2.connect(conn_string)
+	# cursor = conn.cursor()
+	# print("connected!\n")
+	# print("Checking if {} table exists. If soo ill drop dat jawn . . . ".format(tableName))
+
+	# sqlDrop = """DROP TABLE IF EXISTS {};
+	# 		     DROP TABLE IF EXISTS temp_table;""".format(tableName)
+	# cursor.execute(sqlDrop)
+	# conn.commit()
+
+	# sql = "select load_csv_file('{tableName}', '{downloads}{csvFile}', {get_Cols});".format(tableName=tableName, downloads=downloads, csvFile=csvFileMod, get_Cols = get_Cols())
+	# cursor.execute(sql)
+	# conn.commit()
+
+	# addMissing = """DO $$
+	# 			    BEGIN
+	# 			  		BEGIN
+	# 			  			ALTER Table {tableName} ADD COLUMN me text;
+	# 		  			Exception
+	# 		  				WHEN duplicate_column THEN RAISE NOTICE 'Column already exists';
+	# 	  				END;
+	# 	  				BEGIN
+	# 			  			ALTER Table {tableName} ADD COLUMN npi text;
+	# 		  			Exception
+	# 		  				WHEN duplicate_column THEN RAISE NOTICE 'Column already exists';
+	# 	  				END;
+	# 	  				BEGIN
+	# 			  			ALTER Table {tableName} ADD COLUMN fname text;
+	# 		  			Exception
+	# 		  				WHEN duplicate_column THEN RAISE NOTICE 'Column already exists';
+	# 	  				END;
+	# 	  				BEGIN
+	# 			  			ALTER Table {tableName} ADD COLUMN lname text;
+	# 		  			Exception
+	# 		  				WHEN duplicate_column THEN RAISE NOTICE 'Column already exists';
+	# 	  				END;
+	# 	  				BEGIN
+	# 			  			ALTER Table {tableName} ADD COLUMN zip text;
+	# 		  			Exception
+	# 		  				WHEN duplicate_column THEN RAISE NOTICE 'Column already exists';
+	# 	  				END;
+	#   				END;
+  	# 			$$""".format(tableName=tableName)
+	# cursor.execute(addMissing)
+	# conn.commit()
+
+	# strip = """UPDATE {tableName}
+	# 			SET zip = REPLACE("zip", '.0', '');
+
+	# 			UPDATE {tableName}
+	# 			SET npi = REPLACE("npi", '.0', '');
+
+	# 			UPDATE {tableName}
+	# 			SET me = REPLACE("me", '.0', '');""".format(tableName=tableName)
+
+
+	# cursor.execute(strip)
+	# conn.commit()
+
+	# if listMatchType =='Standard':
+	# 	exportSeg = """COPY (
+	# 						SELECT me, npi, fname, lname, zip FROM {tableName}
+	# 					 )
+	# 				 TO '{downloads}supp.txt' DELIMITER '	'  CSV HEADER;""".format(tableName=tableName, downloads=downloads)
+	# 	cursor.execute(exportSeg)
+	# 	conn.commit()
+
+	# elif listMatchType =='Exact':
+	# 	exportSeg = """COPY (
+	# 						SELECT me, npi FROM {tableName}
+	# 					 )
+	# 				 TO '{downloads}supp.txt' DELIMITER '	'  CSV HEADER;""".format(tableName=tableName, downloads=downloads)
+	# 	cursor.execute(exportSeg)
+	# 	conn.commit()
 
 
 def removeChar():
