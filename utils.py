@@ -87,7 +87,7 @@ def xlsb_to_csv():
 
 def pipe_to_csv():
 	newest = max(os.listdir(downloads), key=lambda f: os.path.getmtime("{}/{}".format(downloads, f)))
-	with open(os.path.join(downloads, newest), 'r') as f, open(os.path.join(downloads, 'target.csv'), 'w') as out:
+	with open(os.path.join(downloads, newest), 'r') as f, open(os.path.join(downloads, 'target.csv'), 'w', encoding='utf-8') as out:
 		pipereader = csv.reader(f, delimiter='|')
 		csvwriter = csv.writer(out, delimiter=',', lineterminator='\n')
 		for row in pipereader:
@@ -95,7 +95,7 @@ def pipe_to_csv():
 
 def tab_to_csv():
 	newest = max(os.listdir(downloads), key=lambda f: os.path.getmtime("{}/{}".format(downloads, f)))
-	with open(os.path.join(downloads, newest), 'r') as f, open(os.path.join(downloads, 'target.csv'), 'w') as out:
+	with open(os.path.join(downloads, newest), 'r') as f, open(os.path.join(downloads, 'target.csv'), 'w', encoding='utf-8') as out:
 		tabreader = csv.reader(f, delimiter='\t')
 		csvwriter = csv.writer(out, delimiter=',', lineterminator='\n')
 		for row in tabreader:
@@ -125,7 +125,7 @@ def checkExtension2(test=None):
 	if extension == '.xlsx':
 		csv_from_excel2(matched)
 	elif extension == '.txt':
-		with open(os.path.join(downloads, matched), 'r') as f:
+		with open(os.path.join(downloads, matched), 'r', encoding='utf-8') as f:
 			f = f.read()
 			totalpipecount = 0
 			totaltabcount = 0
@@ -240,8 +240,11 @@ def importDrugs():
 			drugComplete.append(drugs)
 	return drugComplete
 
-def prepSasSegments(lmType):
-	cmiCompasSegmentation = "npi, address1, campaign_type, city, cl_fname, cl_lname, cl_me, cl_zip, clientid, compasid, middle_name, segment1, specialty, state_code, tier, segment2, segment3"
+def prepSasSegments(lmType, isProact):
+	if isProact == 'No':
+		cmiCompasSegmentation = "npi, address1, campaign_type, city, cl_fname, cl_lname, cl_me, cl_zip, clientid, compasid, middle_name, segment1, specialty, state_code, tier, segment2, segment3"
+	else:
+		cmiCompasSegmentation = "npi, address1, campaign_type, city, cl_fname, cl_lname, cl_me, cl_zip, clientid, compasid, middle_name, segment1, specialty, state_code, tier, segment2, segment3, keycode2"
 
 
 	with open(os.path.join(desktop,'Ewok\\Datasharing', 'dataSharing.json'), 'r') as infile:
@@ -347,7 +350,7 @@ def prepSasSegments(lmType):
 
 	return sasSegments
 
-def prepSqlSegments(lmType):
+def prepSqlSegments(lmType, isProact):
 	foundIMSDR = 'No'
 	with open(os.path.join(downloads,'csvFile.csv'), 'r') as infile:
 		reader = csv.reader(infile)
@@ -401,7 +404,10 @@ def prepSqlSegments(lmType):
 				if manu == 'Boehringer':
 					sqlSegments = specialDataSharingDict['boehringerCompassSegmentation']
 				if manu == 'GSK':
-					sqlSegments = specialDataSharingDict['gskCompassSegmentation'] + ', ' + specialDataSharingDict['GSKSegmentation'].replace('clientid, ', '')
+					if isProact == 'No':
+						sqlSegments = specialDataSharingDict['gskCompassSegmentation'] + ', ' + specialDataSharingDict['GSKSegmentation'].replace('clientid, ', '')
+					else:
+						sqlSegments = specialDataSharingDict['gskCompassSegmentation'] + ', keycode2' + ', ' + specialDataSharingDict['GSKSegmentation'].replace('clientid, ', '')
 				if manu == 'Amgen':
 					sqlSegments = specialDataSharingDict['amgenSegmentation']
 				if manu == 'Sanofi-Aventis':

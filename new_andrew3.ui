@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>681</width>
-    <height>871</height>
+    <width>712</width>
+    <height>891</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1494,18 +1494,52 @@ background: rgb(248, 248, 255, 0);
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
-               <widget class="QCheckBox" name="cmi_compass_checkBox">
-                <property name="text">
-                 <string>CMI/Compas</string>
-                </property>
-               </widget>
-              </item>
               <item row="1" column="1">
                <widget class="QCheckBox" name="nbe_checkBox">
                 <property name="text">
                  <string>NBE</string>
                 </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QFrame" name="frame_2">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>35</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QFrame {
+    border: 2px solid grey;
+    border-radius: 10px;
+}</string>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <property name="lineWidth">
+                 <number>2</number>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_5">
+                 <item row="0" column="0">
+                  <widget class="QCheckBox" name="cmi_compass_checkBox">
+                   <property name="text">
+                    <string>CMI/Compas</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QCheckBox" name="proact_checkBox">
+                   <property name="text">
+                    <string>Proact</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
              </layout>
@@ -2077,7 +2111,7 @@ width:12px;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>681</width>
+     <width>712</width>
      <height>21</height>
     </rect>
    </property>

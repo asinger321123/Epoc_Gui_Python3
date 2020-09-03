@@ -88,6 +88,7 @@ if len(args) > 0:
 	with open(os.path.join(desktop, 'Ewok\\Configs', args[0]), 'r') as infile:
 		config = json.loads(infile.read(), encoding='utf8')
 		foundFullName = 'n'
+		isProact = str(config['isProact'])
 		if 'sdaCap' in config:
 			sdaCap = str(config['sdaCap'])
 		else:
@@ -288,8 +289,8 @@ if len(args) > 0:
 						print(splitList)
 				else:
 					print('IM USING THE NEW FUNCTION TO MAKE DA SQL AND SEGMENTS')
-					splitList = utils.prepSqlSegments(listMatchType)
-					segmentList = utils.prepSasSegments(listMatchType)
+					splitList = utils.prepSqlSegments(listMatchType, isProact)
+					segmentList = utils.prepSasSegments(listMatchType, isProact)
 					# print(splitList, '\n', segmentList)
 					
 			if dSharing == 'Y' and config['cmi_compass_client'] == 'Y':
@@ -323,8 +324,8 @@ if len(args) > 0:
 							# splitList = splitList.replace('npi, ', '')
 				else:
 					print('IM USING THE NEW FUNCTION TO MAKE DA SQL AND SEGMETNS')
-					splitList = utils.prepSqlSegments(listMatchType)
-					segmentList = utils.prepSasSegments(listMatchType)
+					splitList = utils.prepSqlSegments(listMatchType, isProact)
+					segmentList = utils.prepSasSegments(listMatchType, isProact)
 
 			if dSharing == 'N' and bDa_only  == 'N' and sDa_only == 'N':
 				segmentList = str(config['segVariable']).lower().replace(' ', '_')
@@ -397,8 +398,8 @@ if len(args) > 0:
 						print('Im on the second File and going to do black magic here :')
 						listMatchType = str(config['organicMatchType'])
 						targetNum = str(config['organicTargetNumber'])
-						splitList = utils.prepSqlSegments(str(config['organicMatchType']))
-						segmentList = utils.prepSasSegments(str(config['organicMatchType']))
+						splitList = utils.prepSqlSegments(str(config['organicMatchType']), isProact)
+						segmentList = utils.prepSasSegments(str(config['organicMatchType']), isProact)
 
 			tableName = str(config['tableName'])
 
@@ -571,7 +572,7 @@ def getMain():
 					elif cellVal == 'dimcidvalue' or cellVal == 'cid' or cellVal == 'clientid' or cellVal == 'client_id':
 						print(cellVal, ': ', colored('I Found a ClientID', 'green'))
 						headers[index] = 'clientid'
-					elif cellVal == 'brandnm':
+					elif cellVal == 'brandnm' or cellVal == 'brand_name':
 						print(cellVal, ': ', colored('I Found a BrandNm', 'green'))
 						headers[index] = 'brandnm'
 					elif cellVal == 'fulfillmentid':
@@ -580,7 +581,7 @@ def getMain():
 					elif cellVal == 'gskmcmid':
 						print(cellVal, ': ', colored('I Found a GSKMCMID', 'green'))
 						headers[index] = 'gskmcmid'
-					elif cellVal == 'tacticcode':
+					elif cellVal == 'tacticcode' or cellVal == 'keycode':
 						print(cellVal, ': ', colored('I Found a TacticCode', 'green'))
 						headers[index] = 'tacticcode'
 				elif manu == 'Biogen':
@@ -687,7 +688,7 @@ def postgresConn():
 
 	if caseType == 'Targeting' and manu in ['Merck', 'AstraZeneca', 'Novartis', 'GSK', 'Boehringer', 'Amgen', 'Biogen', 'Sanofi-Aventis']:
 		# print(utils.prepSasSegments(listMatchType).split(','))
-		neededColumns = ['me', 'npi', 'fname', 'lname', 'zip'] + utils.prepSasSegments(listMatchType).split(', ')
+		neededColumns = ['me', 'npi', 'fname', 'lname', 'zip'] + utils.prepSasSegments(listMatchType, isProact).split(', ')
 	else:
 		neededColumns = ['me', 'npi', 'fname', 'lname', 'zip']
 
@@ -783,6 +784,7 @@ def postgresConn():
 							pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t') 
 
 				elif listMatchType =='Exact':
+					# print(splitList)
 					export = """{select}, {seg} from {tableName};""".format(select=selectMain2, tableName=tableName, seg=splitList)
 					# print(export)
 					pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
@@ -857,6 +859,7 @@ def postgresConn():
 
 				if listMatchType =='Standard' and config['cmi_compass_client'] == 'Y':
 					if not re.search('Hibbert', brand):
+						print(splitList)
 						export = """{select}, {seg} from {tableName};""".format(select=selectMain5, seg=splitList, tableName=tableName)
 						pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
 					else:

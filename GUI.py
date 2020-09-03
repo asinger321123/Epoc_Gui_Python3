@@ -1655,6 +1655,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.bdaCap = self.findChild(QLineEdit, 'bdaCap_lineEdit')
         self.gskEpsilonCheckbox = self.findChild(QCheckBox, 'gskEpsilon_checkBox')
         self.htdTargetBox = self.findChild(QCheckBox, 'htdTarget_checkBox')
+        self.proactCheckBox = self.findChild(QCheckBox, 'proact_checkBox')
 
         self.targetManuName.addItems(manuList)
 
@@ -3090,7 +3091,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.calendar.setGridVisible(True)
         self.calendar.clicked.connect(self.updateDate)
         self.calendar.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        self.calendar.setStyleSheet('background: blue; color: white')
+        self.calendar.setStyleSheet('background: white; color: black')
         pos = QtGui.QCursor.pos()
         self.calendar.setGeometry(pos.x(), pos.y(),300, 200)
         self.calendar.show()
@@ -3697,6 +3698,10 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 self.config['deDup'] = str('No')
         # Target Only Objects are written
         if self.tabWidget.currentIndex() == 1:
+            if self.proactCheckBox.isChecked():
+                self.config['isProact'] = 'Yes'
+            else:
+                self.config['isProact'] = 'No'
             if self.splitBox.isChecked():
                 self.config['randomSplit'] = 'Yes'
             if not self.splitBox.isChecked():
