@@ -88,7 +88,6 @@ if len(args) > 0:
 	with open(os.path.join(desktop, 'Ewok\\Configs', args[0]), 'r') as infile:
 		config = json.loads(infile.read(), encoding='utf8')
 		foundFullName = 'n'
-		isProact = str(config['isProact'])
 		if 'sdaCap' in config:
 			sdaCap = str(config['sdaCap'])
 		else:
@@ -201,6 +200,7 @@ if len(args) > 0:
 		#TARGETING ARGUMENTS
 		elif caseType == 'Targeting':
 			htdTargeting = str(config['htdTargeting'])
+			isProact = str(config['isProact'])
 			randomSplit = str(config['randomSplit'])
 			openerIDs = str(config['openerScheduleIDS'])
 			nbeTarget = str(config['nbeTarget'])
