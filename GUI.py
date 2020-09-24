@@ -45,16 +45,16 @@ strList = ['MD', 'DO', 'Allergy and Immunology', 'Anesthesiology', 'Cardiology',
 downloadFilesDirectory = [f for f in listdir(downloads) if isfile(join(downloads, f))]
 downloadFilesDirectory.sort(key=lambda x: os.stat(os.path.join(downloads, x)).st_mtime, reverse=True)
 
-qtCreatorFile = os.path.join(desktop, 'Ewok','new_andrew3.ui') # Enter file here.
+qtCreatorFile = os.path.join(desktop, 'Ewok','UI','new_andrew3.ui') # Enter file here.
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
 
-uifile_2 = os.path.join(desktop, 'Ewok','fileWidget.ui')
-uifile_3 = os.path.join(desktop, 'Ewok','pivotTabe_ui.ui')
-uifile_4 = os.path.join(desktop, 'Ewok','AdditionalSDA.ui')
-uifile_5 = os.path.join(desktop, 'Ewok','AdditionalBDA.ui')
-uifile_6 = os.path.join(desktop, 'Ewok','state_zip_editor.ui')
-uifile_7 = os.path.join(desktop, 'Ewok','NBE.ui')
-uifile_8 = os.path.join(desktop, 'Ewok','nbe_merger.ui')
+uifile_2 = os.path.join(desktop, 'Ewok','UI','fileWidget.ui')
+uifile_3 = os.path.join(desktop, 'Ewok','UI','pivotTabe_ui.ui')
+uifile_4 = os.path.join(desktop, 'Ewok','UI','AdditionalSDA.ui')
+uifile_5 = os.path.join(desktop, 'Ewok','UI','AdditionalBDA.ui')
+uifile_6 = os.path.join(desktop, 'Ewok','UI','state_zip_editor.ui')
+uifile_7 = os.path.join(desktop, 'Ewok','UI','NBE.ui')
+uifile_8 = os.path.join(desktop, 'Ewok','UI','nbe_merger.ui')
 
 form_2, base_2 = uic.loadUiType(uifile_2)
 form_3, base_3 = uic.loadUiType(uifile_3)
@@ -3547,9 +3547,9 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                     elif isSdaChecked and not isBdaChecked:
                         if self.config['matchedFile'] != "":
                             if int(self.config_final['totalAdditionalSDAs']) < 1:
-                                subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\SDA.py', 'config.json'])
+                                subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','SDA.py'), 'config.json'])
                             elif int(self.config_final['totalAdditionalSDAs']) > 0:
-                                subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\SDA.py', 'config.json'])
+                                subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','SDA.py'), 'config.json'])
                                 subprocess.call(['python.exe', os.path.join(desktop, 'Ewok','main.py'), 'config.json'])
                         else:
                             subprocess.call(['python.exe', os.path.join(desktop, 'Ewok','main.py'), 'config.json'])
@@ -3558,17 +3558,17 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                             if int(self.config_final['totalAdditionalBDAs']) < 1:
                                 if int(self.config['totalLookUps']) == 1:
                                     if str(self.config['specialty']) != '""':
-                                        subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\BDA_Multi.py', 'config.json'])
+                                        subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','BDA_Multi.py'), 'config.json'])
                                     else:
-                                        subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\BDA_Multi_Occ_Only.py', 'config.json'])
+                                        subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','BDA_Multi_Occ_Only.py'), 'config.json'])
                                 else:
                                     if str(self.config['specialty']) != '""':
-                                        subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\BDA_Multi.py', 'config.json'])
+                                        subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','BDA_Multi.py'), 'config.json'])
                                     else:
-                                        subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\BDA_Multi_Occ_Only.py', 'config.json'])
+                                        subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','BDA_Multi_Occ_Only.py'), 'config.json'])
 
                             elif int(self.config_final['totalAdditionalBDAs']) > 0:
-                                subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\BDA_Multi.py', 'config.json'])
+                                subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','BDA_Multi.py'), 'config.json'])
                                 subprocess.call(['python.exe', os.path.join(desktop, 'Ewok','main.py'), 'config.json'])
                         else:
                             subprocess.call(['python.exe', os.path.join(desktop, 'Ewok','main.py'), 'config.json'])
@@ -3577,23 +3577,23 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                             if int(self.config_final['totalAdditionalBDAs']) < 1 and int(self.config_final['totalAdditionalSDAs']) < 1:
                                 if int(self.config['totalLookUps']) == 1:
                                     if str(self.config['specialty']) != '""':
-                                        subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\SDA.py', 'config.json'])
-                                        subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\BDA_Multi.py', 'config.json'])
+                                        subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','SDA.py'), 'config.json'])
+                                        subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','BDA_Multi.py'), 'config.json'])
                                     else:
-                                        subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\SDA.py', 'config.json'])
-                                        subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\BDA_Multi_Occ_Only.py', 'config.json'])
+                                        subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','SDA.py'), 'config.json'])
+                                        subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','BDA_Multi_Occ_Only.py'), 'config.json'])
                                 else:
                                     if str(self.config['specialty']) != '""':
-                                        subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\SDA.py', 'config.json'])
-                                        subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\BDA_Multi.py', 'config.json'])
+                                        subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','SDA.py'), 'config.json'])
+                                        subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','BDA_Multi.py'), 'config.json'])
                                     else:
-                                        subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\SDA.py', 'config.json'])
-                                        subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\BDA_Multi_Occ_Only.py.py', 'config.json'])
+                                        subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','SDA.py'), 'config.json'])
+                                        subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','BDA_Multi_Occ_Only.py'), 'config.json'])
 
                             elif int(self.config_final['totalAdditionalBDAs']) > 0 and int(self.config_final['totalAdditionalSDAs']) > 0:
                                 if str(self.config['specialty']) != '""':
-                                    subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\SDA.py', 'config.json'])
-                                    subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\BDA_Multi.py', 'config.json'])
+                                    subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','SDA.py'), 'config.json'])
+                                    subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','BDA_Multi.py'), 'config.json'])
                                     subprocess.call(['python.exe', os.path.join(desktop, 'Ewok','main.py'), 'config.json'])
                         else:
                             subprocess.call(['python.exe', os.path.join(desktop, 'Ewok','main.py'), 'config.json'])
@@ -3608,39 +3608,39 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                         subprocess.call(['python.exe', os.path.join(desktop, 'Ewok','main.py'), 'config.json'])
                     elif isSdaChecked and not isBdaChecked:
                         if self.config['matchedFile'] != "":
-                            subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\SDA.py', 'config.json'])
+                            subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','SDA.py'), 'config.json'])
                         else:
                             subprocess.call(['python.exe', os.path.join(desktop, 'Ewok','main.py'), 'config.json'])
                     elif not isSdaChecked and isBdaChecked:
                         if self.config['matchedFile'] != "":
                             if int(self.config['totalLookUps']) == 1:
                                 if str(self.config['specialty']) != '""':
-                                    subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\BDA_Multi.py', 'config.json'])
+                                    subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','BDA_Multi.py'), 'config.json'])
                                 else:
-                                    subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\BDA_Multi_Occ_Only.py', 'config.json'])
+                                    subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','BDA_Multi_Occ_Only.py'), 'config.json'])
                             else:
                                 if str(self.config['specialty']) != '""':
-                                    subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\BDA_Multi.py', 'config.json'])
+                                    subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','BDA_Multi.py'), 'config.json'])
                                 else:
-                                    subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\BDA_Multi_Occ_Only.py', 'config.json'])
+                                    subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','BDA_Multi_Occ_Only.py'), 'config.json'])
                         else:
                             subprocess.call(['python.exe', os.path.join(desktop, 'Ewok','main.py'), 'config.json'])
                     elif isSdaChecked and isBdaChecked:
                         if self.config['matchedFile'] != "":
                             if int(self.config['totalLookUps']) == 1:
                                 if str(self.config['specialty']) != '""':
-                                    subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\SDA.py', 'config.json'])
-                                    subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\BDA_Multi.py', 'config.json'])
+                                    subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','SDA.py'), 'config.json'])
+                                    subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','BDA_Multi.py'), 'config.json'])
                                 else:
-                                    subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\SDA.py', 'config.json'])
-                                    subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\BDA_Multi_Occ_Only.py', 'config.json'])
+                                    subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','SDA.py'), 'config.json'])
+                                    subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','BDA_Multi_Occ_Only.py'), 'config.json'])
                             else:
                                 if str(self.config['specialty']) != '""':
-                                    subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\SDA.py', 'config.json'])
-                                    subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\BDA_Multi.py', 'config.json'])
+                                    subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','SDA.py'), 'config.json'])
+                                    subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','BDA_Multi.py'), 'config.json'])
                                 else:
-                                    subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\SDA.py', 'config.json'])
-                                    subprocess.call(['python.exe', 'G:\\Communicator Ops\\Epocrates\\Python Files\\Official Codes\\BDA_Multi_Occ_Only.py.py', 'config.json'])
+                                    subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','SDA.py'), 'config.json'])
+                                    subprocess.call(['python.exe', os.path.join(desktop, 'Ewok', 'Add On Programs','BDA_Multi_Occ_Only.py'), 'config.json'])
                         else:
                             subprocess.call(['python.exe', os.path.join(desktop, 'Ewok','main.py'), 'config.json'])
                 if self.config['suppSASFile'] == '':
