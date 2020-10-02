@@ -119,7 +119,7 @@ if len(args) > 0:
 		if 'excludeStates' in config:
 			statesToExclude = config['excludeStates']
 		if 'excludeStates' not in config:
-			statesToExclude = """\"Colorado", "Vermont\""""
+			statesToExclude = """\"CO", "VT\""""
 
 		userRepo = str(config['userRepo'])
 		caseType = str(config['caseType'])

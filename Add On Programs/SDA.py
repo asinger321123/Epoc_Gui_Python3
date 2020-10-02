@@ -20,25 +20,22 @@ import json
 
 userhome = os.path.expanduser('~')
 desktop = userhome + '\\Desktop\\'
-sdaCode = "P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\CUSTOM\\Email Codes\\PS_SDA_plus_CL_Email.sas"
+# sdaCode = "P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\CUSTOM\\Email Codes\\PS_SDA_plus_CL_Email.sas"
 args = sys.argv[1:]
 # configFile = os.path.join(desktop, 'config.json')
-
-with open(os.path.join(desktop, 'TheEagleHasLanded.csv'), 'r') as passFile:
-	reader = csv.DictReader(passFile)
-	for item in reader:
-		password = item['password']
 
 if len(args) > 0:
 	with open(os.path.join(desktop, 'Ewok\\Configs', args[0]), 'r') as infile:
 		config = json.loads(infile.read(), encoding='utf8')
+		sdaCode = "P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\code_repos\\{repo}\\Code Housing\\PS_SDA_plus_CL_Email.sas".format(repo=str(config['userRepo']))
 
 		if 'excludeStates' in config:
 			statesToExclude = config['excludeStates']
 		if 'excludeStates' not in config:
-			statesToExclude = """\"Colorado", "Vermont\""""
+			statesToExclude = """\"CO", "VT\""""
 		totalAdditionalSDAs = int(config['totalAdditionalSDAs'])
 		activeUserDate = str(config['activeUserDate'])
+		sda_only = str(config['sdaOnly'])
 
 		suppApplied = str(config['suppressionApplied'])
 		listMatchFolder = config['matchedFile']
@@ -89,6 +86,7 @@ for line_in in line_file:
 	target_out = target_out.replace('/*username*/', email)
 	target_out = target_out.replace('/*statesToExclude*/', statesToExclude)
 	target_out = target_out.replace('/*activeUserDate*/', activeUserDate)
+	target_out = target_out.replace('/*sda_only*/', sda_only)
 	new_file.write(target_out)
 	line_file = new_file
 

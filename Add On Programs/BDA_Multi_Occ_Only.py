@@ -24,20 +24,22 @@ desktop = userhome + '\\Desktop\\'
 args = sys.argv[1:]
 drugList = []
 drugList2 = []
-bdaCode = "P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\CUSTOM\\Email Codes\\PS_BDA_Occ_Only_Multi_plus_CL_Email.sas"
 
 if len(args) > 0:
 	with open(os.path.join(desktop, 'Ewok\\Configs', args[0]), 'r') as infile:
 		config = json.loads(infile.read(), encoding='utf8')
 
+		bdaCode = "P:\\Epocrates Analytics\\Code_Library\\Standard_Codes\\Pre Sales\\DocAlert_Python_Reference\\code_repos\\{repo}\\Code Housing\\PS_BDA_Mult_Lookup_plus_CL_Email.sas".format(repo=str(config['userRepo']))
+
 		if 'excludeStates' in config:
 			statesToExclude = config['excludeStates']
 		if 'excludeStates' not in config:
-			statesToExclude = """\"Colorado", "Vermont\""""
+			statesToExclude = """\"CO", "VT\""""
 
 		listMatchFolder = config['matchedFile']
 		suppApplied = str(config['suppressionApplied'])
 		activeUserDate = str(config['activeUserDate'])
+		bda_only = str(config['bdaOnly'])
 		onlyFiles = [f for f in listdir(listMatchFolder) if isfile(join(listMatchFolder, f))]
 		if suppApplied == 'Yes':
 			suppFolder = config['suppSASFile']
@@ -95,6 +97,7 @@ for line_in in line_file:
 	target_out = target_out.replace('/*username*/', email)
 	target_out = target_out.replace('/*statesToExclude*/', statesToExclude)
 	target_out = target_out.replace('/*activeUserDate*/', activeUserDate)
+	target_out = target_out.replace('/*bda_only*/', bda_only)
 	new_file.write(target_out)
 	line_file = new_file
 

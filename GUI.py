@@ -444,8 +444,68 @@ class State_Zip(base_6, form_6):
         super(base_6, self).__init__()
         self.setupUi(self)
 
-        self.statesList = ["Alabama","Alaska","Arizona","Arkansas","California", "Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois", "Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland", "Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana", "Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York", "North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania", "Puerto Rico", "Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah", "Virginia","Washington","West Virginia","Wisconsin","Wyoming"]
-        self.defaultExcludeList = ["Colorado", "Vermont"]
+        self.us_state_abbrev = {
+        'alabama': 'AL', 
+        'alaska': 'AK', 
+        'arizona': 'AZ',
+        'arkansas': 'AR',
+        'california': 'CA',
+        'colorado': 'CO',
+        'connecticut': 'CT',
+        'delaware': 'DE',
+        'district of columbia': 'DC',
+        'dist. of columbia': 'DC',
+        'florida': 'FL',
+        'georgia': 'GA',
+        'guam': 'GU',
+        'hawaii': 'HI',
+        'idaho': 'ID',
+        'illinois': 'IL',
+        'indiana': 'IN',
+        'iowa': 'IA',
+        'kansas': 'KS',
+        'kentucky': 'KY',
+        'louisiana': 'LA',
+        'maine': 'ME',
+        'maryland': 'MD',
+        'massachusetts': 'MA',
+        'michigan': 'MI',
+        'minnesota': 'MN',
+        'mississippi': 'MS',
+        'missouri': 'MO',
+        'montana': 'MT',
+        'nebraska': 'NE',
+        'nevada': 'NV',
+        'new hampshire': 'NH',
+        'new jersey': 'NJ',
+        'new mexico': 'NM',
+        'new york': 'NY',
+        'north carolina': 'NC',
+        'north dakota': 'ND',
+        'northern mariana sslands':'MP',
+        'ohio': 'OH',
+        'oklahoma': 'OK',
+        'oregon': 'OR',
+        'palau': 'PW',
+        'pennsylvania': 'PA',
+        'puerto rico': 'PR',
+        'rhode island': 'RI',
+        'south carolina': 'SC',
+        'south dakota': 'SD',
+        'tennessee': 'TN',
+        'texas': 'TX',
+        'utah': 'UT',
+        'vermont': 'VT',
+        'virgin islands': 'VI',
+        'virginia': 'VA',
+        'washington': 'WA',
+        'west virginia': 'WV',
+        'wisconsin': 'WI',
+        'wyoming': 'WY'}
+
+        self.statesList = [key for key in self.us_state_abbrev.keys()]
+        # self.statesList = ["Alabama","Alaska","Arizona","Arkansas","California", "Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois", "Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland", "Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana", "Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York", "North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania", "Puerto Rico", "Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah", "Virginia","Washington","West Virginia","Wisconsin","Wyoming"]
+        self.defaultExcludeList = ["CO", "VT"]
         # self.finalExcludeStates = []
 
         #config Variables
@@ -520,7 +580,7 @@ class State_Zip(base_6, form_6):
 
         # print(newListofStates)
     # while missing == False:          
-        if 'Vermont' in newListofStates:
+        if 'vermont' in newListofStates:
             pass
 
         else:
@@ -552,7 +612,7 @@ class State_Zip(base_6, form_6):
                     for row in rows:
                         stateValue = str(self.stateZipListSource.item(row).text())
                         # print('dis it: ', stateValue)
-                        if stateValue == "Vermont":
+                        if stateValue == "vermont":
                             self.excludeStatesList.addItem(self.stateZipListSource.takeItem(row))
                             self.keepVermont = False
                     # print(self.keepVermont)
@@ -567,7 +627,7 @@ class State_Zip(base_6, form_6):
         # if self.stateCheckBox.isChecked():
         for state in range(self.excludeStatesList.count()):
             # self.stateObject = '"'+str(self.stateZipListFinal.item(state).text())+'"'+', '+'\n'
-            self.stateObject = '{}{}{}{}{}'.format('"', str(self.excludeStatesList.item(state).text()), '"', ', ', '\n')
+            self.stateObject = '{}{}{}{}{}'.format('"', self.us_state_abbrev[str(self.excludeStatesList.item(state).text())], '"', ', ', '\n')
             self.excludeStatesString += self.stateObject
 
         self.finalExcludeStates = self.excludeStatesString[:-3]
@@ -694,7 +754,7 @@ class State_Zip(base_6, form_6):
         if self.stateCheckBox.isChecked():
             for state in range(self.stateZipListFinal.count()):
                 # self.stateObject = '"'+str(self.stateZipListFinal.item(state).text())+'"'+', '+'\n'
-                self.stateObject = '{}{}{}{}{}'.format('"', str(self.stateZipListFinal.item(state).text()), '"', ', ', '\n')
+                self.stateObject = '{}{}{}{}{}'.format('"', self.us_state_abbrev[str(self.stateZipListFinal.item(state).text())], '"', ', ', '\n')
                 self.statesString += self.stateObject
 
             self.statesStringFinal = self.statesString[:-3]
@@ -1833,7 +1893,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
         if count == totalClickable:
             for item in self.repoMenu.actions():
-                if item.text() == 'master':
+                if item.text() == 'snowflake':
                     item.setChecked(True)
 
 
@@ -3843,7 +3903,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.config['listMatchType'] = str('Standard_Seg')
             if self.sdaOnly.isChecked() or self.bdaOnly.isChecked():
                 self.config['listMatchType'] = 'None'
-        if self.exactMatch.isChecked() and not isSegmentChecked:
+        if self.exactMatch.isChecked() and not isSegmentChecked and not isSegListChecked:
             self.config['listMatchType'] = 'Exact'
             if self.sdaOnly.isChecked() or self.bdaOnly.isChecked():
                 self.config['listMatchType'] = 'None'
