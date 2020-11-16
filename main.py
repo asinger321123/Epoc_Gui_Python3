@@ -48,9 +48,9 @@ inc = 0
 
 
 #Excludes SPecial Datasharing clients
-cmiCompasSegmentation = "npi, address1, campaign_type, city, cl_fname, cl_lname, cl_me, cl_zip, clientid, compasid, middle_name, segment1, specialty, state_code, tier, segment2, segment3"
-cmiCompasSQL = "address1, campaign_type, city, fname as cl_fname, lname as cl_lname, me as cl_me, zip as cl_zip, clientid, compasid, middle_name, segment1, specialty, state_code, tier, segment2, segment3"
-cmiList = ['npi', 'address1', 'campaign_type', 'city', 'cl_fname', 'cl_lname', 'cl_me', 'cl_zip', 'clientid', 'compasid', 'middle_name', 'segment1', 'specialty', 'state_code', 'tier', 'segment2', 'segment3']
+cmiCompasSegmentation = "npi, address1, campaign_type, city, cl_fname, cl_lname, cl_me, cl_zip, clientid, compasid, middle_name, segment1, cl_specialty, state_code, tier, segment2, segment3"
+cmiCompasSQL = "address1, campaign_type, city, fname as cl_fname, lname as cl_lname, me as cl_me, zip as cl_zip, clientid, compasid, middle_name, segment1, cl_specialty, state_code, tier, segment2, segment3"
+cmiList = ['npi', 'address1', 'campaign_type', 'city', 'cl_fname', 'cl_lname', 'cl_me', 'cl_zip', 'clientid', 'compasid', 'middle_name', 'segment1', 'cl_specialty', 'state_code', 'tier', 'segment2', 'segment3']
 
 
 userhome = os.path.expanduser('~')
@@ -146,7 +146,25 @@ if len(args) > 0:
 			manu = str(config['Manu'])
 			if listMatchType == 'Standard_Seg' or listMatchType == 'Exact_Seg':
 				addSeg1 = config['finalSegs']
-				addSeg = ", ".join(addSeg1).lower().replace('Group', '_group').replace('group', '_group').replace('GROUP', '_group')
+				addSeg1_final = []
+				for cl_seg_var in addSeg1:
+					cl_seg = cl_seg_var.lower()
+
+					if cl_seg == 'specialty' or re.search('^specialty.+', cl_seg) or re.search('.+specialty.+', cl_seg) or re.search('.+specialty', cl_seg):
+						print(cl_seg, colored('Changing Segment "{}" to cl_specialty for sql column conflicts'.format(cl_seg), 'yellow'))
+						new_seg = 'cl_specialty'
+
+					if cl_seg == 'occupation' or re.search('^occupation.+', cl_seg) or re.search('.+occupation.+', cl_seg):
+						print(cl_seg, colored('Changing Segment "{}" to cl_occupation for sql column conflicts'.format(cl_seg), 'yellow'))
+						new_seg = 'cl_occupation'
+
+					if cl_seg == 'state':
+						print(cl_seg, colored('Changing Segment "{}" to cl_state for sql column conflicts'.format(cl_seg), 'yellow'))
+						new_seg = 'cl_state'
+					
+					addSeg1_final.append(new_seg)
+
+				addSeg = ", ".join(addSeg1_final).lower().replace('Group', '_group').replace('group', '_group').replace('GROUP', '_group')
 				finalSeg = addSeg.split(', ')
 				for seg in finalSeg:
 					if seg.startswith(('0','1','2','3','4','5','6','7','8','9')):
@@ -267,9 +285,28 @@ if len(args) > 0:
 				backFillValue = ''
 			dSharing = str(config['dSharing'])
 			if dSharing == 'Y' and config['cmi_compass_client'] == 'N':
+				cmiSegsExport = '""'
 				if manu not in ['Merck', 'AstraZeneca', 'Novartis', 'GSK', 'Boehringer', 'Amgen', 'Biogen', 'Sanofi-Aventis', 'AbbVie']:
 					addSeg1 = config['finalSegs']
-					addSeg = ", ".join(addSeg1).lower().replace('Group', '_group').replace('group', '_group').replace('GROUP', '_group')
+					addSeg1_final = []
+					for cl_seg_var in addSeg1:
+						cl_seg = cl_seg_var.lower()
+
+						if cl_seg == 'specialty' or re.search('^specialty.+', cl_seg) or re.search('.+specialty.+', cl_seg) or re.search('.+specialty', cl_seg):
+							print(cl_seg, colored('Changing Segment "{}" to cl_specialty for sql column conflicts'.format(cl_seg), 'yellow'))
+							new_seg = 'cl_specialty'
+
+						if cl_seg == 'occupation' or re.search('^occupation.+', cl_seg) or re.search('.+occupation.+', cl_seg):
+							print(cl_seg, colored('Changing Segment "{}" to cl_occupation for sql column conflicts'.format(cl_seg), 'yellow'))
+							new_seg = 'cl_occupation'
+
+						if cl_seg == 'state':
+							print(cl_seg, colored('Changing Segment "{}" to cl_state for sql column conflicts'.format(cl_seg), 'yellow'))
+							new_seg = 'cl_state'
+						
+						addSeg1_final.append(new_seg)
+
+					addSeg = ", ".join(addSeg1_final).lower().replace('Group', '_group').replace('group', '_group').replace('GROUP', '_group')
 					if config['segVariable'] != "":
 						finalSeg = addSeg.split(', ')
 						finalSeg.append(segVariable)
@@ -294,6 +331,7 @@ if len(args) > 0:
 					# print(splitList, '\n', segmentList)
 					
 			if dSharing == 'Y' and config['cmi_compass_client'] == 'Y':
+				cmiSegsExport = "npi, address1, campaign_type, city, cl_fname, cl_lname, cl_me, cl_zip, clientid, compasid, middle_name, segment1, cl_specialty as specialty, state_code, tier, segment2, segment3"
 				if manu not in ['Merck', 'AstraZeneca', 'Novartis', 'GSK', 'Boehringer', 'Amgen', 'Biogen', 'Sanofi-Aventis', 'AbbVie']:
 					addSeg = cmiCompasSegmentation
 					segVariable = str(config['segVariable']).lower()
@@ -555,6 +593,15 @@ def getMain():
 			elif cellVal.startswith(('0','1','2','3','4','5','6','7','8','9')):
 				print('I added an underscore to: ', cellVal)
 				headers[index] = '_' + headers[index]
+			elif cellVal == 'specialty' or re.search('^specialty.+', cellVal) or re.search('.+specialty.+', cellVal) or re.search('.+specialty', cellVal):
+				print(cellVal, colored('I Found a Specialty', 'green'))
+				headers[index] = 'cl_specialty'
+			elif cellVal == 'occupation' or re.search('^occupation.+', cellVal) or re.search('.+occupation.+', cellVal):
+				print(cellVal, colored('I Found a Occupation', 'green'))
+				headers[index] = 'cl_occupation'
+			elif cellVal == 'state':
+				print(cellVal, colored('I Found a State', 'green'))
+				headers[index] = 'cl_state'
 
 			if caseType == 'Targeting':
 				if manu == 'AstraZeneca':
@@ -674,7 +721,7 @@ def cmiCompasColumns():
 				headers[index] = 'compasid'
 			elif cellVal == 'specialty' or re.search('^specialty.+', cellVal) or re.search('.+specialty.+', cellVal):
 				print(cellVal, colored('I Found a Specialty', 'green'))
-				headers[index] = 'specialty'
+				headers[index] = 'cl_specialty'
 		w = csv.writer(targetFile, lineterminator='\n')
 		w.writerow(headers)
 		for row in r:
@@ -1233,6 +1280,7 @@ def fixSas():
 			target_out = target_out.replace('/*htdOccs*/', htdOccs)
 			target_out = target_out.replace('/*htdSpecs*/', htdSpecs)
 			target_out = target_out.replace('/*userRepo*/', userRepo)
+			target_out = target_out.replace('/*cmiSegs*/', cmiSegsExport)
 
 			new_file.write(target_out)
 			line_file = new_file
