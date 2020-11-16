@@ -707,7 +707,7 @@ def cmiCompasColumns():
 		headers = next(r)
 		for index, col in enumerate(headers):
 			cellVal = str(col).lower().replace('/', '_').replace('-', '_')
-			if cellVal == 'state':
+			if cellVal == 'state' or cellVal == 'cl_state':
 				print(cellVal, colored('I Found a State_Code', 'green'))
 				headers[index] = 'state_code'
 			elif cellVal == 'address_1' or cellVal == 'addr1' or cellVal == 'addressline1':
