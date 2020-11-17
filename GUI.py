@@ -1814,8 +1814,14 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.renameButton.clicked.connect(self.renameValue)
         self.renameButton.clicked.connect(self.bajabThread)
         self.renameColumnButton.clicked.connect(self.renameColumn)
-        self.cmiCompass.toggled.connect(self.dataSharingClients)
-        self.cmiCompass.toggled.connect(self.setDatasharingCallback)
+
+        # self.renameSegmentCols
+        cmiObjects = [self.dataSharingClients, self.setDatasharingCallback, self.highlightCMI]
+        for cmiObj in cmiObjects:
+            self.cmiCompass.toggled.connect(cmiObj)
+        # self.cmiCompass.toggled.connect(self.dataSharingClients)
+        # self.cmiCompass.toggled.connect(self.setDatasharingCallback)
+        # self.cmiCompass.toggled.connect(self.renameSegmentCols)
         # self.gskEpsilonCheckbox.toggled.connect(self.setDatasharingCallback)
         self.postgresTable.textChanged.connect(self.returnUserTable)
         self.postgresTargetTable.textChanged.connect(self.returnUserTable)
@@ -1823,7 +1829,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.addColumnButton.clicked.connect(self.addColumn)
         self.deleteColumnButton.clicked.connect(self.deleteColumn)
         self.tabWidget.currentChanged.connect(self.editListCallback)
-        self.cmiCompass.toggled.connect(self.highlightCMI)
+        # self.cmiCompass.toggled.connect(self.highlightCMI)
         # self.suppCheck.toggled.connect(self.suppressionCallback)
         # self.tabWidget.currentChanged.connect(self.showFrwon)
         self.clearSelections.clicked.connect(self.resetEditTab)
@@ -2824,6 +2830,13 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 # foundCMIColumns.append('state_code')
                 # self.columnIndex.append(i)
                 col.setBackground(QColor(247,154,0,255))
+
+    def renameSegmentCols(self):
+        for i in range(self.sourceSegs.count()):
+            checkCol =  str(self.sourceSegs.item(i).text()).lower()
+            if checkCol == 'segment_1':
+                self.sourceSegs.item(i).setSelected(True)
+                self.renameColumn()
 
 
     def highlightCMI(self):

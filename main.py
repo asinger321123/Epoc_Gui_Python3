@@ -154,13 +154,16 @@ if len(args) > 0:
 						print(cl_seg, colored('Changing Segment "{}" to cl_specialty for sql column conflicts'.format(cl_seg), 'yellow'))
 						new_seg = 'cl_specialty'
 
-					if cl_seg == 'occupation' or re.search('^occupation.+', cl_seg) or re.search('.+occupation.+', cl_seg):
+					elif cl_seg == 'occupation' or re.search('^occupation.+', cl_seg) or re.search('.+occupation.+', cl_seg):
 						print(cl_seg, colored('Changing Segment "{}" to cl_occupation for sql column conflicts'.format(cl_seg), 'yellow'))
 						new_seg = 'cl_occupation'
 
-					if cl_seg == 'state':
+					elif cl_seg == 'state':
 						print(cl_seg, colored('Changing Segment "{}" to cl_state for sql column conflicts'.format(cl_seg), 'yellow'))
 						new_seg = 'cl_state'
+
+					else:
+						new_seg = cl_seg
 					
 					addSeg1_final.append(new_seg)
 
@@ -235,6 +238,7 @@ if len(args) > 0:
 			sDa_only = str(config['sdaOnly'])
 			bDa_only = str(config['bdaOnly'])
 			totalSegValues = str(config['totalSegVals'])
+			cmiSegsExport = '""'
 
 			outFileFinal2 = """P:\\Epocrates Analytics\\TARGETS\\{date}\\{manu} {brand}\\target.txt""".format(date = date, manu = manu, brand = brand)
 			outCode3 = """P:\\Epocrates Analytics\\TARGETS\\{date}\\{manu} {brand}""".format(date = date, slashes = "\\", manu = manu, brand = brand)
@@ -285,7 +289,6 @@ if len(args) > 0:
 				backFillValue = ''
 			dSharing = str(config['dSharing'])
 			if dSharing == 'Y' and config['cmi_compass_client'] == 'N':
-				cmiSegsExport = '""'
 				if manu not in ['Merck', 'AstraZeneca', 'Novartis', 'GSK', 'Boehringer', 'Amgen', 'Biogen', 'Sanofi-Aventis', 'AbbVie']:
 					addSeg1 = config['finalSegs']
 					addSeg1_final = []
@@ -608,6 +611,15 @@ def getMain():
 					if cellVal == 'client_id_1' or cellVal == 'hcp_az_cust_id' or cellVal == 'az_id':
 						print(cellVal, ': ', colored('I Found a HCP_AZ_CUST_ID', 'green'))
 						headers[index] = 'hcp_az_cust_id'
+				elif manu == 'Amgen':
+					if cellVal == 'cl_state':
+						print(cellVal, ': ', colored('I Found a state_cd', 'green'))
+						headers[index] = 'state_cd'
+				elif manu in ['AbbVie', 'Sanofi-Aventis']:
+					if cellVal == 'cl_state':
+						print(cellVal, ': ', colored('I Found a state_cd', 'green'))
+						headers[index] = 'state'
+
 				elif manu == 'Boehringer':
 					if cellVal == 'client_id_1' or cellVal == 'client_id':
 						print(cellVal, ': ', colored('I Found a Veeva_ID', 'green'))
