@@ -238,7 +238,6 @@ if len(args) > 0:
 			sDa_only = str(config['sdaOnly'])
 			bDa_only = str(config['bdaOnly'])
 			totalSegValues = str(config['totalSegVals'])
-			cmiSegsExport = '""'
 
 			outFileFinal2 = """P:\\Epocrates Analytics\\TARGETS\\{date}\\{manu} {brand}\\target.txt""".format(date = date, manu = manu, brand = brand)
 			outCode3 = """P:\\Epocrates Analytics\\TARGETS\\{date}\\{manu} {brand}""".format(date = date, slashes = "\\", manu = manu, brand = brand)
@@ -334,16 +333,10 @@ if len(args) > 0:
 					# print(splitList, '\n', segmentList)
 					
 			if dSharing == 'Y' and config['cmi_compass_client'] == 'Y':
-				cmiSegsExport = "npi, address1, campaign_type, city, cl_fname, cl_lname, cl_me, cl_zip, clientid, compasid, middle_name, segment1, cl_specialty as specialty, state_code, tier, segment2, segment3"
 				if manu not in ['Merck', 'AstraZeneca', 'Novartis', 'GSK', 'Boehringer', 'Amgen', 'Biogen', 'Sanofi-Aventis', 'AbbVie']:
 					addSeg = cmiCompasSegmentation
 					segVariable = str(config['segVariable']).lower()
 					if config['segVariable'] != "":
-						# finalSeg = addSeg.split(', ')
-						# finalSeg.append(segVariable)
-						# for seg in finalSeg:
-						# 	if seg != segVariable:
-						# 		segmentList.append(str(seg).replace(' ', '_'))
 						cmiSegCheck = addSeg.split(', ')
 						if segVariable.lower() in cmiSegCheck:
 							segmentList = addSeg.split(', ')
@@ -1207,6 +1200,11 @@ def fixSas():
 				segList = segmentList
 			else:
 				segList = ''
+
+		if config['cmi_compass_client'] == 'Y':
+			cmiSegsExport = segList.replace('cl_specialty', 'cl_specialty as specialty')
+		else:
+			cmiSegsExport = '""'
 
 
 		# if not os.path.exists('P:\\Epocrates Analytics\\TARGETS\\{date}{slashes}{targetFolder}\\target.txt'.format(date = date, slashes = "\\", targetFolder=targetFolder)):
