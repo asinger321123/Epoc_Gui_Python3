@@ -601,7 +601,7 @@ def getMain():
 
 			if caseType == 'Targeting':
 				if manu == 'AstraZeneca':
-					if cellVal == 'client_id_1' or cellVal == 'hcp_az_cust_id' or cellVal == 'az_id' or cellVal == 'hcp_az_custom_id':
+					if cellVal == 'client_id_1' or cellVal == 'hcp_az_cust_id' or cellVal == 'az_id' or cellVal == 'hcp_az_custom_id' or cellVal == 'hcp_az_id':
 						print(cellVal, ': ', colored('I Found a HCP_AZ_CUST_ID', 'green'))
 						headers[index] = 'hcp_az_cust_id'
 				elif manu == 'Amgen':
