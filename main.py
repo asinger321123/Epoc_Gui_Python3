@@ -23,6 +23,7 @@ import sqlite3
 import random
 import utils as utils
 from threading import Thread
+import traceback
 
 #test comment
 init(autoreset=True)
@@ -1725,7 +1726,9 @@ if (caseType == 'listMatch' or caseType == 'Targeting') and listMatchType != 'No
 	try:
 		postgresConn()
 	except:
+		tb = traceback.format_exc()
 		print(colored('The SQL Export Failed. Ask Andrew why. . . Good place to start is maybe a bad SQL Column Name (e.g GROUP) or unsatified conditional which never exported the TXT File', 'red'))
+		print(tb)
 		deleteCodeCount()
 	check_names_for_stupid_shit()
 	checkDrugs()
