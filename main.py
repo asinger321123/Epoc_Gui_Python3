@@ -596,7 +596,7 @@ def getMain():
 			elif cellVal == 'occupation' or re.search('^occupation.+', cellVal) or re.search('.+occupation.+', cellVal):
 				print(cellVal, colored('I Found a Occupation', 'green'))
 				headers[index] = 'cl_occupation'
-			elif cellVal == 'state':
+			elif cellVal == 'state' and config['cmi_compass_client'] == 'N':
 				print(cellVal, colored('I Found a State', 'green'))
 				headers[index] = 'cl_state'
 
