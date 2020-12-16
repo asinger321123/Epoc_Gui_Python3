@@ -580,9 +580,9 @@ def getMain():
 				headers[index] = 'whatever'
 			elif cellVal == 'Group' or cellVal == 'group':
 				headers[index] = '_group'
-			elif cellVal == 'userid':
-				headers[index] = 'userid'
-				print(cellVal, ': ', colored('I found a userid', 'green'))
+			elif cellVal == 'user_id':
+				headers[index] = 'user_id'
+				print(cellVal, ': ', colored('I found a user_id', 'green'))
 			elif cellVal == 'zip' or cellVal == 'Postal' or (re.search('^zip.+', cellVal) and (cellVal != 'zip_4' or cellVal != 'zip4')) or re.search('^postal.+', cellVal) or re.search('.+_zip', cellVal) or re.search('.+ zip', cellVal) or re.search('.+_postal', cellVal) or re.search('.+ zip', cellVal) or re.search('.+ postal', cellVal):
 				print(cellVal, ': ',  colored('I found a Zip/Postal Code', 'green'))
 				headers[index] = 'zip'
@@ -596,7 +596,7 @@ def getMain():
 			elif cellVal == 'occupation' or re.search('^occupation.+', cellVal) or re.search('.+occupation.+', cellVal):
 				print(cellVal, colored('I Found a Occupation', 'green'))
 				headers[index] = 'cl_occupation'
-			elif cellVal == 'state' and config['cmi_compass_client'] == 'N':
+			elif cellVal == 'state':
 				print(cellVal, colored('I Found a State', 'green'))
 				headers[index] = 'cl_state'
 
@@ -916,7 +916,7 @@ def postgresConn():
 						export = """{select}, {seg} from {tableName};""".format(select=selectMain5, seg=splitList, tableName=tableName)
 						pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')
 					else:
-						export = """Select REPLACE(userid, '.0', '') as userid, REPLACE(npi, '.0', '') as npi, {seg} from {tableName};""".format(seg=splitList, tableName=tableName)
+						export = """Select REPLACE(user_id, '.0', '') as user_id, REPLACE(npi, '.0', '') as npi, {seg} from {tableName};""".format(seg=splitList, tableName=tableName)
 						pandas.read_sql_query(export, conn).to_csv(os.path.join(downloads, 'target.txt'), index=False, sep='\t')						
 
 
