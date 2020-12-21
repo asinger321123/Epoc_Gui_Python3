@@ -3043,8 +3043,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.finalSegs.setEnabled(False)
             if self.finalSegs:
                 self.finalSegs.clear()
-            self.finalSegs.addItem('IMSDR')
-            self.finalSegs.addItem('HCP_AZ_CUSTOM_ID')
+            # self.finalSegs.addItem('IMSDR')
+            # self.finalSegs.addItem('HCP_AZ_CUSTOM_ID')
 
         if str(self.targetManuName.currentText()) == 'Biogen':
 
