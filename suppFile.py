@@ -42,10 +42,10 @@ desktop = userhome + '\\Desktop\\'
 newest = max(os.listdir(downloads), key=lambda f: os.path.getctime("{}/{}".format(downloads, f)))
 stupid = ''
 
-with open(os.path.join(desktop, 'TheEagleHasLanded.csv'), 'r') as passFile:
-	reader = csv.DictReader(passFile)
-	for item in reader:
-		password = item['password']
+# with open(os.path.join(desktop, 'TheEagleHasLanded.csv'), 'r') as passFile:
+# 	reader = csv.DictReader(passFile)
+# 	for item in reader:
+# 		password = item['password']
 
 if len(args) > 0:
 	with open(os.path.join(desktop, 'Ewok\\Configs', args[0]), 'r') as infile:
